@@ -1,0 +1,350 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-browser": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "b93b77d9a63143fcefa7d371c1fceba58f1f310ef76a5f2ad3d4d2077efa8c25"
+    },
+    "ai-sdk": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "8190ed3dc5fd836fb9b902f6cf8266a0ede8fb1e1c2fff754aaf79cbdaba5670"
+    },
+    "architect": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "686bd8b5606ad628da5cceced15b9c5155bff8f1666c7f8d0cd498fdd34dbb3f"
+    },
+    "caveman": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "b0e7741886c0c32270cedc1a2fc21c2879d90964d3ce00f24952de7064613404"
+    },
+    "clerk": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "9a7ea0a999381471bb8f783260b295360a2a937d61c9d1c3163cede96b39c229"
+    },
+    "clerk-backend-api": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "cbcad1341a7d32fed789abe864c829f27a2858dc8ba68b92254e9beb53467148"
+    },
+    "clerk-cli": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "65eb4d512aabfac55c7bf91cdc1edbac10cbd34dfeb815cbfa0fa7a1ff35cd5c"
+    },
+    "clerk-custom-ui": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "b45ddd91c4924e8a74cb5272e769b06a5bbbde329983e7e565e6902b1cc80ded"
+    },
+    "clerk-nextjs-patterns": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "cdcb9f08d567058fca7563ad8c67a4a2a2f3b9f286294e1caeb1ea5407dfebc6"
+    },
+    "clerk-setup": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "bbf0711ddcc8d8d0dcd148c0061ab83c7d66225a60a28caba62ef76e4384fa54"
+    },
+    "clerk-webhooks": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "4764eeeef1e80ce9757759ef119a3a5e77322383e8a37975d7c8ea718c259ec9"
+    },
+    "css-to-tailwind": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "ce309f21651a32b4e3d19a8eb69ba1dd6725c1a7000054004203ab10cf6861d6"
+    },
+    "drizzle-best-practices": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "5e03a111e46241a0618c1d09e888b1aa7394274df30e4b2cc646aff2fa613e4e"
+    },
+    "drizzle-orm-patterns": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "d63e6d73a9f579b505a5694af2f3b3200c2b5eeea147e88b9b6d1e5fce23bcbb"
+    },
+    "embedded-captions": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "c4b9b79ab0051fc537a4b33a7156fedfd50051cf8cd745130e38f1690480920b"
+    },
+    "excalidraw-diagram": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "15e15928db875be3b9b3f68b57627f5c2daf1f5e8724e60a68d3b63b4735d1ce"
+    },
+    "frontend-design": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "93f53fd1c0352d3d7ec17b8f73d7351bf76f4821e55d123c9d2abc2c53ba48e4"
+    },
+    "general-video": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "493150152438b3611e69287367d86e9b362087e2ba16481587d04d3a6a99dc90"
+    },
+    "grill-me": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "67e31b63e6e9e454cc2f51cd85b9cf1396ee46379a87c07a1450f33c47c1276a"
+    },
+    "grill-with-docs": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "559d4de044394b86af53a5cedd2d3a689770088c3c5361646c91f5d7ea59f78a"
+    },
+    "humanizer": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "f07cf88b15b404a2e7bc28163f2166099cb708f9450c0a7fc230eeda99ff70cd"
+    },
+    "hyperframes": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "2c53ce652297b99d089e6b05245e1cd29ce3cc6861f8bf3334b31594861959cb"
+    },
+    "hyperframes-animation": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "e13acd92b6b051204c3674d8c022e5d914f49b0dd45212d7bac5befa5d66b987"
+    },
+    "hyperframes-cli": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "bd4e6ce21f2b18a14dfba8046be78224d5511b8103a7fbb9f758b378593eecee"
+    },
+    "hyperframes-core": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "7610a4f082bce99eb1aef8bca00dc94930faa8b8248d97ee6b9100d0a5ac9c44"
+    },
+    "hyperframes-creative": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "50a929377c5a7d9b71fdcced4f917f3d6a1808403678f2b619bd0918f7d66339"
+    },
+    "hyperframes-media": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "1919954c839a3ef6dbe57a381d32e32149e23aaae94a58d1a29e8ca6b33b7b2d"
+    },
+    "hyperframes-registry": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "a65dd053db01700a8c52ee2dd005807bb48962808b6dc32b59699561dea3eabd"
+    },
+    "improve-codebase-architecture": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "4c4d2b6da48482c1a054aca0e09eafd61cdcbebe2bda10abd3f355bf5f6fc57c"
+    },
+    "inspo-brand-builder": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "17cea3fe85d5a0d728e2d8acc88741d32247b994f6f467760d675e46c106880e"
+    },
+    "media-use": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "df639864404f45c9a5175deb190492bcc19eda53b84f4be1eb8d545dcf3a608e"
+    },
+    "motion-graphics": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "608c9298432465916a79851f92fd2ba88268255a0be1504b58058da653410a87"
+    },
+    "music-to-video": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "0f31ad4a57a44b252a3c22ddd2f492e519ebf6df9828b90aeb0c23155dc0c75b"
+    },
+    "neon": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "ce1f5da18ac154f5171bc4c884cf6889ea361dd5a8c427544dcd6117cd41c528"
+    },
+    "neon-ai-gateway": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "8b9ad5b0e146817091318e2d7253a1796bb2c4a8c5145433ed2b14ef25634205"
+    },
+    "neon-functions": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "2264a93c71e52496ebeabf984bea38d90b75fdc75cc24ae83d690e82d0d43f75"
+    },
+    "neon-object-storage": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "7d755468cfc41979fd03650ef325af5a19641bc7ef0af4897e19255763d25579"
+    },
+    "neon-postgres": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "21099d016e1ad02a2b5d393344841f592121071ca0f8d98ea051a91359e7ab19"
+    },
+    "neon-postgres-branches": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "7ac4a05a2ef3738424cb060d8477c87667d013ea09307380d0a6d47414c63c46"
+    },
+    "neon-postgres-egress-optimizer": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "0168575e2f9709c54a9252bff4ecd551b4361b5959329e9f88113642dac00388"
+    },
+    "next-best-practices": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
+    },
+    "next-cache-components": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "a94b83ddcd2ff1c30722577f693b1bfe32f2e1a83abdd6c08c2d6cc6753b53c8"
+    },
+    "next-upgrade": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "be6bbf6ab1dc2cc6f2505cea52d497920c04f5b532c0846ee201f6029b803fb0"
+    },
+    "pr-to-video": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "60e3d3c8a0e3dfe5141058f94ff5c6c4ae07c99c0c32c0065cf7ea91b4503534"
+    },
+    "product-launch-video": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "1b1a4713fdcf9f21916a59a3e637de88beaaabecccf900a815d8fd4123d72473"
+    },
+    "remember": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "5ab74d5ccf24c96c61292920fd980341b97846f52114710e18c519923cf874a1"
+    },
+    "remotion-to-hyperframes": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "3f5441e7d3b935d61e98d185c96555b51f9c5229b3a77b940765bd852aa0629f"
+    },
+    "sentry-fix-issues": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "d8f04b1844eb6ae5721d58507a69be1f880a7cd231560de5097b3e40d8d11e1c"
+    },
+    "shadcn": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "0dc0edeeaec2ae491ae506806517866a3f9bd48d04e0458feb37e0252862891f"
+    },
+    "skill-creator": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "7e3c9cd74e9e2b4828527a857170e86310f2dab5ea8030a9043df2c7e6c88857"
+    },
+    "slideshow": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "7402021ef0893eb97c2f75edfd624262200060e7ad751bbbd4b5dce6058ce2a5"
+    },
+    "stripe-best-practices": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "4aecf9b7d63a5f63ecbd1fdcb6077e0923a675befa6e9b7aa5d1e51ff28d9dae"
+    },
+    "stripe-directory": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "58d8c458beaa92877ed2f0a622af65a0a91e2804efcc4188ac87a35780015361"
+    },
+    "stripe-projects": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "56cec649e6e1ad41c44b0aeaffee90c84579b025fc13a787051abdec3bbe81d4"
+    },
+    "systematic-debugging": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "792a368e074981d7e3138edb439e138489b2ac247cd1e5739fab52af680fb17b"
+    },
+    "tailwind-best-practices": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "097878688ef5377c82cc5b02b88e3e5ae44fe37b6a2f176d65c613dc02f1201d"
+    },
+    "tailwind-css-patterns": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "5f72bf21fa889009ea67d22c648eb086ba90136f296970e9906bbf6a631611d9"
+    },
+    "tailwind-performance": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "95968ff46a922926b2040f8ac1226c4c72325e3b662d20d689ea04398ef443c1"
+    },
+    "tailwind-responsive-design": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "be0e7e40bdd242626c000a68ee022a7820202e9c03e764bf7ed92ea94f41e14e"
+    },
+    "tailwind-utility-classes": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "2b68709709a1477a6194e0768a2bddabd8b92180840168d340935760f7005d86"
+    },
+    "tailwind-v4": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "bd2ce4d0484497fb640892d440028be436201d639488c226875d6d989b0a6a25"
+    },
+    "talking-head-recut": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "f62341566d612cd9b268ce0fa42e3e43d3d30fd582c67bbc15e4cb90f2befd7b"
+    },
+    "tanstack-query-best-practices": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "21d2e8b7468a81d772b6527ad8ca178cc2f3f08af777bb9061333013ee88a0c9"
+    },
+    "tanstack-query-expert": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "f7366f83faade8fcd91b1fa7541c66d0e42f92ee90eef4bde642dbafd45db082"
+    },
+    "upgrade-stripe": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "46bb3c16878f93b953ed901b950686d64f04f90c67400bf31e1a0d7790d889df"
+    },
+    "vercel-composition-patterns": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "f98931159fa9c7fed043bcd18a891a46dcf89ababa38df13a4c5b7b30dc0ce07"
+    },
+    "web-design-guidelines": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "d8e7d3afe37dcc8a97b99ffb5afdb4d0919ae0092ea8b68f44eb201f035e33ac"
+    },
+    "website-to-video": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "baec9bf74ffae7e72024778c5ed2543f57f21ebb1fbc400412574062e07c7012"
+    },
+    "writing-guidelines": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
+      "sourceType": "local",
+      "computedHash": "9c221f46dca7bdf94af9c27ce54a7b4ea323c590333f8bc0a55c65254c646584"
+    }
+  }
+}
