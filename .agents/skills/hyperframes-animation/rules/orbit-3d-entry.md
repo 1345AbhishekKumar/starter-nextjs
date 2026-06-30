@@ -100,7 +100,7 @@ The orbit runs **inside the timeline** — not via `requestAnimationFrame` — s
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const items = document.querySelectorAll(".orbit-item");
+  const items = document.querySelectorAll('.orbit-item');
   // RADIUS_X, RADIUS_Y, ORBIT_DURATION, ENTRY_DUR, STAGGER, FLIP_BACK, CENTER_BACK
   // — all named constants; values per "How to Choose Values" below.
   const RADIUS_Y = RADIUS_X * Y_TO_X_RATIO; // perspective-flattened ellipse
@@ -146,7 +146,7 @@ The orbit runs **inside the timeline** — not via `requestAnimationFrame` — s
       {
         p: 1,
         duration: ORBIT_DURATION,
-        ease: "none",
+        ease: 'none',
         onUpdate: () => {
           const angle = initialAngleRad + orbitState.p * Math.PI * 2;
           const x = Math.cos(angle) * RADIUS_X;
@@ -163,12 +163,17 @@ The orbit runs **inside the timeline** — not via `requestAnimationFrame` — s
 
   // Center label fades in once a few orbit items have landed
   tl.from(
-    ".orbit-center",
-    { opacity: 0, scale: 0.6, duration: ENTRY_DUR, ease: `back.out(${CENTER_BACK})` },
+    '.orbit-center',
+    {
+      opacity: 0,
+      scale: 0.6,
+      duration: ENTRY_DUR,
+      ease: `back.out(${CENTER_BACK})`,
+    },
     CENTER_FADE_AT,
   );
 
-  window.__timelines["orbit-scene"] = tl;
+  window.__timelines['orbit-scene'] = tl;
 </script>
 ```
 
@@ -239,7 +244,7 @@ tl.to(
   {
     r: 0,
     duration: COLLAPSE_DUR,
-    ease: "power3.inOut",
+    ease: 'power3.inOut',
     onUpdate: () =>
       items.forEach((el) => {
         const a = (Number(el.dataset.angle) / 360) * Math.PI * 2;

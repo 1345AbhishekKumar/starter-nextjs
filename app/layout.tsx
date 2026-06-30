@@ -21,7 +21,6 @@ const spaceMono = Space_Mono({
   display: 'swap',
 });
 
-
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -52,7 +51,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://starterkit.app'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 'https://starterkit.app',
+  ),
   alternates: {
     canonical: '/',
     languages: {
@@ -64,7 +65,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: '/',
     title: 'Starter Kit',
-    description: 'A premium Next.js starter kit with pre-configured authentication, styling, database, and custom animations.',
+    description:
+      'A premium Next.js starter kit with pre-configured authentication, styling, database, and custom animations.',
     siteName: 'Starter Kit',
     images: [
       {
@@ -78,7 +80,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Starter Kit',
-    description: 'A premium Next.js starter kit with pre-configured authentication, styling, database, and custom animations.',
+    description:
+      'A premium Next.js starter kit with pre-configured authentication, styling, database, and custom animations.',
     images: ['/og-image.png'],
     creator: '@starterkit',
   },
@@ -95,10 +98,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`${inter.variable} ${caveat.variable} ${spaceMono.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen antialiased" suppressHydrationWarning>
+    <html
+      lang='en'
+      className={`${inter.variable} ${caveat.variable} ${spaceMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className='min-h-screen antialiased' suppressHydrationWarning>
         {children}
       </body>
     </html>

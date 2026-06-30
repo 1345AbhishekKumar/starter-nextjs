@@ -61,8 +61,9 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect((has) => has({ permission: 'org:invoices:create' }));
   }
   if (isAdminRoute(req)) {
-    await auth.protect((has) =>
-      has({ role: 'org:admin' }) || has({ role: 'org:billing_manager' })
+    await auth.protect(
+      (has) =>
+        has({ role: 'org:admin' }) || has({ role: 'org:billing_manager' }),
     );
   }
 });

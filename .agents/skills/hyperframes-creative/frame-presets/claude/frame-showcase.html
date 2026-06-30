@@ -24,14 +24,15 @@
         --amber: #e8a55a;
         --ok: #5db872;
         --warn: #c64545;
-        --serif: "EB Garamond", Georgia, serif;
-        --sans: "Inter", system-ui, sans-serif;
-        --mono: "JetBrains Mono", ui-monospace, monospace;
+        --serif: 'EB Garamond', Georgia, serif;
+        --sans: 'Inter', system-ui, sans-serif;
+        --mono: 'JetBrains Mono', ui-monospace, monospace;
         --hair: rgba(20, 20, 19, 0.12);
         --hair-soft: rgba(20, 20, 19, 0.06);
         --on-dark: rgba(250, 249, 245, 0.92);
         --on-dark-soft: rgba(250, 249, 245, 0.58);
-        --shadow: 0 1px 3px rgba(20, 20, 19, 0.08), 0 4px 16px rgba(20, 20, 19, 0.04);
+        --shadow:
+          0 1px 3px rgba(20, 20, 19, 0.08), 0 4px 16px rgba(20, 20, 19, 0.04);
       }
       * {
         margin: 0;
@@ -825,11 +826,11 @@
         font-family: var(--mono);
       }
       .do-card.do li::before {
-        content: "+";
+        content: '+';
         color: var(--coral);
       }
       .do-card.dont li::before {
-        content: "\00d7";
+        content: '\00d7';
         color: color-mix(in srgb, var(--ink) 40%, var(--cream));
       }
 
@@ -871,16 +872,19 @@
     <!-- COVER -->
     <section class="cover">
       <div class="top">
-        <span class="lbl"><span class="spike">✱</span> Frame System · Vol. 01</span
+        <span class="lbl"
+          ><span class="spike">✱</span> Frame System · Vol. 01</span
         ><span class="idx">EB Garamond · Inter · JetBrains Mono</span>
       </div>
       <h1>Cream, ink &amp; one <span class="it">coral.</span></h1>
       <div class="lede">
-        A warm-editorial frame system — EB Garamond at optical sizes for display, Inter for body,
-        JetBrains Mono for the index and code, and a single terracotta coral held as scarce voltage.
+        A warm-editorial frame system — EB Garamond at optical sizes for
+        display, Inter for body, JetBrains Mono for the index and code, and a
+        single terracotta coral held as scarce voltage.
       </div>
       <div class="footline">
-        <span>Warm cream paper · hairline elevation</span><span>1920 × 1080</span>
+        <span>Warm cream paper · hairline elevation</span
+        ><span>1920 × 1080</span>
       </div>
     </section>
 
@@ -897,7 +901,8 @@
             <div class="name">Ink</div>
             <div class="hex">#141413</div>
             <div class="role">
-              Warm near-black — the voice. Every word, every hairline; never pure #000.
+              Warm near-black — the voice. Every word, every hairline; never
+              pure #000.
             </div>
           </div>
         </div>
@@ -906,7 +911,9 @@
           <div class="meta">
             <div class="name">Cream</div>
             <div class="hex">#FAF9F5</div>
-            <div class="role">Warm paper — the ~60% floor. Never pure white, never cool.</div>
+            <div class="role">
+              Warm paper — the ~60% floor. Never pure white, never cool.
+            </div>
           </div>
         </div>
         <div class="sw">
@@ -915,7 +922,8 @@
             <div class="name">Coral</div>
             <div class="hex">#CC785C</div>
             <div class="role">
-              Terracotta voltage — the one accent. CTA / inline link / band, once per frame.
+              Terracotta voltage — the one accent. CTA / inline link / band,
+              once per frame.
             </div>
           </div>
         </div>
@@ -924,7 +932,9 @@
           <div class="meta">
             <div class="name">Tile</div>
             <div class="hex">#EFE9DE</div>
-            <div class="role">Half-step content surface — where cards gather.</div>
+            <div class="role">
+              Half-step content surface — where cards gather.
+            </div>
           </div>
         </div>
         <div class="sw">
@@ -950,29 +960,52 @@
           <div class="meta">
             <div class="name">Navy Elev</div>
             <div class="hex">#252320</div>
-            <div class="role">Title bars + status strips on the code surface.</div>
+            <div class="role">
+              Title bars + status strips on the code surface.
+            </div>
           </div>
         </div>
         <div class="sw">
           <div
             class="chip"
-            style="background: linear-gradient(90deg, var(--teal) 0 50%, var(--amber) 50% 100%)"
+            style="
+              background: linear-gradient(
+                90deg,
+                var(--teal) 0 50%,
+                var(--amber) 50% 100%
+              );
+            "
           ></div>
           <div class="meta">
             <div class="name">Syntax</div>
             <div class="hex">#5DB8A6 · #E8A55A</div>
             <div class="role">
-              Teal strings · amber numbers — fixed code decoration, not remixable.
+              Teal strings · amber numbers — fixed code decoration, not
+              remixable.
             </div>
           </div>
         </div>
       </div>
       <div class="syntax-note">
-        <span><span class="dot" style="background: var(--coral)"></span>keywords</span>
-        <span><span class="dot" style="background: var(--teal)"></span>strings</span>
-        <span><span class="dot" style="background: var(--amber)"></span>numbers</span>
-        <span><span class="dot" style="background: var(--ok)"></span>added</span>
-        <span><span class="dot" style="background: var(--warn)"></span>removed</span>
+        <span
+          ><span class="dot" style="background: var(--coral)"></span
+          >keywords</span
+        >
+        <span
+          ><span class="dot" style="background: var(--teal)"></span
+          >strings</span
+        >
+        <span
+          ><span class="dot" style="background: var(--amber)"></span
+          >numbers</span
+        >
+        <span
+          ><span class="dot" style="background: var(--ok)"></span>added</span
+        >
+        <span
+          ><span class="dot" style="background: var(--warn)"></span
+          >removed</span
+        >
       </div>
     </section>
 
@@ -998,7 +1031,11 @@
           <div class="tok">display</div>
           <div class="m">EB Garamond · 500 · 140px · −0.022em</div>
         </div>
-        <div><span class="serif" style="font-size: 80px">A serif that thinks.</span></div>
+        <div>
+          <span class="serif" style="font-size: 80px"
+            >A serif that thinks.</span
+          >
+        </div>
       </div>
       <div class="type-row">
         <div>
@@ -1036,8 +1073,8 @@
               color: color-mix(in srgb, var(--ink) 82%, var(--cream));
             "
           >
-            The body reads first and answers second — Inter at weight 400, sentence case, with its
-            qualifiers kept. No hype, no exclamation.
+            The body reads first and answers second — Inter at weight 400,
+            sentence case, with its qualifiers kept. No hype, no exclamation.
           </p>
         </div>
       </div>
@@ -1051,7 +1088,8 @@
             >✱ Pull Request · #1842</span
           >
           &nbsp;
-          <span style="font-family: var(--mono); font-size: 18px; color: var(--ink)"
+          <span
+            style="font-family: var(--mono); font-size: 18px; color: var(--ink)"
             >async for tok in stream()</span
           >
         </div>
@@ -1059,10 +1097,14 @@
       <div class="type-row" style="border-bottom: 0">
         <div>
           <div class="tok">quote-pull</div>
-          <div class="m">EB Garamond · 400 · italic · the expressive register</div>
+          <div class="m">
+            EB Garamond · 400 · italic · the expressive register
+          </div>
         </div>
         <div>
-          <span class="serif" style="font-style: italic; font-size: 46px; color: var(--ink)"
+          <span
+            class="serif"
+            style="font-style: italic; font-size: 46px; color: var(--ink)"
             >Ship it when it reads like a person wrote it.</span
           >
         </div>
@@ -1078,24 +1120,29 @@
 
       <div class="cgrid">
         <div class="s5">
-          <div class="cnote">card-hairline — 1px ink hairline + one soft warm shadow</div>
+          <div class="cnote">
+            card-hairline — 1px ink hairline + one soft warm shadow
+          </div>
           <div class="card">
             <div class="kt">Reads first, answers second</div>
             <div class="kb">
-              The editorial content card. Elevation is the hairline plus one soft warm shadow —
-              never a heavy drop, glow, or gradient.
+              The editorial content card. Elevation is the hairline plus one
+              soft warm shadow — never a heavy drop, glow, or gradient.
             </div>
           </div>
           <div class="card tile" style="margin-top: 24px">
             <div class="kt">Gathers on a half-step tile</div>
             <div class="kb">
-              Content collects on a warm tile surface, half a step down from the cream floor.
+              Content collects on a warm tile surface, half a step down from the
+              cream floor.
             </div>
           </div>
         </div>
         <div class="s3">
           <div class="cnote">kicker-spike + coral-callout</div>
-          <div class="kicker"><span class="spike">✱</span> For the considered worker</div>
+          <div class="kicker">
+            <span class="spike">✱</span> For the considered worker
+          </div>
           <div class="callout" style="margin-top: 22px">
             <span class="b">Start a project</span><span class="a">CTA</span>
           </div>
@@ -1113,11 +1160,15 @@
           </div>
         </div>
         <div class="s4">
-          <div class="cnote">number-lockup — EB Garamond figure + mono unit</div>
+          <div class="cnote">
+            number-lockup — EB Garamond figure + mono unit
+          </div>
           <div class="kpi">
             <div class="tag">Impact</div>
             <div class="fig">2.1<span class="u">× faster</span></div>
-            <div class="d">Figure is serif; the unit is always mono, never the serif.</div>
+            <div class="d">
+              Figure is serif; the unit is always mono, never the serif.
+            </div>
           </div>
         </div>
       </div>
@@ -1125,7 +1176,8 @@
       <div class="cgrid" style="margin-bottom: 0">
         <div class="s7">
           <div class="cnote">
-            code-surface — the warm-navy code / terminal surface (code-* blocks render here)
+            code-surface — the warm-navy code / terminal surface (code-* blocks
+            render here)
           </div>
           <div class="codewin">
             <div class="bar">
@@ -1145,7 +1197,8 @@
           <div class="cnote">pull-quote — EB Garamond italic + mono cite</div>
           <div class="quote">
             <div class="q">
-              Refactor the transport so streaming isn't a special case — it's the default.
+              Refactor the transport so streaming isn't a special case — it's
+              the default.
             </div>
             <div class="cite">Commit a1b2c3d · a. chen</div>
           </div>
@@ -1161,7 +1214,9 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Cover</b><span>· the PR title · cream · left</span></div>
+          <div class="flabel">
+            <b>Cover</b><span>· the PR title · cream · left</span>
+          </div>
           <div class="frame cf1">
             <div class="tb">
               <span class="l coral">✱ Pull Request · #1842</span
@@ -1172,30 +1227,39 @@
               <h3>Streaming,<br />end to end.</h3>
             </div>
             <div class="fl">
-              <span class="l">main ← stream-api</span><span class="l">01 / 06</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="fw">
-          <div class="flabel"><b>Statement</b><span>· the change in a sentence · cream</span></div>
-          <div class="frame cf2">
-            <div class="tb">
-              <span class="l coral">The change</span><span class="l">02 / 06</span>
-            </div>
-            <div class="body">
-              <h3>The API now streams tokens <span class="it">as they're written.</span></h3>
+              <span class="l">main ← stream-api</span
+              ><span class="l">01 / 06</span>
             </div>
           </div>
         </div>
 
         <div class="fw">
           <div class="flabel">
-            <b>Code Surface</b><span>· the diff · navy · the PR-critical frame</span>
+            <b>Statement</b><span>· the change in a sentence · cream</span>
+          </div>
+          <div class="frame cf2">
+            <div class="tb">
+              <span class="l coral">The change</span
+              ><span class="l">02 / 06</span>
+            </div>
+            <div class="body">
+              <h3>
+                The API now streams tokens
+                <span class="it">as they're written.</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="fw">
+          <div class="flabel">
+            <b>Code Surface</b
+            ><span>· the diff · navy · the PR-critical frame</span>
           </div>
           <div class="frame cf3">
             <div class="tb">
-              <span class="l coral">The diff</span><span class="l">03 / 06</span>
+              <span class="l coral">The diff</span
+              ><span class="l">03 / 06</span>
             </div>
             <div class="body">
               <div class="kick">transport.py · +3 −2</div>
@@ -1218,20 +1282,25 @@
 
         <div class="fw">
           <div class="flabel">
-            <b>Number / Impact</b><span>· +N/−M · cream · oversized figure</span>
+            <b>Number / Impact</b
+            ><span>· +N/−M · cream · oversized figure</span>
           </div>
           <div class="frame cf4">
             <div class="tb">
-              <span class="l coral">By the numbers</span><span class="l">04 / 06</span>
+              <span class="l coral">By the numbers</span
+              ><span class="l">04 / 06</span>
             </div>
             <div class="body">
               <span class="tag">Net change</span>
               <div class="fig">+1,204<span class="u">/ −318</span></div>
               <div class="d">
-                Across 17 files — the transport layer rewritten, the special-case path deleted.
+                Across 17 files — the transport layer rewritten, the
+                special-case path deleted.
               </div>
             </div>
-            <div class="fl"><span class="l">17 files</span><span class="l">04 / 06</span></div>
+            <div class="fl">
+              <span class="l">17 files</span><span class="l">04 / 06</span>
+            </div>
           </div>
         </div>
 
@@ -1241,19 +1310,27 @@
           </div>
           <div class="frame cf5">
             <div class="tb">
-              <span class="l coral">In the commit</span><span class="l">05 / 06</span>
+              <span class="l coral">In the commit</span
+              ><span class="l">05 / 06</span>
             </div>
             <div class="body">
-              <div class="q">"Streaming isn't a special case anymore — it's the default path."</div>
+              <div class="q">
+                "Streaming isn't a special case anymore — it's the default
+                path."
+              </div>
               <div class="cite">a. chen · author</div>
             </div>
           </div>
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Closing / CTA</b><span>· shipped-by · coral voltage</span></div>
+          <div class="flabel">
+            <b>Closing / CTA</b><span>· shipped-by · coral voltage</span>
+          </div>
           <div class="frame cf6">
-            <div class="tb"><span class="l coral">Shipped</span><span class="l">06 / 06</span></div>
+            <div class="tb">
+              <span class="l coral">Shipped</span><span class="l">06 / 06</span>
+            </div>
             <div class="body">
               <h3>Merged &amp; shipped.</h3>
               <div class="ship">
@@ -1280,21 +1357,41 @@
           <h4>Do</h4>
           <div class="rule"></div>
           <ul>
-            <li>Stand every frame on the warm cream floor; gather content on a half-step tile.</li>
-            <li>Set display in EB Garamond 400, sentence case, optical size, negative-tracked.</li>
-            <li>Ration coral to one moment per frame — CTA, inline link, or full-bleed band.</li>
+            <li>
+              Stand every frame on the warm cream floor; gather content on a
+              half-step tile.
+            </li>
+            <li>
+              Set display in EB Garamond 400, sentence case, optical size,
+              negative-tracked.
+            </li>
+            <li>
+              Ration coral to one moment per frame — CTA, inline link, or
+              full-bleed band.
+            </li>
             <li>Elevate with a 1px hairline + at most one soft warm shadow.</li>
-            <li>Reserve warm navy for the code surface; pair every figure with a mono unit.</li>
+            <li>
+              Reserve warm navy for the code surface; pair every figure with a
+              mono unit.
+            </li>
           </ul>
         </div>
         <div class="do-card dont">
           <h4>Don't</h4>
           <div class="rule"></div>
           <ul>
-            <li>No pure white, no cool gray, no pure black; no fourth brand hue.</li>
+            <li>
+              No pure white, no cool gray, no pure black; no fourth brand hue.
+            </li>
             <li>No heavy drop shadow, glow, gradient on content, or tilt.</li>
-            <li>No uppercase or title-case EB Garamond; no sans headline; no serif label.</li>
-            <li>No two corals in one frame; coral never sets a headline or body run.</li>
+            <li>
+              No uppercase or title-case EB Garamond; no sans headline; no serif
+              label.
+            </li>
+            <li>
+              No two corals in one frame; coral never sets a headline or body
+              run.
+            </li>
             <li>Don't cram edge-to-edge — the considered voice needs cream.</li>
           </ul>
         </div>
@@ -1324,7 +1421,8 @@
         max-width: 80cqw;
         padding: 1.4cqw 3cqw 1.7cqw;
         background: var(--cap-canvas);
-        border: 0.07cqw solid color-mix(in srgb, var(--cap-ink) 12%, transparent);
+        border: 0.07cqw solid
+          color-mix(in srgb, var(--cap-ink) 12%, transparent);
         border-radius: 0.7cqw;
         box-shadow:
           0 0.06cqw 0.18cqw rgba(20, 20, 19, 0.08),
@@ -1359,7 +1457,8 @@
         left: 0;
         right: 0;
         bottom: 16.67cqh;
-        border-top: 0.12cqw dashed color-mix(in srgb, var(--ink) 28%, transparent);
+        border-top: 0.12cqw dashed
+          color-mix(in srgb, var(--ink) 28%, transparent);
         z-index: 3;
       }
       .capdemo .bandtag {
@@ -1382,9 +1481,13 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Active line</b><span>· spoken · current · upcoming</span></div>
+          <div class="flabel">
+            <b>Active line</b><span>· spoken · current · upcoming</span>
+          </div>
           <div class="frame capdemo">
-            <div class="tb"><span class="l coral">Captions</span><span class="l">active</span></div>
+            <div class="tb">
+              <span class="l coral">Captions</span><span class="l">active</span>
+            </div>
             <div class="bandline"></div>
             <div class="bandtag">caption band · 16.7%</div>
             <div class="stage">
@@ -1402,10 +1505,13 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Settled line</b><span>· all spoken · underline cleared</span></div>
+          <div class="flabel">
+            <b>Settled line</b><span>· all spoken · underline cleared</span>
+          </div>
           <div class="frame capdemo">
             <div class="tb">
-              <span class="l coral">Captions</span><span class="l">settled</span>
+              <span class="l coral">Captions</span
+              ><span class="l">settled</span>
             </div>
             <div class="stage">
               <div class="pill">
@@ -1429,9 +1535,26 @@
     <template id="__bundler_thumbnail">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" fill="#faf9f5" />
-        <text x="11" y="48" font-family="Georgia" font-size="34" fill="#141413">Aa</text>
-        <text x="68" y="30" font-family="monospace" font-size="22" fill="#cc785c">✱</text>
-        <rect x="11" y="62" width="58" height="1.5" fill="#141413" opacity="0.16" />
+        <text x="11" y="48" font-family="Georgia" font-size="34" fill="#141413">
+          Aa
+        </text>
+        <text
+          x="68"
+          y="30"
+          font-family="monospace"
+          font-size="22"
+          fill="#cc785c"
+        >
+          ✱
+        </text>
+        <rect
+          x="11"
+          y="62"
+          width="58"
+          height="1.5"
+          fill="#141413"
+          opacity="0.16"
+        />
         <rect x="11" y="72" width="40" height="10" rx="2" fill="#181715" />
       </svg>
     </template>

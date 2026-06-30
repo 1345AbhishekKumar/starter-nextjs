@@ -56,7 +56,7 @@ When using sub-compositions, `index.html` should be **thin**. Its job is to decl
         overflow: hidden;
       }
       /* Sub-comp slots stretch to fill the root. */
-      [data-composition-id="root"] > div[data-composition-src] {
+      [data-composition-id='root'] > div[data-composition-src] {
         position: absolute;
         inset: 0;
       }
@@ -111,7 +111,7 @@ When using sub-compositions, `index.html` should be **thin**. Its job is to decl
 
     <script>
       window.__timelines = window.__timelines || {};
-      window.__timelines["root"] = gsap.timeline({ paused: true });
+      window.__timelines['root'] = gsap.timeline({ paused: true });
     </script>
   </body>
 </html>
@@ -163,11 +163,11 @@ A sub-comp timeline **cannot** drive host elements (a global selector or `docume
 <script>
   // MAIN timeline drives the host video. Global time: scene starts at 20.
   window.__timelines = window.__timelines || {};
-  const main = window.__timelines["main"];
+  const main = window.__timelines['main'];
   main.fromTo(
-    "#final-video",
-    { scale: 1.4, filter: "blur(14px)" },
-    { scale: 1.0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" },
+    '#final-video',
+    { scale: 1.4, filter: 'blur(14px)' },
+    { scale: 1.0, filter: 'blur(0px)', duration: 0.9, ease: 'power3.out' },
     20,
   ); // = slot data-start (+ any scene-local offset)
 </script>
@@ -185,7 +185,7 @@ A sub-comp timeline **cannot** drive host elements (a global selector or `docume
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       // animate ONLY this sub-comp's own elements here (labels, frame, overlays)
-      window.__timelines["final-anim"] = tl;
+      window.__timelines['final-anim'] = tl;
     </script>
   </div>
 </template>
@@ -204,9 +204,14 @@ When several beat-level scenes share continuous state — a chat thread that gro
 ```html
 <!-- compositions/act2-merged.html -->
 <template>
-  <div data-composition-id="act2-merged" data-width="1920" data-height="1080" data-duration="9">
+  <div
+    data-composition-id="act2-merged"
+    data-width="1920"
+    data-height="1080"
+    data-duration="9"
+  >
     <style>
-      [data-composition-id="act2-merged"] .phase {
+      [data-composition-id='act2-merged'] .phase {
         position: absolute;
         inset: 0;
         opacity: 0;
@@ -218,11 +223,11 @@ When several beat-level scenes share continuous state — a chat thread that gro
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      tl.set("#phase-a", { opacity: 1 }, 0);
-      tl.to("#phase-a", { opacity: 0, duration: 0.4 }, 3.0);
-      tl.set("#phase-b", { opacity: 1 }, 3.0);
+      tl.set('#phase-a', { opacity: 1 }, 0);
+      tl.to('#phase-a', { opacity: 0, duration: 0.4 }, 3.0);
+      tl.set('#phase-b', { opacity: 1 }, 3.0);
       // …
-      window.__timelines["act2-merged"] = tl;
+      window.__timelines['act2-merged'] = tl;
     </script>
   </div>
 </template>

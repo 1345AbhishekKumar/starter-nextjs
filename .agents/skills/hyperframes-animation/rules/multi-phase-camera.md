@@ -95,7 +95,7 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const camera = document.getElementById("camera");
+  const camera = document.getElementById('camera');
 
   // Three-phase scale plan: pullback → focus → push
   const phase = { scale: PHASE_1_SCALE };
@@ -133,7 +133,7 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
     {
       p: Math.PI * 2 * DRIFT_CYCLES,
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         const dx = Math.sin(drift.p) * DRIFT_AMP_X;
         const dy = Math.sin(drift.p * DRIFT_FREQ_RATIO) * DRIFT_AMP_Y;
@@ -144,11 +144,23 @@ Both run inside the GSAP timeline so HF seeks frame-by-frame deterministically.
   );
 
   // Content reveals (entry beats inside the camera frame)
-  tl.from(".hero", { opacity: 0, y: 32, scale: 0.96, duration: 0.9, ease: "power3.out" }, HERO_AT);
-  tl.from(".tagline", { opacity: 0, y: 16, duration: 0.7, ease: "power3.out" }, TAGLINE_AT);
-  tl.from(".cta", { opacity: 0, y: 8, duration: 0.7, ease: "power3.out" }, CTA_AT);
+  tl.from(
+    '.hero',
+    { opacity: 0, y: 32, scale: 0.96, duration: 0.9, ease: 'power3.out' },
+    HERO_AT,
+  );
+  tl.from(
+    '.tagline',
+    { opacity: 0, y: 16, duration: 0.7, ease: 'power3.out' },
+    TAGLINE_AT,
+  );
+  tl.from(
+    '.cta',
+    { opacity: 0, y: 8, duration: 0.7, ease: 'power3.out' },
+    CTA_AT,
+  );
 
-  window.__timelines["cam-scene"] = tl;
+  window.__timelines['cam-scene'] = tl;
 </script>
 ```
 
@@ -215,7 +227,7 @@ tl.to(
   {
     p: Math.PI * 2 * SHAKE_CYCLES,
     duration: SHAKE_DUR,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       const dx = Math.sin(drift.p) * SHAKE_AMP_X;
       const dy = Math.sin(drift.p * SHAKE_FREQ_RATIO) * SHAKE_AMP_Y;
@@ -231,11 +243,13 @@ tl.to(
 If the climax should zoom into a non-centered element, combine scale with counter-translation. Compute the offset so the target ends at viewport center after scale:
 
 ```js
-const target = document.querySelector(".cta");
+const target = document.querySelector('.cta');
 const tRect = target.getBoundingClientRect();
 const viewportCenter = { x: STAGE_W / 2, y: STAGE_H / 2 };
-const offsetX = (viewportCenter.x - (tRect.left + tRect.width / 2)) / phase.scale;
-const offsetY = (viewportCenter.y - (tRect.top + tRect.height / 2)) / phase.scale;
+const offsetX =
+  (viewportCenter.x - (tRect.left + tRect.width / 2)) / phase.scale;
+const offsetY =
+  (viewportCenter.y - (tRect.top + tRect.height / 2)) / phase.scale;
 // then in onUpdate: translate(offsetX + dx, offsetY + dy)
 ```
 

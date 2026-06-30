@@ -48,8 +48,20 @@ When adding a new clip to an existing composition:
 `data-start` accepts a clip ID instead of a number, meaning "start when that clip ends". Add `+ N` / `- N` to offset; negative produces overlap (useful for crossfades).
 
 ```html
-<video id="intro" data-start="0" data-duration="10" data-track-index="0" src="..."></video>
-<video id="main" data-start="intro" data-duration="20" data-track-index="0" src="..."></video>
+<video
+  id="intro"
+  data-start="0"
+  data-duration="10"
+  data-track-index="0"
+  src="..."
+></video>
+<video
+  id="main"
+  data-start="intro"
+  data-duration="20"
+  data-track-index="0"
+  src="..."
+></video>
 <video
   id="scene-a"
   data-start="intro + 2"

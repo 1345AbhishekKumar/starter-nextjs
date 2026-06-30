@@ -7,10 +7,10 @@ HyperFrames is a seek-driven runtime. Build one paused timeline per composition,
 ```javascript
 const tl = gsap.timeline({
   paused: true,
-  defaults: { duration: 0.5, ease: "power2.out" },
+  defaults: { duration: 0.5, ease: 'power2.out' },
 });
 
-tl.to(".a", { x: 100 }).to(".b", { y: 50 }).to(".c", { opacity: 0 });
+tl.to('.a', { x: 100 }).to('.b', { y: 50 }).to('.c', { opacity: 0 });
 ```
 
 Timeline options:
@@ -36,9 +36,9 @@ The third argument to `.to()`/`.from()`/`.fromTo()` controls placement on the ti
 | `">-0.1"`      | 0.1s before the previous tween ends  |
 
 ```javascript
-tl.to(".a", { x: 100 }, 0);
-tl.to(".b", { y: 50 }, "<"); // same start as .a
-tl.to(".c", { opacity: 0 }, "<0.2"); // 0.2s after .b starts
+tl.to('.a', { x: 100 }, 0);
+tl.to('.b', { y: 50 }, '<'); // same start as .a
+tl.to('.c', { opacity: 0 }, '<0.2'); // 0.2s after .b starts
 ```
 
 Prefer the position parameter over `delay:` — it composes naturally and survives refactors that re-order tweens.
@@ -46,11 +46,11 @@ Prefer the position parameter over `delay:` — it composes naturally and surviv
 ## Labels
 
 ```javascript
-tl.addLabel("intro", 0);
-tl.to(".a", { x: 100 }, "intro");
+tl.addLabel('intro', 0);
+tl.to('.a', { x: 100 }, 'intro');
 
-tl.addLabel("outro", "+=0.5");
-tl.to(".a", { opacity: 0 }, "outro");
+tl.addLabel('outro', '+=0.5');
+tl.to('.a', { opacity: 0 }, 'outro');
 ```
 
 Labels make a long timeline readable and let multiple tweens converge on the same beat without re-typing absolute times.
@@ -61,7 +61,7 @@ Labels make a long timeline readable and let multiple tweens converge on the sam
 const master = gsap.timeline({ paused: true });
 
 const child = gsap.timeline();
-child.to(".a", { x: 100 }).to(".b", { y: 50 });
+child.to('.a', { x: 100 }).to('.b', { y: 50 });
 
 master.add(child, 0);
 ```
@@ -74,7 +74,12 @@ For entrance tweens inside a sub-composition, prefer `gsap.fromTo()` over `gsap.
 
 ```javascript
 // Sub-composition entrance — survives re-seek cleanly
-tl.fromTo(".title", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.2);
+tl.fromTo(
+  '.title',
+  { y: 60, opacity: 0 },
+  { y: 0, opacity: 1, duration: 0.6 },
+  0.2,
+);
 ```
 
 Why: HyperFrames re-seeks the sub-composition every time its host clip becomes visible. `gsap.from()` snapshots the starting state at **registration time** (page load); when the playhead jumps back past `data-start`, that snapshot can desync from the actual CSS state and the element renders in the wrong position. `gsap.fromTo()` declares both endpoints explicitly, so the seek-back always produces the same start state.

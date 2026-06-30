@@ -15,23 +15,24 @@
  * determine (no rail.html, no puppeteer, timeline never registers, no climax)
  * exits 0 — infra problems never block a render.
  */
-const path = require("path");
-const fs = require("fs");
-const os = require("os");
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
 const HF_ROOTS = [
   process.env.HYPERFRAMES_ROOT,
-  path.resolve(__dirname, "../../.."),
-  path.join(os.homedir(), "Downloads", "hyperframes"),
+  path.resolve(__dirname, '../../..'),
+  path.join(os.homedir(), 'Downloads', 'hyperframes'),
 ].filter(Boolean);
 
 function findInBun(root, pkg, sub) {
-  const cands = [path.join(root, "node_modules", pkg)];
-  const bunDir = path.join(root, "node_modules", ".bun");
+  const cands = [path.join(root, 'node_modules', pkg)];
+  const bunDir = path.join(root, 'node_modules', '.bun');
   try {
     if (fs.existsSync(bunDir))
       for (const d of fs.readdirSync(bunDir))
-        if (d.startsWith(pkg + "@")) cands.push(path.join(bunDir, d, "node_modules", pkg));
+        if (d.startsWith(pkg + '@'))
+          cands.push(path.join(bunDir, d, 'node_modules', pkg));
   } catch {
     /* ignore */
   }
@@ -46,7 +47,7 @@ let puppeteer = null,
   gsapSource = null;
 for (const root of HF_ROOTS) {
   if (!puppeteer) {
-    const p = findInBun(root, "puppeteer");
+    const p = findInBun(root, 'puppeteer');
     if (p) {
       try {
         puppeteer = require(p);
@@ -54,15 +55,15 @@ for (const root of HF_ROOTS) {
     }
   }
   if (!gsapSource) {
-    const g = findInBun(root, "gsap", path.join("dist", "gsap.min.js"));
-    if (g) gsapSource = fs.readFileSync(g, "utf8");
+    const g = findInBun(root, 'gsap', path.join('dist', 'gsap.min.js'));
+    if (g) gsapSource = fs.readFileSync(g, 'utf8');
   }
 }
 
 const norm = (s) =>
   String(s)
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, "");
+    .replace(/[^a-z0-9]/g, '');
 const toks = (s) =>
   String(s)
     .split(/\s+/)
@@ -84,19 +85,28 @@ async function newPage(browser, W, H) {
   if (gsapSource) {
     await page.evaluateOnNewDocument(gsapSource);
     await page.setRequestInterception(true);
-    page.on("request", (req) => {
+    page.on('request', (req) => {
       const u = req.url();
-      if (req.resourceType() === "script" && /gsap/i.test(u) && /^https?:/i.test(u)) req.abort();
+      if (
+        req.resourceType() === 'script' &&
+        /gsap/i.test(u) &&
+        /^https?:/i.test(u)
+      )
+        req.abort();
       else req.continue();
     });
   }
   return page;
 }
 async function load(page, file) {
-  await page.goto(`file://${file}`, { waitUntil: "load", timeout: 15000 });
+  await page.goto(`file://${file}`, { waitUntil: 'load', timeout: 15000 });
   const start = Date.now();
   while (Date.now() - start < 12000) {
-    if (await page.evaluate(() => !!(window.__timelines && window.__timelines.main))) {
+    if (
+      await page.evaluate(
+        () => !!(window.__timelines && window.__timelines.main),
+      )
+    ) {
       try {
         await page.evaluate(async () => {
           await document.fonts.ready;
@@ -123,7 +133,7 @@ async function visibleAt(page, t, selector, childSel) {
           n = el;
         while (n && n.nodeType === 1) {
           const cs = getComputedStyle(n);
-          if (cs.display === "none" || cs.visibility === "hidden") return 0;
+          if (cs.display === 'none' || cs.visibility === 'hidden') return 0;
           o *= +cs.opacity;
           n = n.parentElement;
         }
@@ -137,9 +147,9 @@ async function visibleAt(page, t, selector, childSel) {
           for (const k of kids) {
             if (eff(k) > 0.05) out.push(k.textContent);
           }
-        } else if ((el.textContent || "").trim()) out.push(el.textContent);
+        } else if ((el.textContent || '').trim()) out.push(el.textContent);
       }
-      return out.join(" ").trim();
+      return out.join(' ').trim();
     },
     t,
     selector,
@@ -148,24 +158,30 @@ async function visibleAt(page, t, selector, childSel) {
 }
 
 async function main() {
-  const project = path.resolve(process.argv[2] || "");
-  if (!process.argv[2]) ok("[rail-climax] usage: check-rail-climax.cjs <project-dir>");
-  const indexPath = path.join(project, "index.html");
-  const railPath = path.join(project, "rail.html");
+  const project = path.resolve(process.argv[2] || '');
+  if (!process.argv[2])
+    ok('[rail-climax] usage: check-rail-climax.cjs <project-dir>');
+  const indexPath = path.join(project, 'index.html');
+  const railPath = path.join(project, 'rail.html');
   if (!fs.existsSync(railPath) || !fs.existsSync(indexPath))
-    ok("[rail-climax] no rail.html+index.html — not Standard, skipping");
-  if (!puppeteer) ok("[rail-climax] puppeteer unavailable — skipping (set HYPERFRAMES_ROOT)");
+    ok('[rail-climax] no rail.html+index.html — not Standard, skipping');
+  if (!puppeteer)
+    ok('[rail-climax] puppeteer unavailable — skipping (set HYPERFRAMES_ROOT)');
 
   const exe =
-    process.platform === "darwin"
-      ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-      : "/usr/bin/google-chrome";
+    process.platform === 'darwin'
+      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      : '/usr/bin/google-chrome';
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: "new",
+      headless: 'new',
       executablePath: fs.existsSync(exe) ? exe : undefined,
-      args: ["--disable-web-security", "--allow-file-access-from-files", "--disable-dev-shm-usage"],
+      args: [
+        '--disable-web-security',
+        '--allow-file-access-from-files',
+        '--disable-dev-shm-usage',
+      ],
     });
   } catch (e) {
     ok(`[rail-climax] could not launch Chromium — skipping (${e.message})`);
@@ -175,10 +191,12 @@ async function main() {
     // index.html → climax window + climax word tokens
     const ip = await newPage(browser, 1920, 1080);
     if (!(await load(ip, indexPath)))
-      ok("[rail-climax] index timeline never registered — skipping");
+      ok('[rail-climax] index timeline never registered — skipping');
     const dur =
       +(await ip.evaluate(() => {
-        const r = document.querySelector("#root") || document.querySelector("[data-duration]");
+        const r =
+          document.querySelector('#root') ||
+          document.querySelector('[data-duration]');
         return (r && r.dataset && r.dataset.duration) || 0;
       })) || 30;
     const STEP = 0.1;
@@ -186,7 +204,7 @@ async function main() {
     let winIn = null,
       winOut = null;
     for (let t = 0; t <= dur + 0.001; t += STEP) {
-      const txt = await visibleAt(ip, +t.toFixed(2), ".climax", "span,.w");
+      const txt = await visibleAt(ip, +t.toFixed(2), '.climax', 'span,.w');
       if (txt) {
         toks(txt).forEach((w) => climaxTokens.add(w));
         if (winIn === null) winIn = t;
@@ -194,23 +212,27 @@ async function main() {
       }
     }
     if (!climaxTokens.size || winIn === null)
-      ok("[rail-climax] no visible climax found in index.html — skipping");
+      ok('[rail-climax] no visible climax found in index.html — skipping');
 
     // rail.html → words visible during [winIn, winOut]
     const rp = await newPage(browser, 1920, 1080);
-    if (!(await load(rp, railPath))) ok("[rail-climax] rail timeline never registered — skipping");
+    if (!(await load(rp, railPath)))
+      ok('[rail-climax] rail timeline never registered — skipping');
     const hits = new Map(); // token -> first t seen
     for (let t = Math.max(0, winIn - STEP); t <= winOut + 0.001; t += STEP) {
-      const railToks = new Set(toks(await visibleAt(rp, +t.toFixed(2), ".w", null)));
-      for (const w of climaxTokens) if (railToks.has(w) && !hits.has(w)) hits.set(w, +t.toFixed(2));
+      const railToks = new Set(
+        toks(await visibleAt(rp, +t.toFixed(2), '.w', null)),
+      );
+      for (const w of climaxTokens)
+        if (railToks.has(w) && !hits.has(w)) hits.set(w, +t.toFixed(2));
     }
 
     if (hits.size) {
       const list = [...hits.entries()]
         .map(([w, t]) => `"${w}" (rail shows it at t=${t}s)`)
-        .join(", ");
+        .join(', ');
       fail(
-        `[rail-climax] ✗ DUPLICATE PROMOTED WORD: the climax word(s) ${[...climaxTokens].map((w) => `"${w}"`).join(", ")} ` +
+        `[rail-climax] ✗ DUPLICATE PROMOTED WORD: the climax word(s) ${[...climaxTokens].map((w) => `"${w}"`).join(', ')} ` +
           `are on screen during the climax window [${winIn.toFixed(2)}–${winOut.toFixed(2)}s], ` +
           `and the rail ALSO reveals: ${list}.\n` +
           `  The promoted word must be handed off, never duplicated — see PIPELINE.md "Rail ↔ climax hand-off":\n` +
@@ -219,10 +241,13 @@ async function main() {
       );
     }
     console.log(
-      `[rail-climax] ✓ ok — promoted word(s) ${[...climaxTokens].map((w) => `"${w}"`).join(", ")} not duplicated in the rail (window ${winIn.toFixed(2)}–${winOut.toFixed(2)}s)`,
+      `[rail-climax] ✓ ok — promoted word(s) ${[...climaxTokens].map((w) => `"${w}"`).join(', ')} not duplicated in the rail (window ${winIn.toFixed(2)}–${winOut.toFixed(2)}s)`,
     );
   } finally {
-    await Promise.race([browser.close().catch(() => {}), new Promise((r) => setTimeout(r, 8000))]);
+    await Promise.race([
+      browser.close().catch(() => {}),
+      new Promise((r) => setTimeout(r, 8000)),
+    ]);
   }
 }
 main()

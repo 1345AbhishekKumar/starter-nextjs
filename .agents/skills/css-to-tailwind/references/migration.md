@@ -12,13 +12,13 @@ In this repo, skin work often means keeping **`packages/skins/*/css/`** and the 
 
 ## Tailwind v4 specifics
 
-| Concern | Prefer |
-| ------- | ------ |
-| New design tokens | Add to **`@theme { }`** (skin shared sheet or app entry CSS) so utilities like `rounded-*`, `gap-*`, and custom namespaces stay consistent |
-| One-off escapes | Arbitrary utilities that reuse **`theme()`**, e.g. **`bg-[theme(--surface)]`**, whenever the backing variable already exists in **`@theme`** |
-| Repeated arbitrary variants / long class strings | **`@utility`** blocks in CSS |
-| Repeated selector shapes | **`@custom-variant`** (see **`site`** / **`apps/sandbox`** for examples) |
-| Keyframes tied to animations | Registered in CSS (`@keyframes`) and wired through **`@theme`** (see comments in skins `input-feedback` tailwind components) |
+| Concern                                          | Prefer                                                                                                                                       |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| New design tokens                                | Add to **`@theme { }`** (skin shared sheet or app entry CSS) so utilities like `rounded-*`, `gap-*`, and custom namespaces stay consistent   |
+| One-off escapes                                  | Arbitrary utilities that reuse **`theme()`**, e.g. **`bg-[theme(--surface)]`**, whenever the backing variable already exists in **`@theme`** |
+| Repeated arbitrary variants / long class strings | **`@utility`** blocks in CSS                                                                                                                 |
+| Repeated selector shapes                         | **`@custom-variant`** (see **`site`** / **`apps/sandbox`** for examples)                                                                     |
+| Keyframes tied to animations                     | Registered in CSS (`@keyframes`) and wired through **`@theme`** (see comments in skins `input-feedback` tailwind components)                 |
 
 Legacy **`tailwind.config.js`** theme spreads are not the primary path here—extend the **CSS** theme surface when adding tokens.
 

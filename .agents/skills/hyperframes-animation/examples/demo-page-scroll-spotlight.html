@@ -49,7 +49,7 @@
         overflow: hidden;
         background: #000;
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -113,7 +113,11 @@
         justify-content: space-between;
         z-index: 100;
         opacity: 0; /* GSAP fades in */
-        background: linear-gradient(to bottom, rgba(10, 10, 15, 0.95), rgba(10, 10, 15, 0.6));
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 10, 15, 0.95),
+          rgba(10, 10, 15, 0.6)
+        );
       }
       .nav-left {
         display: flex;
@@ -233,16 +237,20 @@
         z-index: 0;
         padding: 0 0.015em;
         color: rgb(
-          calc(255 - var(--glow) * 18) calc(255 - var(--glow) * 30) calc(255 - var(--glow) * 150)
+          calc(255 - var(--glow) * 18) calc(255 - var(--glow) * 30)
+            calc(255 - var(--glow) * 150)
         );
         text-shadow:
-          0 0 calc(var(--glow) * 10px) rgba(255, 235, 120, calc(var(--glow) * 0.95)),
-          0 0 calc(var(--glow) * 24px) rgba(237, 203, 80, calc(var(--glow) * 0.78)),
-          0 0 calc(var(--glow) * 44px) rgba(237, 203, 80, calc(var(--glow) * 0.38));
+          0 0 calc(var(--glow) * 10px)
+            rgba(255, 235, 120, calc(var(--glow) * 0.95)),
+          0 0 calc(var(--glow) * 24px)
+            rgba(237, 203, 80, calc(var(--glow) * 0.78)),
+          0 0 calc(var(--glow) * 44px)
+            rgba(237, 203, 80, calc(var(--glow) * 0.38));
         transform: scale(calc(1 + var(--glow) * 0.035));
       }
       .kw::before {
-        content: "";
+        content: '';
         position: absolute;
         left: -0.025em;
         right: -0.025em;
@@ -260,8 +268,10 @@
         transform: scaleX(calc(0.72 + var(--glow) * 0.24)) skewX(-5deg);
         transform-origin: left center;
         box-shadow:
-          0 0 calc(var(--glow) * 14px) rgba(237, 203, 80, calc(var(--glow) * 0.7)),
-          0 0 calc(var(--glow) * 28px) rgba(237, 203, 80, calc(var(--glow) * 0.32));
+          0 0 calc(var(--glow) * 14px)
+            rgba(237, 203, 80, calc(var(--glow) * 0.7)),
+          0 0 calc(var(--glow) * 28px)
+            rgba(237, 203, 80, calc(var(--glow) * 0.32));
       }
 
       /* ============================================================
@@ -357,10 +367,13 @@
         overflow: hidden;
         flex-shrink: 0;
         transform-style: preserve-3d;
-        transform: translateZ(calc(var(--glow) * 80px)) scale(calc(1 + var(--glow) * 0.15));
+        transform: translateZ(calc(var(--glow) * 80px))
+          scale(calc(1 + var(--glow) * 0.15));
         box-shadow:
-          0 0 calc(var(--glow) * 25px) rgba(237, 203, 80, calc(var(--glow) * 0.7)),
-          0 0 calc(var(--glow) * 50px) rgba(237, 203, 80, calc(var(--glow) * 0.4)),
+          0 0 calc(var(--glow) * 25px)
+            rgba(237, 203, 80, calc(var(--glow) * 0.7)),
+          0 0 calc(var(--glow) * 50px)
+            rgba(237, 203, 80, calc(var(--glow) * 0.4)),
           0 calc(20px + var(--glow) * 40px) calc(60px + var(--glow) * 40px)
             rgba(0, 0, 0, calc(0.6 + var(--glow) * 0.2));
         border: 3px solid rgba(237, 203, 80, calc(var(--glow) * 0.8));
@@ -375,7 +388,12 @@
         font-size: 28px;
         font-weight: 600;
         color: rgba(255, 255, 255, 0.5);
-        background: linear-gradient(135deg, #1a2540 0%, #3d2a4f 50%, #4f1d2e 100%);
+        background: linear-gradient(
+          135deg,
+          #1a2540 0%,
+          #3d2a4f 50%,
+          #4f1d2e 100%
+        );
       }
       .carousel-main-placeholder span {
         background: rgba(0, 0, 0, 0.4);
@@ -452,7 +470,11 @@
       .vignette {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
+        background: radial-gradient(
+          ellipse at center,
+          transparent 50%,
+          rgba(0, 0, 0, 0.3) 100%
+        );
         pointer-events: none;
         z-index: 400;
       }
@@ -503,8 +525,12 @@
               <span class="nav-item">Solutions<span class="chev">▾</span></span>
               <span class="nav-item">Resources<span class="chev">▾</span></span>
               <span class="nav-item">Pricing</span>
-              <span class="nav-item">For business<span class="chev">▾</span></span>
-              <span class="nav-item"><span class="nav-tag">New</span>Agent Opus</span>
+              <span class="nav-item"
+                >For business<span class="chev">▾</span></span
+              >
+              <span class="nav-item"
+                ><span class="nav-tag">New</span>Agent Opus</span
+              >
             </div>
             <div class="nav-right">
               <span class="nav-signin">Sign in</span>
@@ -517,17 +543,29 @@
             <div class="hero" id="hero">
               <div class="hero-eyebrow">#1 AI VIDEO CLIPPING TOOL</div>
               <h1 class="hero-title">
-                <span class="kw" data-glow-start="0.12" data-glow-end="0.28">1</span>
-                <span class="kw" data-glow-start="0.52" data-glow-end="0.72">long</span>
-                <span class="kw" data-glow-start="0.78" data-glow-end="1.44">video,</span>
-                <span class="kw" data-glow-start="1.48" data-glow-end="1.80">10</span>
-                <span class="kw" data-glow-start="1.94" data-glow-end="2.22">viral</span>
-                <span class="kw" data-glow-start="2.28" data-glow-end="2.80">clips.</span>
+                <span class="kw" data-glow-start="0.12" data-glow-end="0.28"
+                  >1</span
+                >
+                <span class="kw" data-glow-start="0.52" data-glow-end="0.72"
+                  >long</span
+                >
+                <span class="kw" data-glow-start="0.78" data-glow-end="1.44"
+                  >video,</span
+                >
+                <span class="kw" data-glow-start="1.48" data-glow-end="1.80"
+                  >10</span
+                >
+                <span class="kw" data-glow-start="1.94" data-glow-end="2.22"
+                  >viral</span
+                >
+                <span class="kw" data-glow-start="2.28" data-glow-end="2.80"
+                  >clips.</span
+                >
                 <br />Create 10x faster.
               </h1>
               <p class="hero-sub">
-                OpusClip turns long videos into shorts, and publishes them to all social platforms
-                in one click.
+                OpusClip turns long videos into shorts, and publishes them to
+                all social platforms in one click.
               </p>
             </div>
 
@@ -543,8 +581,12 @@
                   stroke-linejoin="round"
                   aria-hidden="true"
                 >
-                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                  <path
+                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                  />
+                  <path
+                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                  />
                 </svg>
                 <span class="cta-placeholder">Drop a video link</span>
                 <div class="cta-button">Get free clips</div>
@@ -638,7 +680,7 @@
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       // Set the static 3D tilt + initial scale via GSAP so subsequent
       // scale tweens preserve the rotation aliases. (If we left
@@ -646,7 +688,7 @@
       // tween touching only `scale` could overwrite the full matrix and
       // lose the rotation. Owning the transform state in GSAP avoids the
       // problem entirely.)
-      gsap.set(".page-card", {
+      gsap.set('.page-card', {
         rotationY: -8,
         rotationX: 3,
         scale: 0.95,
@@ -656,29 +698,29 @@
          PHASE 1: Page card entry + navbar/title/CTA fade-in
          ---------------------------------------------------------------- */
       tl.to(
-        ".page-card",
-        { scale: 1.0, duration: TIMING.cardEntryDur, ease: "power2.out" },
+        '.page-card',
+        { scale: 1.0, duration: TIMING.cardEntryDur, ease: 'power2.out' },
         TIMING.cardEntryStart,
       );
 
       tl.fromTo(
-        "#navbar",
+        '#navbar',
         { opacity: 0 },
-        { opacity: 1, duration: TIMING.navbarFadeDur, ease: "power2.out" },
+        { opacity: 1, duration: TIMING.navbarFadeDur, ease: 'power2.out' },
         TIMING.navbarFadeAt,
       );
 
       tl.fromTo(
-        "#hero",
+        '#hero',
         { opacity: 0 },
-        { opacity: 1, duration: TIMING.titleFadeDur, ease: "power2.out" },
+        { opacity: 1, duration: TIMING.titleFadeDur, ease: 'power2.out' },
         TIMING.titleFadeAt,
       );
 
       tl.fromTo(
-        "#cta-row",
+        '#cta-row',
         { opacity: 0 },
-        { opacity: 1, duration: TIMING.ctaFadeDur, ease: "power2.out" },
+        { opacity: 1, duration: TIMING.ctaFadeDur, ease: 'power2.out' },
         TIMING.ctaFadeAt,
       );
 
@@ -686,7 +728,7 @@
          PHASE 2: Keyword glows — two tweens per word.
          Attack (0 → 1) + decay (1 → REST_LEVEL). GSAP holds REST forever.
          ---------------------------------------------------------------- */
-      document.querySelectorAll(".kw").forEach((kw) => {
+      document.querySelectorAll('.kw').forEach((kw) => {
         const start = Number(kw.dataset.glowStart);
         const end = Number(kw.dataset.glowEnd);
         const peak = start + (end - start) / 2;
@@ -694,14 +736,18 @@
 
         tl.fromTo(
           kw,
-          { "--glow": 0 },
-          { "--glow": 1.18, duration: peak - start, ease: "power2.out" },
+          { '--glow': 0 },
+          { '--glow': 1.18, duration: peak - start, ease: 'power2.out' },
           start,
         );
 
         tl.to(
           kw,
-          { "--glow": KEYWORD_REST_LEVEL, duration: restAt - peak, ease: "power2.out" },
+          {
+            '--glow': KEYWORD_REST_LEVEL,
+            duration: restAt - peak,
+            ease: 'power2.out',
+          },
           peak,
         );
       });
@@ -710,16 +756,25 @@
          PHASE 3: Scroll + carousel entry
          ---------------------------------------------------------------- */
       tl.fromTo(
-        "#scroll-content",
+        '#scroll-content',
         { y: 0 },
-        { y: -TIMING.scrollDistance, duration: TIMING.scrollDur, ease: "power2.inOut" },
+        {
+          y: -TIMING.scrollDistance,
+          duration: TIMING.scrollDur,
+          ease: 'power2.inOut',
+        },
         TIMING.phase2StartAt,
       );
 
       tl.fromTo(
-        "#carousel",
+        '#carousel',
         { opacity: 0, scale: 0.9 },
-        { opacity: 1, scale: 1.0, duration: TIMING.carouselFadeDur, ease: "power2.out" },
+        {
+          opacity: 1,
+          scale: 1.0,
+          duration: TIMING.carouselFadeDur,
+          ease: 'power2.out',
+        },
         TIMING.phase2StartAt,
       );
 
@@ -728,30 +783,38 @@
          ---------------------------------------------------------------- */
       // Attack the pop-out glow.
       tl.fromTo(
-        "#pop-target",
-        { "--glow": 0 },
-        { "--glow": 1, duration: TIMING.popAttackDur, ease: "power2.out" },
+        '#pop-target',
+        { '--glow': 0 },
+        { '--glow': 1, duration: TIMING.popAttackDur, ease: 'power2.out' },
         TIMING.popStart,
       );
 
       // Decay at the end of the scene (mirrors original phase2End-10 / phase2End ramp).
       tl.to(
-        "#pop-target",
-        { "--glow": TIMING.popRestLevel, duration: TIMING.popDecayDur, ease: "power2.out" },
+        '#pop-target',
+        {
+          '--glow': TIMING.popRestLevel,
+          duration: TIMING.popDecayDur,
+          ease: 'power2.out',
+        },
         TIMING.popEnd - TIMING.popDecayDur,
       );
 
       // Spotlight fades in alongside the pop attack, decays with the pop.
       tl.fromTo(
-        "#spotlight",
+        '#spotlight',
         { opacity: 0 },
-        { opacity: 1, duration: 0.5, ease: "power2.out" },
+        { opacity: 1, duration: 0.5, ease: 'power2.out' },
         TIMING.popStart,
       );
 
       tl.to(
-        "#spotlight",
-        { opacity: TIMING.popRestLevel, duration: TIMING.popDecayDur, ease: "power2.out" },
+        '#spotlight',
+        {
+          opacity: TIMING.popRestLevel,
+          duration: TIMING.popDecayDur,
+          ease: 'power2.out',
+        },
         TIMING.popEnd - TIMING.popDecayDur,
       );
     </script>

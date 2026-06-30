@@ -20,8 +20,8 @@
         --green: #99e885;
         --yellow: #f7cb46;
         --cream: #ffdc8b;
-        --disp: "Inter", sans-serif;
-        --mono: "Space Grotesk", monospace;
+        --disp: 'Inter', sans-serif;
+        --mono: 'Space Grotesk', monospace;
       }
       * {
         margin: 0;
@@ -57,7 +57,11 @@
         font-size: 13px;
       }
       .dotgrid {
-        background-image: radial-gradient(circle, var(--black) 1.2px, transparent 1.2px);
+        background-image: radial-gradient(
+          circle,
+          var(--black) 1.2px,
+          transparent 1.2px
+        );
         background-size: 24px 24px;
       }
 
@@ -101,7 +105,11 @@
         position: absolute;
         inset: 0;
         opacity: 0.4;
-        background-image: radial-gradient(circle, var(--black) 1.2px, transparent 1.2px);
+        background-image: radial-gradient(
+          circle,
+          var(--black) 1.2px,
+          transparent 1.2px
+        );
         background-size: 24px 24px;
         pointer-events: none;
       }
@@ -428,7 +436,11 @@
         position: absolute;
         inset: 0;
         opacity: 0.35;
-        background-image: radial-gradient(circle, var(--black) 0.15cqw, transparent 0.15cqw);
+        background-image: radial-gradient(
+          circle,
+          var(--black) 0.15cqw,
+          transparent 0.15cqw
+        );
         background-size: 3cqw 3cqw;
         z-index: 1;
       }
@@ -743,10 +755,10 @@
         font-weight: 900;
       }
       .do-card.do li::before {
-        content: "+";
+        content: '+';
       }
       .do-card.dont li::before {
-        content: "\00d7";
+        content: '\00d7';
       }
 
       .foot {
@@ -795,14 +807,14 @@
         --secondary: #000000 !important;
         --tertiary: #ffdc8b !important;
         --accent: #fe90e8 !important;
-        --f-disp: "Inter", sans-serif !important;
-        --f-body: "Space Grotesk", sans-serif !important;
+        --f-disp: 'Inter', sans-serif !important;
+        --f-body: 'Space Grotesk', sans-serif !important;
         --black: #000000 !important;
         --offwhite: #fffdf5 !important;
         --pink: #fe90e8 !important;
         --cream: #ffdc8b !important;
-        --disp: "Inter", sans-serif !important;
-        --mono: "Space Grotesk", sans-serif !important;
+        --disp: 'Inter', sans-serif !important;
+        --mono: 'Space Grotesk', sans-serif !important;
         --white: #ffffff !important;
         --blue: #c0f7fe !important;
         --green: #99e885 !important;
@@ -821,8 +833,9 @@
         <span class="pill">Frame System · Vol. 01</span>
         <h1>Loud,<br />bordered,<br />a little crooked.</h1>
         <div class="sub">
-          A maximalist neobrutalist frame system — 4px ink borders, 8px hard shadows, five candy
-          pastels, and tilted decorations that puncture the grid.
+          A maximalist neobrutalist frame system — 4px ink borders, 8px hard
+          shadows, five candy pastels, and tilted decorations that puncture the
+          grid.
         </div>
       </div>
       <div class="counter">01 / 06</div>
@@ -874,7 +887,10 @@
         <div class="sw">
           <div
             class="chip"
-            style="background: var(--offwhite); border-bottom: 4px solid var(--black)"
+            style="
+              background: var(--offwhite);
+              border-bottom: 4px solid var(--black);
+            "
           ></div>
           <div class="meta">
             <div class="name">Off-White</div>
@@ -884,7 +900,10 @@
         <div class="sw">
           <div
             class="chip"
-            style="background: var(--white); border-bottom: 4px solid var(--black)"
+            style="
+              background: var(--white);
+              border-bottom: 4px solid var(--black);
+            "
           ></div>
           <div class="meta">
             <div class="name">White</div>
@@ -913,7 +932,9 @@
           <div class="tok">heading-xl</div>
           <div class="m">Inter 900 · uppercase · −0.03em</div>
         </div>
-        <div class="spec"><span class="disp" style="font-size: 80px">Maximal.</span></div>
+        <div class="spec">
+          <span class="disp" style="font-size: 80px">Maximal.</span>
+        </div>
       </div>
       <div class="type-row">
         <div>
@@ -921,7 +942,9 @@
           <div class="m">Inter 800 · uppercase · −0.02em</div>
         </div>
         <div class="spec">
-          <span class="disp" style="font-weight: 800; font-size: 50px">Bordered & Bold</span>
+          <span class="disp" style="font-weight: 800; font-size: 50px"
+            >Bordered & Bold</span
+          >
         </div>
       </div>
       <div class="type-row">
@@ -930,7 +953,9 @@
           <div class="m">Inter 900 · line 1</div>
         </div>
         <div class="spec">
-          <span class="disp" style="font-size: 64px; letter-spacing: -0.02em">240</span>
+          <span class="disp" style="font-size: 64px; letter-spacing: -0.02em"
+            >240</span
+          >
         </div>
       </div>
       <div class="type-row">
@@ -939,9 +964,16 @@
           <div class="m">Inter 500 · sentence case · line 1.6</div>
         </div>
         <div class="spec">
-          <p style="font-weight: 500; font-size: 18px; line-height: 1.6; max-width: 640px">
-            Body runs Inter at weight 500, sentence case — the calm against the heavy uppercase
-            display.
+          <p
+            style="
+              font-weight: 500;
+              font-size: 18px;
+              line-height: 1.6;
+              max-width: 640px;
+            "
+          >
+            Body runs Inter at weight 500, sentence case — the calm against the
+            heavy uppercase display.
           </p>
         </div>
       </div>
@@ -969,7 +1001,9 @@
             <div class="notch"></div>
             <div class="ic" style="background: var(--pink)">A</div>
             <div class="t">Bordered Block</div>
-            <div class="bd">4px ink border + 8px hard offset shadow, square corners.</div>
+            <div class="bd">
+              4px ink border + 8px hard offset shadow, square corners.
+            </div>
           </div>
         </div>
         <div class="s4">
@@ -990,9 +1024,21 @@
         <div class="s4">
           <div class="cnote">CTA · list number · stripe</div>
           <span class="btn">Click Here →</span>
-          <div style="display: flex; align-items: center; gap: 14px; margin-top: 24px">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              margin-top: 24px;
+            "
+          >
             <span class="listnum">01</span
-            ><span style="font-family: var(--disp); font-weight: 500; font-size: 15px"
+            ><span
+              style="
+                font-family: var(--disp);
+                font-weight: 500;
+                font-size: 15px;
+              "
               >Numbered list bullet</span
             >
           </div>
@@ -1076,7 +1122,9 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Cover</b><span>· identity · cream · decorations · left</span></div>
+          <div class="flabel">
+            <b>Cover</b><span>· identity · cream · decorations · left</span>
+          </div>
           <div class="frame bf1">
             <div class="dg"></div>
             <div class="star"></div>
@@ -1089,7 +1137,9 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Feature Cards</b><span>· catalog · blue ground · 3-up</span></div>
+          <div class="flabel">
+            <b>Feature Cards</b><span>· catalog · blue ground · 3-up</span>
+          </div>
           <div class="frame bf2">
             <div class="body">
               <span class="pill">Three Laws</span>
@@ -1117,7 +1167,8 @@
 
         <div class="fw">
           <div class="flabel">
-            <b>Stat Grid</b><span>· data · green ground · tilted · the dense frame</span>
+            <b>Stat Grid</b
+            ><span>· data · green ground · tilted · the dense frame</span>
           </div>
           <div class="frame bf3">
             <div class="body">
@@ -1146,7 +1197,8 @@
 
         <div class="fw">
           <div class="flabel">
-            <b>Closing Plate</b><span>· closer · black ground · yellow shadow</span>
+            <b>Closing Plate</b
+            ><span>· closer · black ground · yellow shadow</span>
           </div>
           <div class="frame bf4">
             <div class="body">
@@ -1172,9 +1224,13 @@
         <div class="do-card do">
           <h4>Do</h4>
           <ul>
-            <li>4px borders + 8px shadows on primary cards; 3px + 4px on chrome.</li>
+            <li>
+              4px borders + 8px shadows on primary cards; 3px + 4px on chrome.
+            </li>
             <li>Cycle pastel grounds across frames; keep the rhythm.</li>
-            <li>Inter 800–900 uppercase, negative tracking, for all display.</li>
+            <li>
+              Inter 800–900 uppercase, negative tracking, for all display.
+            </li>
             <li>Open every region with a label-pill eyebrow.</li>
             <li>Tilt decorations ±2°–12°; add one to every frame.</li>
           </ul>
@@ -1182,8 +1238,12 @@
         <div class="do-card dont">
           <h4>Don't</h4>
           <ul>
-            <li>No rounded corners (save the stat-deco dot); no blurred shadows.</li>
-            <li>No colored borders (black only, save the close-frame white).</li>
+            <li>
+              No rounded corners (save the stat-deco dot); no blurred shadows.
+            </li>
+            <li>
+              No colored borders (black only, save the close-frame white).
+            </li>
             <li>No sentence-case Inter display; no sixth pastel.</li>
             <li>No label rendered as plain text — pill or nothing.</li>
             <li>Don't blow a headline edge-to-edge — fit to measure.</li>
@@ -1275,7 +1335,9 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Active line</b><span>· spoken · current · upcoming</span></div>
+          <div class="flabel">
+            <b>Active line</b><span>· spoken · current · upcoming</span>
+          </div>
           <div class="frame capdemo" style="background: var(--cream)">
             <div
               class="dg"
@@ -1309,7 +1371,9 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Settled line</b><span>· all spoken · stamp cleared</span></div>
+          <div class="flabel">
+            <b>Settled line</b><span>· all spoken · stamp cleared</span>
+          </div>
           <div class="frame capdemo" style="background: var(--blue)">
             <div class="stage">
               <div class="pill">
@@ -1333,8 +1397,24 @@
     <template id="__bundler_thumbnail">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" fill="#FFFDF5" />
-        <rect x="16" y="34" width="46" height="32" fill="#FE90E8" stroke="#000" stroke-width="4" />
-        <rect x="22" y="40" width="46" height="32" fill="#C0F7FE" stroke="#000" stroke-width="4" />
+        <rect
+          x="16"
+          y="34"
+          width="46"
+          height="32"
+          fill="#FE90E8"
+          stroke="#000"
+          stroke-width="4"
+        />
+        <rect
+          x="22"
+          y="40"
+          width="46"
+          height="32"
+          fill="#C0F7FE"
+          stroke="#000"
+          stroke-width="4"
+        />
         <path
           d="M74 16l4 11h12l-9 7 3 11-10-6-10 6 3-11-9-7h12z"
           fill="#F7CB46"

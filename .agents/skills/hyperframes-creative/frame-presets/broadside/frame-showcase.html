@@ -23,8 +23,8 @@
         --on-orange-hint: rgba(17, 17, 17, 0.55);
         --on-orange-faint: rgba(17, 17, 17, 0.4);
         --on-orange-border: rgba(17, 17, 17, 0.2);
-        --sans: "Barlow", sans-serif;
-        --mono: "IBM Plex Mono", monospace;
+        --sans: 'Barlow', sans-serif;
+        --mono: 'IBM Plex Mono', monospace;
       }
       * {
         margin: 0;
@@ -305,7 +305,7 @@
         position: relative;
       }
       .blist li::before {
-        content: "/";
+        content: '/';
         position: absolute;
         left: 0;
         font-family: var(--mono);
@@ -641,7 +641,7 @@
         color: var(--cream-muted);
       }
       .do-card li::before {
-        content: "/";
+        content: '/';
         position: absolute;
         left: 0;
         font-family: var(--mono);
@@ -649,7 +649,7 @@
         color: var(--orange);
       }
       .do-card.dont li::before {
-        content: "\00d7";
+        content: '\00d7';
         color: var(--cream-hint);
       }
 
@@ -696,14 +696,14 @@
         --secondary: #111111 !important;
         --tertiary: #282826 !important;
         --accent: #e85d26 !important;
-        --f-disp: "Barlow", sans-serif !important;
-        --f-body: "IBM Plex Mono", sans-serif !important;
+        --f-disp: 'Barlow', sans-serif !important;
+        --f-body: 'IBM Plex Mono', sans-serif !important;
         --ink: #111111 !important;
         --orange: #e85d26 !important;
         --cream: #f0ece5 !important;
         --border-dark: #282826 !important;
-        --sans: "Barlow", sans-serif !important;
-        --mono: "IBM Plex Mono", sans-serif !important;
+        --sans: 'Barlow', sans-serif !important;
+        --mono: 'IBM Plex Mono', sans-serif !important;
         --ink-alt: #1a1a18 !important;
         --cream-muted: #888880 !important;
         --cream-hint: #505048 !important;
@@ -723,10 +723,13 @@
       <div class="kick">Protest-Poster Editorial</div>
       <h1>ink on fire.</h1>
       <div class="lead">
-        Massive Barlow type as graphic primitive, one fire-orange environment, and a flat plane
-        built from negative space — dark to document, orange to declare.
+        Massive Barlow type as graphic primitive, one fire-orange environment,
+        and a flat plane built from negative space — dark to document, orange to
+        declare.
       </div>
-      <div class="foot"><span>Barlow 900 · IBM Plex Mono</span><span>1920 × 1080</span></div>
+      <div class="foot">
+        <span>Barlow 900 · IBM Plex Mono</span><span>1920 × 1080</span>
+      </div>
     </section>
 
     <!-- PALETTE -->
@@ -794,7 +797,10 @@
           </div>
         </div>
         <div class="sw">
-          <div class="chip" style="background: var(--orange); opacity: 0.2"></div>
+          <div
+            class="chip"
+            style="background: var(--orange); opacity: 0.2"
+          ></div>
           <div class="meta">
             <div class="name">ink-on-orange</div>
             <div class="hex">17,17,17 · .75–.20</div>
@@ -816,7 +822,9 @@
           <div class="tok">display</div>
           <div class="m">Barlow 900 · 13vw · lowercase · −.04em</div>
         </div>
-        <div class="spec"><span class="disp" style="font-size: 104px">shout.</span></div>
+        <div class="spec">
+          <span class="disp" style="font-size: 104px">shout.</span>
+        </div>
       </div>
       <div class="type-row">
         <div>
@@ -824,7 +832,9 @@
           <div class="m">Barlow 700 · primary headline</div>
         </div>
         <div class="spec">
-          <span class="disp" style="font-weight: 700; font-size: 58px; letter-spacing: -0.02em"
+          <span
+            class="disp"
+            style="font-weight: 700; font-size: 58px; letter-spacing: -0.02em"
             >type as graphic primitive</span
           >
         </div>
@@ -835,7 +845,9 @@
           <div class="m">Barlow 900 · orange on dark</div>
         </div>
         <div class="spec">
-          <span class="disp" style="font-size: 80px; color: var(--orange)">94%</span>
+          <span class="disp" style="font-size: 80px; color: var(--orange)"
+            >94%</span
+          >
         </div>
       </div>
       <div class="type-row">
@@ -844,9 +856,16 @@
           <div class="m">Barlow 400 · cream · line 1.6</div>
         </div>
         <div class="spec">
-          <p style="font-size: 18px; line-height: 1.6; max-width: 660px; color: var(--cream)">
-            Barlow carries every text role — the expressive range comes from weight and size, not a
-            second face.
+          <p
+            style="
+              font-size: 18px;
+              line-height: 1.6;
+              max-width: 660px;
+              color: var(--cream);
+            "
+          >
+            Barlow carries every text role — the expressive range comes from
+            weight and size, not a second face.
           </p>
         </div>
       </div>
@@ -886,7 +905,9 @@
               <div class="n">Dark / orange</div>
             </div>
           </div>
-          <div class="cnote" style="margin-top: 36px">Bullet list — capped at three</div>
+          <div class="cnote" style="margin-top: 36px">
+            Bullet list — capped at three
+          </div>
           <ul class="blist">
             <li>one statement per slide</li>
             <li>one accent color</li>
@@ -901,7 +922,9 @@
             <div class="bar accent" style="height: 100%"></div>
             <div class="bar" style="height: 44%"></div>
           </div>
-          <div class="barlabels"><span>q1</span><span>q2</span><span>q3</span><span>q4</span></div>
+          <div class="barlabels">
+            <span>q1</span><span>q2</span><span>q3</span><span>q4</span>
+          </div>
           <div class="cnote" style="margin-top: 32px">Mono tag</div>
           <span class="tag">Section / 03</span>
         </div>
@@ -932,7 +955,9 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Cover</b><span>· identity · orange register · left</span></div>
+          <div class="flabel">
+            <b>Cover</b><span>· identity · orange register · left</span>
+          </div>
           <div class="frame orange bf1">
             <div class="topnum">No. 01 / 06</div>
             <div class="body">
@@ -956,10 +981,14 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Stat Grid</b><span>· data · dark · the dense frame</span></div>
+          <div class="flabel">
+            <b>Stat Grid</b><span>· data · dark · the dense frame</span>
+          </div>
           <div class="frame bf3">
             <div class="body">
-              <div class="top"><span class="k">By The Numbers</span><span>FIG.03</span></div>
+              <div class="top">
+                <span class="k">By The Numbers</span><span>FIG.03</span>
+              </div>
               <div class="row">
                 <div class="sc">
                   <div class="v">13vw</div>
@@ -983,7 +1012,9 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Fadelist</b><span>· narrative · before/during/after</span></div>
+          <div class="flabel">
+            <b>Fadelist</b><span>· narrative · before/during/after</span>
+          </div>
           <div class="frame bf4">
             <div class="body">
               <div class="stack">
@@ -1009,9 +1040,13 @@
         <div class="do-card do">
           <h4>do</h4>
           <ul>
-            <li>Set every Barlow display in lowercase weight 900, negative-tracked.</li>
             <li>
-              Make orange the full environment on declarative frames, the lone accent on dark.
+              Set every Barlow display in lowercase weight 900,
+              negative-tracked.
+            </li>
+            <li>
+              Make orange the full environment on declarative frames, the lone
+              accent on dark.
             </li>
             <li>Keep chrome in IBM Plex Mono uppercase, 0.14em tracked.</li>
             <li>Cap bullet lists at three; one statement per frame.</li>
@@ -1022,7 +1057,9 @@
           <h4>don't</h4>
           <ul>
             <li>Never uppercase Barlow display — lowercase is the identity.</li>
-            <li>No second accent color; no cream text on orange (ink on fire).</li>
+            <li>
+              No second accent color; no cream text on orange (ink on fire).
+            </li>
             <li>No drop shadows, rounded surfaces, or gradient grounds.</li>
             <li>No serif companion; chrome is never set in Barlow.</li>
             <li>Don't pack two display moments into one frame.</li>
@@ -1111,7 +1148,9 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Active line</b><span>· spoken · current · upcoming</span></div>
+          <div class="flabel">
+            <b>Active line</b><span>· spoken · current · upcoming</span>
+          </div>
           <div class="frame capdemo">
             <div class="bandline"></div>
             <div class="bandtag">caption band · 16.7%</div>
@@ -1157,7 +1196,14 @@
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" fill="#E85D26" />
         <rect x="14" y="40" width="26" height="4" fill="#111111" />
-        <text x="14" y="68" font-family="Arial" font-weight="900" font-size="22" fill="#111111">
+        <text
+          x="14"
+          y="68"
+          font-family="Arial"
+          font-weight="900"
+          font-size="22"
+          fill="#111111"
+        >
           ink.
         </text>
       </svg>

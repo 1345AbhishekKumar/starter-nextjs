@@ -4,11 +4,13 @@
 
 ```typescript
 await db.transaction(async (tx) => {
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} - 100` })
     .where(eq(accounts.userId, 1));
 
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} + 100` })
     .where(eq(accounts.userId, 2));
 });
@@ -18,7 +20,8 @@ await db.transaction(async (tx) => {
 
 ```typescript
 await db.transaction(async (tx) => {
-  const [account] = await tx.select()
+  const [account] = await tx
+    .select()
     .from(accounts)
     .where(eq(accounts.userId, 1));
 
@@ -26,7 +29,8 @@ await db.transaction(async (tx) => {
     tx.rollback(); // Throws exception and rolls back all changes
   }
 
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} - 100` })
     .where(eq(accounts.userId, 1));
 });
@@ -36,11 +40,13 @@ await db.transaction(async (tx) => {
 
 ```typescript
 const newBalance = await db.transaction(async (tx) => {
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} - 100` })
     .where(eq(accounts.userId, 1));
 
-  const [account] = await tx.select()
+  const [account] = await tx
+    .select()
     .from(accounts)
     .where(eq(accounts.userId, 1));
 
@@ -65,17 +71,22 @@ await db.transaction(async (tx) => {
 ```typescript
 async function transferFunds(fromId: number, toId: number, amount: number) {
   await db.transaction(async (tx) => {
-    const [from] = await tx.select().from(accounts).where(eq(accounts.userId, fromId));
+    const [from] = await tx
+      .select()
+      .from(accounts)
+      .where(eq(accounts.userId, fromId));
 
     if (from.balance < amount) {
       tx.rollback(); // Rolls back all changes
     }
 
-    await tx.update(accounts)
+    await tx
+      .update(accounts)
       .set({ balance: sql`${accounts.balance} - ${amount}` })
       .where(eq(accounts.userId, fromId));
 
-    await tx.update(accounts)
+    await tx
+      .update(accounts)
       .set({ balance: sql`${accounts.balance} + ${amount}` })
       .where(eq(accounts.userId, toId));
   });
@@ -99,9 +110,12 @@ try {
 ## Transaction Isolation Levels
 
 ```typescript
-await db.transaction(async (tx) => {
-  // Operations
-}, {
-  isolationLevel: 'serializable', // or 'read committed', 'repeatable read'
-});
+await db.transaction(
+  async (tx) => {
+    // Operations
+  },
+  {
+    isolationLevel: 'serializable', // or 'read committed', 'repeatable read'
+  },
+);
 ```

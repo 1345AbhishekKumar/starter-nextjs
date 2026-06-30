@@ -72,16 +72,23 @@ Basic Create, Read, Update, Delete operations with Drizzle ORM.
 import { eq } from 'drizzle-orm';
 
 // Insert a new user
-const [newUser] = await db.insert(users).values({
-  name: 'John',
-  email: 'john@example.com',
-}).returning();
+const [newUser] = await db
+  .insert(users)
+  .values({
+    name: 'John',
+    email: 'john@example.com',
+  })
+  .returning();
 
 // Select user by email
-const [user] = await db.select().from(users).where(eq(users.email, 'john@example.com'));
+const [user] = await db
+  .select()
+  .from(users)
+  .where(eq(users.email, 'john@example.com'));
 
 // Update user name
-const [updated] = await db.update(users)
+const [updated] = await db
+  .update(users)
   .set({ name: 'John Updated' })
   .where(eq(users.id, 1))
   .returning();
@@ -94,11 +101,14 @@ await db.delete(users).where(eq(users.id, 1));
 
 ```typescript
 // Insert multiple users
-const newUsers = await db.insert(users).values([
-  { name: 'John', email: 'john@example.com' },
-  { name: 'Jane', email: 'jane@example.com' },
-  { name: 'Bob', email: 'bob@example.com' },
-]).returning();
+const newUsers = await db
+  .insert(users)
+  .values([
+    { name: 'John', email: 'john@example.com' },
+    { name: 'Jane', email: 'jane@example.com' },
+    { name: 'Bob', email: 'bob@example.com' },
+  ])
+  .returning();
 
 // Select multiple users with filter
 const activeUsers = await db
@@ -118,17 +128,22 @@ import { eq, sql } from 'drizzle-orm';
 
 async function transferFunds(fromId: number, toId: number, amount: number) {
   await db.transaction(async (tx) => {
-    const [from] = await tx.select().from(accounts).where(eq(accounts.userId, fromId));
+    const [from] = await tx
+      .select()
+      .from(accounts)
+      .where(eq(accounts.userId, fromId));
 
     if (from.balance < amount) {
       tx.rollback(); // Rolls back all changes
     }
 
-    await tx.update(accounts)
+    await tx
+      .update(accounts)
       .set({ balance: sql`${accounts.balance} - ${amount}` })
       .where(eq(accounts.userId, fromId));
 
-    await tx.update(accounts)
+    await tx
+      .update(accounts)
       .set({ balance: sql`${accounts.balance} + ${amount}` })
       .where(eq(accounts.userId, toId));
   });
@@ -151,11 +166,13 @@ async function safeTransfer(fromId: number, toId: number, amount: number) {
         return { success: false, error: 'Insufficient funds' };
       }
 
-      await tx.update(accounts)
+      await tx
+        .update(accounts)
         .set({ balance: sql`${accounts.balance} - ${amount}` })
         .where(eq(accounts.userId, fromId));
 
-      await tx.update(accounts)
+      await tx
+        .update(accounts)
         .set({ balance: sql`${accounts.balance} + ${amount}` })
         .where(eq(accounts.userId, toId));
 
@@ -291,10 +308,7 @@ await db
   .where(eq(users.id, userId));
 
 // Restore soft-deleted user
-await db
-  .update(users)
-  .set({ deletedAt: null })
-  .where(eq(users.id, userId));
+await db.update(users).set({ deletedAt: null }).where(eq(users.id, userId));
 ```
 
 ---
@@ -315,10 +329,7 @@ class UserRepository {
   }
 
   async findById(id: number) {
-    const [user] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, id));
+    const [user] = await this.db.select().from(users).where(eq(users.id, id));
     return user;
   }
 

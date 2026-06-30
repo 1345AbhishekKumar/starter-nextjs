@@ -20,22 +20,23 @@
  * Sample-time default: climax/groups midpoints from standard.json or plan.json,
  * else 25/50/75% of the clip.
  */
-const path = require("path");
-const fs = require("fs");
-const os = require("os");
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
 const HF_ROOTS = [
   process.env.HYPERFRAMES_ROOT,
-  path.resolve(__dirname, "../../.."),
-  path.join(os.homedir(), "Downloads", "hyperframes"),
+  path.resolve(__dirname, '../../..'),
+  path.join(os.homedir(), 'Downloads', 'hyperframes'),
 ].filter(Boolean);
 function findInBun(root, pkg, sub) {
-  const cands = [path.join(root, "node_modules", pkg)];
-  const bunDir = path.join(root, "node_modules", ".bun");
+  const cands = [path.join(root, 'node_modules', pkg)];
+  const bunDir = path.join(root, 'node_modules', '.bun');
   try {
     if (fs.existsSync(bunDir))
       for (const d of fs.readdirSync(bunDir))
-        if (d.startsWith(pkg + "@")) cands.push(path.join(bunDir, d, "node_modules", pkg));
+        if (d.startsWith(pkg + '@'))
+          cands.push(path.join(bunDir, d, 'node_modules', pkg));
   } catch {}
   for (const c of cands) {
     const p = sub ? path.join(c, sub) : c;
@@ -48,26 +49,26 @@ let puppeteer = null,
   gsapSource = null;
 for (const r of HF_ROOTS) {
   if (!puppeteer) {
-    const p = findInBun(r, "puppeteer");
+    const p = findInBun(r, 'puppeteer');
     if (p)
       try {
         puppeteer = require(p);
       } catch {}
   }
   if (!sharp) {
-    const p = findInBun(r, "sharp");
+    const p = findInBun(r, 'sharp');
     if (p)
       try {
         sharp = require(p);
       } catch {}
   }
   if (!gsapSource) {
-    const g = findInBun(r, "gsap", path.join("dist", "gsap.min.js"));
-    if (g) gsapSource = fs.readFileSync(g, "utf8");
+    const g = findInBun(r, 'gsap', path.join('dist', 'gsap.min.js'));
+    if (g) gsapSource = fs.readFileSync(g, 'utf8');
   }
 }
 if (!puppeteer || !sharp) {
-  console.error("[preview] need puppeteer+sharp — set HYPERFRAMES_ROOT");
+  console.error('[preview] need puppeteer+sharp — set HYPERFRAMES_ROOT');
   process.exit(0);
 }
 
@@ -80,30 +81,48 @@ async function shotAt(browser, file, W, H, t) {
     // evaluation runs while document.head is still null, and gsap's init then
     // throws "appendChild of null" — which killed previews for theme projects.
     await page.setRequestInterception(true);
-    page.on("request", (req) => {
+    page.on('request', (req) => {
       const u = req.url();
-      if (req.resourceType() === "script" && /gsap/i.test(u) && /^https?:/i.test(u)) {
+      if (
+        req.resourceType() === 'script' &&
+        /gsap/i.test(u) &&
+        /^https?:/i.test(u)
+      ) {
         if (gsapSource)
-          req.respond({ status: 200, contentType: "application/javascript", body: gsapSource });
+          req.respond({
+            status: 200,
+            contentType: 'application/javascript',
+            body: gsapSource,
+          });
         else req.continue(); // no local bundle — let the CDN load (online machines)
-      } else if (req.resourceType() === "media")
+      } else if (req.resourceType() === 'media')
         req.abort(); // a-roll pixels come from frames_bg
       else req.continue();
     });
-    await page.goto(`file://${file}`, { waitUntil: "load", timeout: 15000 });
+    await page.goto(`file://${file}`, { waitUntil: 'load', timeout: 15000 });
     const t0 = Date.now();
     let tlReady = false;
     while (Date.now() - t0 < 15000) {
-      tlReady = await page.evaluate(() => !!(window.__timelines && window.__timelines.main));
+      tlReady = await page.evaluate(
+        () => !!(window.__timelines && window.__timelines.main),
+      );
       if (tlReady) break;
       await new Promise((r) => setTimeout(r, 120));
     }
-    if (!tlReady) throw new Error(`timeline never registered in ${path.basename(file)}`);
+    if (!tlReady)
+      throw new Error(`timeline never registered in ${path.basename(file)}`);
     // bundled @font-face → previews show the REAL faces (same set the renderer embeds)
     try {
-      const fontsCss = path.join(__dirname, "..", "modes", "standard", "fonts", "fonts.css");
+      const fontsCss = path.join(
+        __dirname,
+        '..',
+        'modes',
+        'standard',
+        'fonts',
+        'fonts.css',
+      );
       if (fs.existsSync(fontsCss))
-        await page.addStyleTag({ content: fs.readFileSync(fontsCss, "utf8") });
+        await page.addStyleTag({ content: fs.readFileSync(fontsCss, 'utf8') });
     } catch {}
     await page.evaluate(async () => {
       try {
@@ -111,10 +130,10 @@ async function shotAt(browser, file, W, H, t) {
       } catch {}
     });
     await page.evaluate((t) => {
-      const v = document.getElementById("a-roll");
-      if (v) v.style.display = "none"; // transparent hole for the bg frame
-      document.body.style.background = "transparent";
-      document.documentElement.style.background = "transparent";
+      const v = document.getElementById('a-roll');
+      if (v) v.style.display = 'none'; // transparent hole for the bg frame
+      document.body.style.background = 'transparent';
+      document.documentElement.style.background = 'transparent';
       window.__timelines.main.seek(t);
       void document.body.offsetHeight;
     }, t);
@@ -126,25 +145,28 @@ async function shotAt(browser, file, W, H, t) {
 }
 
 async function main() {
-  const project = path.resolve(process.argv[2] || "");
+  const project = path.resolve(process.argv[2] || '');
   if (!process.argv[2]) {
-    console.error("usage: preview-frames.cjs <project-dir> [times...]");
+    console.error('usage: preview-frames.cjs <project-dir> [times...]');
     process.exit(1);
   }
-  const idx = path.join(project, "index.html");
+  const idx = path.join(project, 'index.html');
   if (!fs.existsSync(idx)) {
-    console.error("[preview] no index.html — compile first");
+    console.error('[preview] no index.html — compile first');
     process.exit(1);
   }
-  const railP = path.join(project, "rail.html");
+  const railP = path.join(project, 'rail.html');
   const hasRail = fs.existsSync(railP);
-  const fgP = path.join(project, "index_fg.html");
+  const fgP = path.join(project, 'index_fg.html');
   const hasFg = fs.existsSync(fgP); // hybrid: fg caps render ABOVE the matte (like the real composite)
 
   let fps = 24;
   try {
     const f = parseFloat(
-      String(fs.readFileSync(path.join(project, "matte.fps"), "utf8")).replace(/[^\d.]/g, ""),
+      String(fs.readFileSync(path.join(project, 'matte.fps'), 'utf8')).replace(
+        /[^\d.]/g,
+        '',
+      ),
     );
     if (f > 0) fps = f;
   } catch {}
@@ -153,12 +175,15 @@ async function main() {
   let globalFg = false;
   try {
     globalFg =
-      JSON.parse(fs.readFileSync(path.join(project, "plan.json"), "utf8")).caption_layer === "fg";
+      JSON.parse(fs.readFileSync(path.join(project, 'plan.json'), 'utf8'))
+        .caption_layer === 'fg';
   } catch {}
   let times = process.argv.slice(3).map(Number).filter(Number.isFinite);
   if (!times.length) {
     try {
-      const plan = JSON.parse(fs.readFileSync(path.join(project, "plan.json"), "utf8"));
+      const plan = JSON.parse(
+        fs.readFileSync(path.join(project, 'plan.json'), 'utf8'),
+      );
       // heroes get 2 samples each (entrance + hold); every OTHER group gets at least
       // a shot at one midpoint — the old 2-per-group list truncated at 12 and silently
       // dropped whole narration blocks from the sheet (cold-start agents missed bugs there)
@@ -167,7 +192,10 @@ async function main() {
         rest = gs.filter((g) => !g.hero);
       for (const g of heroes) {
         const span = g.out - g.in;
-        times.push(+(g.in + span * 0.25).toFixed(2), +(g.in + span * 0.7).toFixed(2));
+        times.push(
+          +(g.in + span * 0.25).toFixed(2),
+          +(g.in + span * 0.7).toFixed(2),
+        );
       }
       const mids = rest.map((g) => +((g.in + g.out) / 2).toFixed(2));
       const budget = Math.max(2, 16 - times.length);
@@ -176,8 +204,8 @@ async function main() {
     } catch {}
   }
   if (!times.length) {
-    const n = fs.existsSync(path.join(project, "frames_bg"))
-      ? fs.readdirSync(path.join(project, "frames_bg")).length
+    const n = fs.existsSync(path.join(project, 'frames_bg'))
+      ? fs.readdirSync(path.join(project, 'frames_bg')).length
       : 0;
     const dur = n / fps || 10;
     times = [dur * 0.25, dur * 0.5, dur * 0.75].map((t) => +t.toFixed(2));
@@ -187,33 +215,45 @@ async function main() {
   const meta = await sharp(
     path.join(
       project,
-      "frames_bg",
+      'frames_bg',
       fs
-        .readdirSync(path.join(project, "frames_bg"))
-        .filter((f) => f.endsWith(".png"))
+        .readdirSync(path.join(project, 'frames_bg'))
+        .filter((f) => f.endsWith('.png'))
         .sort()[0],
     ),
   ).metadata();
   const W = meta.width,
     H = meta.height;
-  const outDir = path.join(project, "preview");
+  const outDir = path.join(project, 'preview');
   fs.mkdirSync(outDir, { recursive: true });
 
   const exe =
-    process.platform === "darwin"
-      ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-      : "/usr/bin/google-chrome";
+    process.platform === 'darwin'
+      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      : '/usr/bin/google-chrome';
   const browser = await puppeteer.launch({
-    headless: "new",
+    headless: 'new',
     executablePath: fs.existsSync(exe) ? exe : undefined,
-    args: ["--disable-web-security", "--allow-file-access-from-files", "--disable-dev-shm-usage"],
+    args: [
+      '--disable-web-security',
+      '--allow-file-access-from-files',
+      '--disable-dev-shm-usage',
+    ],
   });
   const outs = [];
   try {
     for (const t of times) {
       const fi = Math.max(1, Math.round(t * fps));
-      const bg = path.join(project, "frames_bg", `f_${String(fi).padStart(4, "0")}.png`);
-      const fg = path.join(project, "frames_fg", `f_${String(fi).padStart(4, "0")}.png`);
+      const bg = path.join(
+        project,
+        'frames_bg',
+        `f_${String(fi).padStart(4, '0')}.png`,
+      );
+      const fg = path.join(
+        project,
+        'frames_fg',
+        `f_${String(fi).padStart(4, '0')}.png`,
+      );
       if (!fs.existsSync(bg)) {
         console.error(`[preview] no bg frame for t=${t}`);
         continue;
@@ -222,9 +262,14 @@ async function main() {
       // global caption_layer:"fg" → captions sit ON TOP of the subject; the matte
       // must NOT be stacked over them (the render skips the overlay too).
       if (!globalFg && fs.existsSync(fg)) layers.push({ input: fg }); // subject occludes embed
-      if (hasFg) layers.push({ input: await shotAt(browser, fgP, W, H, t), blend: "screen" }); // hybrid fg caps in front (screen, like the real ffmpeg pass)
-      if (hasRail) layers.push({ input: await shotAt(browser, railP, W, H, t) }); // rail in front
-      const out = path.join(outDir, `t${String(t).replace(".", "_")}.png`);
+      if (hasFg)
+        layers.push({
+          input: await shotAt(browser, fgP, W, H, t),
+          blend: 'screen',
+        }); // hybrid fg caps in front (screen, like the real ffmpeg pass)
+      if (hasRail)
+        layers.push({ input: await shotAt(browser, railP, W, H, t) }); // rail in front
+      const out = path.join(outDir, `t${String(t).replace('.', '_')}.png`);
       await sharp(bg).composite(layers).png().toFile(out);
       outs.push({ t, out });
       console.log(`[preview] t=${t}s → ${out}`);
@@ -251,18 +296,21 @@ async function main() {
       })
         .composite(comps)
         .png()
-        .toFile(path.join(outDir, "sheet.png"));
+        .toFile(path.join(outDir, 'sheet.png'));
       console.log(
-        `[preview] contact sheet → ${path.join(outDir, "sheet.png")}  (${outs.length} frames @ ${times.join(", ")}s)`,
+        `[preview] contact sheet → ${path.join(outDir, 'sheet.png')}  (${outs.length} frames @ ${times.join(', ')}s)`,
       );
     }
   } finally {
-    await Promise.race([browser.close().catch(() => {}), new Promise((r) => setTimeout(r, 8000))]);
+    await Promise.race([
+      browser.close().catch(() => {}),
+      new Promise((r) => setTimeout(r, 8000)),
+    ]);
   }
 }
 main()
   .then(() => process.exit(0))
   .catch((e) => {
-    console.error("[preview]", e.message);
+    console.error('[preview]', e.message);
     process.exit(1);
   });

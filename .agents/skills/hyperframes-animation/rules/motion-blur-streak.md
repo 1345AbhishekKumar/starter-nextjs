@@ -43,7 +43,11 @@ Path A tweens the filter's `stdDeviation` attribute (a non-DOM-style numeric att
   <svg width="0" height="0" aria-hidden="true" style="position: absolute">
     <defs>
       <filter id="streak" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur id="streak-blur" in="SourceGraphic" stdDeviation="0 0" />
+        <feGaussianBlur
+          id="streak-blur"
+          in="SourceGraphic"
+          stdDeviation="0 0"
+        />
       </filter>
     </defs>
   </svg>
@@ -133,23 +137,28 @@ Path A tweens the filter's `stdDeviation` attribute (a non-DOM-style numeric att
   const tl = gsap.timeline({ paused: true });
 
   // GSAP can't tween an SVG attribute directly — tween a proxy and write it back each frame.
-  const blurNode = document.getElementById("streak-blur");
+  const blurNode = document.getElementById('streak-blur');
   const blurProxy = { v: PEAK_BLUR };
-  const writeBlur = () => blurNode.setAttribute("stdDeviation", `${blurProxy.v} 0`); // X-axis only
+  const writeBlur = () =>
+    blurNode.setAttribute('stdDeviation', `${blurProxy.v} 0`); // X-axis only
   writeBlur(); // seed frame 0 so a seek to t=0 shows the streaked start, not a sharp pre-frame
 
   // Position: travel from off-frame to rest on a fast `out` ease (velocity front-loaded).
   tl.fromTo(
-    "#streak-el",
+    '#streak-el',
     { x: ENTER_FROM_X, opacity: 0 },
     { x: 0, opacity: 1, duration: MOVE_DUR, ease: MOVE_EASE },
     MOVE_START,
   );
 
   // Blur envelope: SAME window + SAME ease so peak-blur == peak-speed, resolving to 0 at the settle.
-  tl.to(blurProxy, { v: 0, duration: MOVE_DUR, ease: MOVE_EASE, onUpdate: writeBlur }, MOVE_START);
+  tl.to(
+    blurProxy,
+    { v: 0, duration: MOVE_DUR, ease: MOVE_EASE, onUpdate: writeBlur },
+    MOVE_START,
+  );
 
-  window.__timelines["streak-scene"] = tl;
+  window.__timelines['streak-scene'] = tl;
 </script>
 ```
 
@@ -163,7 +172,7 @@ Path A tweens the filter's `stdDeviation` attribute (a non-DOM-style numeric att
 
   // Lead element: same fast `out` move as Path A.
   tl.fromTo(
-    "#streak-el",
+    '#streak-el',
     { x: ENTER_FROM_X, opacity: 0 },
     { x: 0, opacity: 1, duration: MOVE_DUR, ease: MOVE_EASE },
     MOVE_START,
@@ -171,7 +180,7 @@ Path A tweens the filter's `stdDeviation` attribute (a non-DOM-style numeric att
 
   // Ghosts: each starts FURTHER back along the motion vector (deterministic, by index),
   // dimmer, and collapses onto the lead — all on the SAME ease/window so they vanish at the settle.
-  const ghosts = gsap.utils.toArray(".streak-ghost");
+  const ghosts = gsap.utils.toArray('.streak-ghost');
   ghosts.forEach((g) => {
     const i = Number(g.dataset.i); // 1..N-1, set in HTML (no Math.random)
     tl.fromTo(
@@ -182,7 +191,7 @@ Path A tweens the filter's `stdDeviation` attribute (a non-DOM-style numeric att
     );
   });
 
-  window.__timelines["streak-scene"] = tl;
+  window.__timelines['streak-scene'] = tl;
 </script>
 ```
 
@@ -198,7 +207,7 @@ Instead of translating, the element rushes the camera: `scale: SCALE_FROM → 1`
 
 ```js
 tl.fromTo(
-  "#streak-el",
+  '#streak-el',
   { scale: SCALE_FROM, opacity: 0 },
   { scale: 1, opacity: 1, duration: MOVE_DUR, ease: MOVE_EASE },
   MOVE_START,
@@ -209,7 +218,8 @@ tl.to(
     v: 0,
     duration: MOVE_DUR,
     ease: MOVE_EASE,
-    onUpdate: () => blurNode.setAttribute("stdDeviation", `${blurProxy.v} ${blurProxy.v}`),
+    onUpdate: () =>
+      blurNode.setAttribute('stdDeviation', `${blurProxy.v} ${blurProxy.v}`),
   },
   MOVE_START,
 );
@@ -220,7 +230,7 @@ tl.to(
 For `grid-card-assemble`: each card streaks into its slot from its own backward offset, staggered. Drive every card off the same ease/window with a per-index delay; derive the entrance offset and start time from the card's index (no `Math.random`). Each card is sharp the instant it lands in its slot.
 
 ```js
-gsap.utils.toArray(".grid-card").forEach((card, i) => {
+gsap.utils.toArray('.grid-card').forEach((card, i) => {
   const at = MOVE_START + i * CARD_STAGGER;
   tl.fromTo(
     card,

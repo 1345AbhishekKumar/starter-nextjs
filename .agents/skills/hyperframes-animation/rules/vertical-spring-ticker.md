@@ -117,7 +117,7 @@ Each spring fires at a different time, settles, then the next fires. When summed
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const innerEl = document.getElementById("stack-inner");
+  const innerEl = document.getElementById('stack-inner');
 
   // Each spring object holds a 0→1 progress; they accumulate to a step-counter.
   // Sum * -ITEM_HEIGHT becomes translateY.
@@ -145,12 +145,12 @@ Each spring fires at a different time, settles, then the next fires. When summed
 
   // Footer reveals after the ticker settles on the final item.
   tl.from(
-    ".brand",
-    { opacity: 0, y: BRAND_Y, duration: BRAND_FADE_DUR, ease: "power3.out" },
+    '.brand',
+    { opacity: 0, y: BRAND_Y, duration: BRAND_FADE_DUR, ease: 'power3.out' },
     STEP_START + STEPS * STEP_SPACING + BRAND_DELAY,
   );
 
-  window.__timelines["ticker-scene"] = tl;
+  window.__timelines['ticker-scene'] = tl;
 </script>
 ```
 

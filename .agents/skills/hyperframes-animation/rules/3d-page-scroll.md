@@ -39,7 +39,9 @@ For multi-step scrolling (scroll → pause → scroll), use multiple `tl.to(".pa
            scrolling matters. Each section is real DOM, not a screenshot. -->
       <section class="page-hero">{heroContents}</section>
       <section class="page-features">{featuresContents}</section>
-      <section class="page-target" id="target-section">{targetContents}</section>
+      <section class="page-target" id="target-section">
+        {targetContents}
+      </section>
       <section class="page-cta">{ctaContents}</section>
     </div>
 
@@ -116,27 +118,27 @@ For multi-step scrolling (scroll → pause → scroll), use multiple `tl.to(".pa
   // (top of .page-content origin to vertical center of #target-section,
   // accounting for card height).
   tl.to(
-    ".page-content",
+    '.page-content',
     {
       y: -SCROLL_DISTANCE,
       duration: SCROLL_DUR,
-      ease: "power3.out",
+      ease: 'power3.out',
     },
     SCROLL_AT,
   );
 
   // Phase 3 — Spotlight fades in on the target after scroll settles
   tl.to(
-    ".spotlight",
+    '.spotlight',
     {
       opacity: 1,
       duration: SPOTLIGHT_FADE_DUR,
-      ease: "power1.inOut",
+      ease: 'power1.inOut',
     },
     SPOTLIGHT_AT,
   );
 
-  window.__timelines["page-scroll-scene"] = tl;
+  window.__timelines['page-scroll-scene'] = tl;
 </script>
 ```
 
@@ -147,13 +149,13 @@ For multi-step scrolling (scroll → pause → scroll), use multiple `tl.to(".pa
 // SCROLL_DISTANCE_A and SCROLL_DISTANCE_B are both measured from the
 // .page-content origin (NOT delta from previous step).
 tl.to(
-  ".page-content",
-  { y: -SCROLL_DISTANCE_A, duration: SCROLL_DUR, ease: "power3.out" },
+  '.page-content',
+  { y: -SCROLL_DISTANCE_A, duration: SCROLL_DUR, ease: 'power3.out' },
   SCROLL_AT_A,
 );
 tl.to(
-  ".page-content",
-  { y: -SCROLL_DISTANCE_B, duration: SCROLL_DUR, ease: "power3.out" },
+  '.page-content',
+  { y: -SCROLL_DISTANCE_B, duration: SCROLL_DUR, ease: 'power3.out' },
   SCROLL_AT_B,
 );
 ```

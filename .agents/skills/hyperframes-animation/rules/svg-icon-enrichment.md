@@ -33,8 +33,19 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
   <div class="stack">
     <div class="row">
       <!-- Clock icon — minute hand rotates -->
-      <svg class="icon-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="60" cy="60" r="50" fill="none" stroke="{accentColor}" stroke-width="6" />
+      <svg
+        class="icon-svg"
+        viewBox="0 0 120 120"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle
+          cx="60"
+          cy="60"
+          r="50"
+          fill="none"
+          stroke="{accentColor}"
+          stroke-width="6"
+        />
         <line
           class="clock-hand"
           id="hand-min"
@@ -61,7 +72,11 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
       </svg>
 
       <!-- Recording dot — pulses -->
-      <svg class="icon-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        class="icon-svg"
+        viewBox="0 0 120 120"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <circle
           id="rec-ring"
           cx="60"
@@ -75,7 +90,11 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
       </svg>
 
       <!-- Data stream — dashes flow along the line -->
-      <svg class="icon-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        class="icon-svg"
+        viewBox="0 0 120 120"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <rect
           x="14"
           y="48"
@@ -161,9 +180,10 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
     {
       deg: 360 * MIN_REVOLUTIONS,
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
-        document.getElementById("hand-min").style.transform = `rotate(${minState.deg}deg)`;
+        document.getElementById('hand-min').style.transform =
+          `rotate(${minState.deg}deg)`;
       },
     },
     0,
@@ -176,9 +196,10 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
     {
       deg: 360 * SEC_REVOLUTIONS,
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
-        document.getElementById("hand-sec").style.transform = `rotate(${secState.deg}deg)`;
+        document.getElementById('hand-sec').style.transform =
+          `rotate(${secState.deg}deg)`;
       },
     },
     0,
@@ -191,18 +212,20 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
     {
       p: Math.PI * 2 * PULSE_CYCLES,
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         const dotScale = 1 + Math.sin(pulseState.p) * PULSE_DOT_AMP;
-        const ringScale = 1 + Math.sin(pulseState.p + Math.PI / 2) * PULSE_RING_AMP;
+        const ringScale =
+          1 + Math.sin(pulseState.p + Math.PI / 2) * PULSE_RING_AMP;
         const ringOpacity =
-          PULSE_RING_OPACITY_BASE + Math.sin(pulseState.p) * PULSE_RING_OPACITY_AMP;
-        const dot = document.getElementById("rec-dot");
-        const ring = document.getElementById("rec-ring");
+          PULSE_RING_OPACITY_BASE +
+          Math.sin(pulseState.p) * PULSE_RING_OPACITY_AMP;
+        const dot = document.getElementById('rec-dot');
+        const ring = document.getElementById('rec-ring');
         dot.style.transform = `scale(${dotScale})`;
-        dot.style.transformOrigin = "60px 60px";
+        dot.style.transformOrigin = '60px 60px';
         ring.style.transform = `scale(${ringScale})`;
-        ring.style.transformOrigin = "60px 60px";
+        ring.style.transformOrigin = '60px 60px';
         ring.style.opacity = String(ringOpacity);
       },
     },
@@ -216,18 +239,24 @@ All run inside the paused GSAP timeline so HF seeks deterministically.
     {
       offset: DASH_FLOW_TOTAL_OFFSET, // negative for L→R flow, positive for R→L
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
-        document.getElementById("data-flow").style.strokeDashoffset = String(flowState.offset);
+        document.getElementById('data-flow').style.strokeDashoffset = String(
+          flowState.offset,
+        );
       },
     },
     0,
   );
 
   // Brand fades in early
-  tl.from(".brand", { opacity: 0, y: 16, duration: 0.6, ease: "power3.out" }, BRAND_AT);
+  tl.from(
+    '.brand',
+    { opacity: 0, y: 16, duration: 0.6, ease: 'power3.out' },
+    BRAND_AT,
+  );
 
-  window.__timelines["enrichment-scene"] = tl;
+  window.__timelines['enrichment-scene'] = tl;
 </script>
 ```
 
@@ -286,9 +315,9 @@ Draw the icon outline first (via [svg-path-draw](svg-path-draw.md)), THEN activa
 ```js
 // Phase 1: outline draws (0 → OUTLINE_DUR)
 tl.fromTo(
-  "#icon-outline",
+  '#icon-outline',
   { strokeDashoffset: 360 },
-  { strokeDashoffset: 0, duration: OUTLINE_DUR, ease: "power2.inOut" },
+  { strokeDashoffset: 0, duration: OUTLINE_DUR, ease: 'power2.inOut' },
   0,
 );
 // Phase 2: enrichment starts at OUTLINE_DUR

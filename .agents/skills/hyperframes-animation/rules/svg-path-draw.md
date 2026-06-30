@@ -29,7 +29,11 @@ The path length is computed via the DOM API `path.getTotalLength()`.
   data-duration="3"
   data-track-index="0"
 >
-  <svg class="logo-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    class="logo-mark"
+    viewBox="0 0 200 200"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <!-- Multi-segment glyph; draw all segments sequentially -->
     <path id="bar-left" d="M 60 40 L 60 160" />
     <path id="bar-right" d="M 140 40 L 140 160" />
@@ -97,7 +101,7 @@ The path length is computed via the DOM API `path.getTotalLength()`.
   // Measure each path's total length and set up its dash pattern.
   // getTotalLength() is a real DOM API — its return value is dynamic
   // measured geometry, NOT a magic number.
-  const paths = document.querySelectorAll(".logo-mark path");
+  const paths = document.querySelectorAll('.logo-mark path');
   paths.forEach((p) => {
     const len = p.getTotalLength();
     p.style.strokeDasharray = `${len}`;
@@ -109,45 +113,45 @@ The path length is computed via the DOM API `path.getTotalLength()`.
   // Stagger draws across segments — each starts before the previous finishes
   // so the eye reads continuous motion.
   tl.to(
-    "#bar-left",
+    '#bar-left',
     {
       strokeDashoffset: 0,
       duration: SEGMENT_DRAW_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     SEG_1_START,
   );
   tl.to(
-    "#bar-right",
+    '#bar-right',
     {
       strokeDashoffset: 0,
       duration: SEGMENT_DRAW_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     SEG_2_START,
   );
   tl.to(
-    "#bar-mid",
+    '#bar-mid',
     {
       strokeDashoffset: 0,
       duration: FINAL_SEGMENT_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     SEG_3_START,
   );
 
   // Brand line fades in after the strokes settle
   tl.to(
-    ".brand-line",
+    '.brand-line',
     {
       opacity: 1,
       duration: BRAND_FADE_DUR,
-      ease: "power1.out",
+      ease: 'power1.out',
     },
     BRAND_FADE_START,
   );
 
-  window.__timelines["svg-draw-scene"] = tl;
+  window.__timelines['svg-draw-scene'] = tl;
 </script>
 ```
 
@@ -222,7 +226,11 @@ By default, `<circle>` and `<rect>` start their stroke at 3 o'clock. Rotate the 
 Use `ease: 'none'` for steady-rate drawing (like an actual pen tracing):
 
 ```js
-tl.to("#path", { strokeDashoffset: 0, duration: SEGMENT_DRAW_DUR, ease: "none" }, SEG_1_START);
+tl.to(
+  '#path',
+  { strokeDashoffset: 0, duration: SEGMENT_DRAW_DUR, ease: 'none' },
+  SEG_1_START,
+);
 ```
 
 ### Draw then fill
@@ -231,13 +239,13 @@ For SVG shapes that have a fill color, animate fill opacity to come in AFTER the
 
 ```js
 tl.to(
-  "#path",
-  { strokeDashoffset: 0, duration: SEGMENT_DRAW_DUR, ease: "power2.out" },
+  '#path',
+  { strokeDashoffset: 0, duration: SEGMENT_DRAW_DUR, ease: 'power2.out' },
   SEG_1_START,
 );
 tl.to(
-  "#path",
-  { fillOpacity: 1, duration: FILL_FADE_DUR, ease: "power1.out" },
+  '#path',
+  { fillOpacity: 1, duration: FILL_FADE_DUR, ease: 'power1.out' },
   SEG_1_START + SEGMENT_DRAW_DUR,
 );
 ```

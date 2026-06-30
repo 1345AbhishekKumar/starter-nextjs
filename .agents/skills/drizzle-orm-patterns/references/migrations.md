@@ -18,6 +18,7 @@ export default defineConfig({
 ## Configuration for Different Databases
 
 ### PostgreSQL
+
 ```typescript
 export default defineConfig({
   schema: './src/db/schema.ts',
@@ -30,6 +31,7 @@ export default defineConfig({
 ```
 
 ### MySQL
+
 ```typescript
 export default defineConfig({
   schema: './src/db/schema.ts',
@@ -46,6 +48,7 @@ export default defineConfig({
 ```
 
 ### SQLite
+
 ```typescript
 export default defineConfig({
   schema: './src/db/schema.ts',

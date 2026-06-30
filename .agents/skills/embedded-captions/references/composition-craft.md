@@ -288,8 +288,12 @@ Contrast floor — the climax must at least clear these:
 A quick audit script — before shipping, dump every plan's max-body vs max-crown font-size ratio, and flag anything <1.8×:
 
 ```js
-const bodyMax = Math.max(...plan.groups.filter((g) => g.plane === "body").map(fsize));
-const crownMax = Math.max(...plan.groups.filter((g) => g.plane === "crown").map(fsize));
+const bodyMax = Math.max(
+  ...plan.groups.filter((g) => g.plane === 'body').map(fsize),
+);
+const crownMax = Math.max(
+  ...plan.groups.filter((g) => g.plane === 'crown').map(fsize),
+);
 const ratio = crownMax / bodyMax; // aim for ≥1.8
 ```
 

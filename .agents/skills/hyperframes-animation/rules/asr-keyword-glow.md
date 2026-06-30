@@ -119,7 +119,7 @@ The envelope drives `textShadow` blur radius AND `scale`. Higher blur + bigger s
     return REST_LEVEL;
   }
 
-  const words = document.querySelectorAll(".word");
+  const words = document.querySelectorAll('.word');
 
   // Single driver — 0 → composition duration
   const driver = { t: 0 };
@@ -128,7 +128,7 @@ The envelope drives `textShadow` blur radius AND `scale`. Higher blur + bigger s
     {
       t: SCENE_DURATION,
       duration: SCENE_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         words.forEach((el) => {
           const word = el.dataset.word;
@@ -145,7 +145,7 @@ The envelope drives `textShadow` blur radius AND `scale`. Higher blur + bigger s
     0,
   );
 
-  window.__timelines["asr-scene"] = tl;
+  window.__timelines['asr-scene'] = tl;
 </script>
 ```
 
@@ -193,7 +193,7 @@ function colorAt(env, isBrand) {
 }
 
 // In onUpdate:
-el.style.color = colorAt(env, el.classList.contains("brand"));
+el.style.color = colorAt(env, el.classList.contains('brand'));
 ```
 
 Visual result: at any moment 1-2 words are bright + glowing (the spoken word + the recently-spoken one's lingering rest), and the rest of the phrase is dim. This is closer to actual karaoke / lyric video aesthetic than the subtle "everyone half-glowing" baseline.

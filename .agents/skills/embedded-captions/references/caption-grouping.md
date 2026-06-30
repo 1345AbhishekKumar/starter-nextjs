@@ -120,7 +120,13 @@ Groups after editorial pass:
 Plus the crown:
 
 ```json
-{ "id": "cg-crown", "style": "crown", "words": ["Wimbledon", "Champion"], "in": 10.8, "out": 12.08 }
+{
+  "id": "cg-crown",
+  "style": "crown",
+  "words": ["Wimbledon", "Champion"],
+  "in": 10.8,
+  "out": 12.08
+}
 ```
 
 Notice "had" was dropped from cg-2 ("had the great foundation" → "the great foundation"), "I was" was dropped from cg-4, and "a" was dropped from crown — all for visual cadence.

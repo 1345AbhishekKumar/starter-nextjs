@@ -42,7 +42,8 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
   data-track-index="0"
 >
   <div class="counter-wrap">
-    <span class="counter" id="counter">0</span><span class="counter-suffix">{suffix}</span>
+    <span class="counter" id="counter">0</span
+    ><span class="counter-suffix">{suffix}</span>
   </div>
   <div class="counter-label">{label}</div>
 </div>
@@ -108,7 +109,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const counter = document.getElementById("counter");
+  const counter = document.getElementById('counter');
   const state = { value: 0, fontSize: START_SIZE };
 
   // Synchronized count + font-size tween
@@ -129,7 +130,7 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
 
   // Suffix slides in after count completes
   tl.to(
-    ".counter-suffix",
+    '.counter-suffix',
     {
       opacity: 1,
       y: 0,
@@ -141,17 +142,17 @@ Pick by drama desired (the choice is discrete; coefficient is implicit):
 
   // Label fades in early
   tl.from(
-    ".counter-label",
+    '.counter-label',
     {
       opacity: 0,
       y: 12,
       duration: LABEL_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     LABEL_AT,
   );
 
-  window.__timelines["counter-scene"] = tl;
+  window.__timelines['counter-scene'] = tl;
 </script>
 ```
 
@@ -196,7 +197,12 @@ The GSAP inspector reads `innerText` directly, so a number-only counter can skip
 ```js
 tl.to(
   counter,
-  { innerText: TARGET_VALUE, duration: COUNT_DUR, ease: COUNT_EASE, snap: { innerText: 1 } },
+  {
+    innerText: TARGET_VALUE,
+    duration: COUNT_DUR,
+    ease: COUNT_EASE,
+    snap: { innerText: 1 },
+  },
   0,
 );
 ```
@@ -209,11 +215,11 @@ Combine with `translateZ` for parallax-style depth on entry:
 
 ```js
 tl.from(
-  ".counter",
+  '.counter',
   {
     z: -300,
     duration: 0.6,
-    ease: "power2.out",
+    ease: 'power2.out',
     // requires parent or .counter itself to have perspective set
   },
   0,
@@ -236,7 +242,7 @@ CSS prerequisite:
 For 3 stats counting in parallel, share the SAME ease and duration so they finish together — visually a chord, not arpeggio. Each stat usually also needs a **paired graphic** (bar / ring / stars) — don't stop at the number; see [stat-bars-and-fills.md](stat-bars-and-fills.md):
 
 ```js
-["#stat1", "#stat2", "#stat3"].forEach((sel, i) => {
+['#stat1', '#stat2', '#stat3'].forEach((sel, i) => {
   const obj = { v: 0 };
   tl.to(
     obj,
@@ -244,7 +250,8 @@ For 3 stats counting in parallel, share the SAME ease and duration so they finis
       v: TARGETS[i],
       duration: COUNT_DUR,
       ease: COUNT_EASE,
-      onUpdate: () => (document.querySelector(sel).textContent = Math.round(obj.v)),
+      onUpdate: () =>
+        (document.querySelector(sel).textContent = Math.round(obj.v)),
     },
     0,
   ); // same start position — chord

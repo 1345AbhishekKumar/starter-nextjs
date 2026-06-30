@@ -120,7 +120,7 @@ For the traveling-sweep form, the sweep layer is clipped to the surface it cross
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const glow = document.getElementById("bloom-glow");
+  const glow = document.getElementById('bloom-glow');
 
   // ── Form A: HERO BLOOM ──────────────────────────────────────────────
   // Phase 1 — bloom in. opacity 0 → peak + gentle scale swell, landing on
@@ -132,7 +132,7 @@ For the traveling-sweep form, the sweep layer is clipped to the surface it cross
       opacity: GLOW_PEAK_OPACITY,
       scale: 1,
       duration: BLOOM_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     BLOOM_START,
   );
@@ -147,7 +147,7 @@ For the traveling-sweep form, the sweep layer is clipped to the surface it cross
     {
       p: Math.PI * 2 * BREATHE_CYCLES,
       duration: BREATHE_DUR,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         const s = Math.sin(phase.p);
         glow.style.opacity = String(GLOW_PEAK_OPACITY + s * OPACITY_AMP);
@@ -160,7 +160,7 @@ For the traveling-sweep form, the sweep layer is clipped to the surface it cross
   // ── Form B: TRAVELING SWEEP ─────────────────────────────────────────
   // A single finite pass. opacity fades in, x travels from off one edge to
   // off the other, opacity fades out as it exits. One pass — no repeat.
-  const sweep = document.getElementById("sweep");
+  const sweep = document.getElementById('sweep');
   tl.fromTo(
     sweep,
     { x: SWEEP_START_X, opacity: 0 },
@@ -168,14 +168,18 @@ For the traveling-sweep form, the sweep layer is clipped to the surface it cross
       x: SWEEP_END_X,
       opacity: SWEEP_PEAK_OPACITY,
       duration: SWEEP_DUR,
-      ease: "none", // constant glide reads as a raking light, not an ease-in object
+      ease: 'none', // constant glide reads as a raking light, not an ease-in object
     },
     SWEEP_START,
   );
   // Fade the trailing edge out so it doesn't pop off at the surface edge.
-  tl.to(sweep, { opacity: 0, duration: SWEEP_FADE_DUR, ease: "power1.in" }, SWEEP_FADE_START);
+  tl.to(
+    sweep,
+    { opacity: 0, duration: SWEEP_FADE_DUR, ease: 'power1.in' },
+    SWEEP_FADE_START,
+  );
 
-  window.__timelines["bloom-scene"] = tl;
+  window.__timelines['bloom-scene'] = tl;
 </script>
 ```
 
@@ -193,12 +197,22 @@ Bloom slightly **past** peak, then ease back down to a steady hold level — a s
 tl.fromTo(
   glow,
   { opacity: 0, scale: GLOW_START_SCALE },
-  { opacity: GLOW_OVERSHOOT_OPACITY, scale: 1.06, duration: BLOOM_DUR, ease: "power2.out" },
+  {
+    opacity: GLOW_OVERSHOOT_OPACITY,
+    scale: 1.06,
+    duration: BLOOM_DUR,
+    ease: 'power2.out',
+  },
   BLOOM_START,
 );
 tl.to(
   glow,
-  { opacity: GLOW_HOLD_OPACITY, scale: 1, duration: SETTLE_DUR, ease: "power2.inOut" },
+  {
+    opacity: GLOW_HOLD_OPACITY,
+    scale: 1,
+    duration: SETTLE_DUR,
+    ease: 'power2.inOut',
+  },
   BLOOM_START + BLOOM_DUR,
 );
 ```

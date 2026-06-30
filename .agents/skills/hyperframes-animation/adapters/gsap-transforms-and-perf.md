@@ -21,7 +21,7 @@ Aliases let GSAP track and interpolate each axis independently, which prevents a
 Prefer `autoAlpha` over `opacity` for show/hide:
 
 ```javascript
-gsap.to(".panel", { autoAlpha: 0, duration: 0.4 });
+gsap.to('.panel', { autoAlpha: 0, duration: 0.4 });
 ```
 
 `autoAlpha: 0` sets both `opacity: 0` and `visibility: hidden`, which removes the element from hit-testing and accessibility tree at zero alpha — closer to "gone" than plain `opacity: 0`.
@@ -31,8 +31,8 @@ gsap.to(".panel", { autoAlpha: 0, duration: 0.4 });
 Removes inline styles set by GSAP when the tween completes:
 
 ```javascript
-gsap.to(".item", { x: 100, rotation: 45, clearProps: "all" });
-gsap.to(".item", { x: 100, rotation: 45, clearProps: "rotation,x" });
+gsap.to('.item', { x: 100, rotation: 45, clearProps: 'all' });
+gsap.to('.item', { x: 100, rotation: 45, clearProps: 'rotation,x' });
 ```
 
 Useful at the end of an animation segment to hand the element back to CSS.
@@ -40,7 +40,7 @@ Useful at the end of an animation segment to hand the element back to CSS.
 ## CSS Variables
 
 ```javascript
-gsap.to(".chart", { "--hue": 180, duration: 1 });
+gsap.to('.chart', { '--hue': 180, duration: 1 });
 ```
 
 Animate any custom property. Works for color, length, number — anything CSS will interpolate.
@@ -76,10 +76,10 @@ Only on elements that _actually_ animate. Applied everywhere it becomes useless 
 For high-frequency updates driven by **events** — pointer move, scroll, audio scrub — `quickTo` reuses the same tween instead of creating a new one each frame:
 
 ```javascript
-const xTo = gsap.quickTo("#cursor", "x", { duration: 0.4, ease: "power3" });
-const yTo = gsap.quickTo("#cursor", "y", { duration: 0.4, ease: "power3" });
+const xTo = gsap.quickTo('#cursor', 'x', { duration: 0.4, ease: 'power3' });
+const yTo = gsap.quickTo('#cursor', 'y', { duration: 0.4, ease: 'power3' });
 
-container.addEventListener("mousemove", (e) => {
+container.addEventListener('mousemove', (e) => {
   xTo(e.pageX);
   yTo(e.pageY);
 });

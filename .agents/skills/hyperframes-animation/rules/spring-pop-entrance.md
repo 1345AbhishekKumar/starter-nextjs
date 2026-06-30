@@ -117,13 +117,13 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
   // fromTo states the collapsed start explicitly so the hero is correct at t=0
   // under seek. power3.out grows scale into 1.0 and decelerates smoothly.
   tl.fromTo(
-    "#hero",
+    '#hero',
     { scale: 0, opacity: 0 },
     {
       scale: 1,
       opacity: 1,
       duration: POP_DUR,
-      ease: "power3.out", // smooth beats bouncy; expo.out for a punchier front
+      ease: 'power3.out', // smooth beats bouncy; expo.out for a punchier front
     },
     ENTRY_AT,
   );
@@ -131,7 +131,7 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
   // --- Staggered group pop ---
   // Deterministic, index-derived stagger (no Math.random). The cap keeps the
   // whole group inside one arriving beat: ITEM_COUNT * STAGGER <= ~0.5s.
-  const items = gsap.utils.toArray(".pop-item");
+  const items = gsap.utils.toArray('.pop-item');
   items.forEach((el, i) => {
     tl.fromTo(
       el,
@@ -141,13 +141,13 @@ A small `y` rise (`y: 24 → 0`) layers a subtle "lifts into place" on top of th
         opacity: 1,
         y: 0,
         duration: POP_DUR,
-        ease: "power3.out",
+        ease: 'power3.out',
       },
       GROUP_ENTRY_AT + i * STAGGER,
     );
   });
 
-  window.__timelines["pop-scene"] = tl;
+  window.__timelines['pop-scene'] = tl;
 </script>
 ```
 
@@ -170,7 +170,13 @@ The exception, not the default. **Only** for a deliberately playful register (a 
 tl.fromTo(
   el,
   { scale: 0, opacity: 0, rotation: ROT_FROM },
-  { scale: 1, opacity: 1, rotation: 0, duration: POP_DUR, ease: `back.out(${OVERSHOOT})` },
+  {
+    scale: 1,
+    opacity: 1,
+    rotation: 0,
+    duration: POP_DUR,
+    ease: `back.out(${OVERSHOOT})`,
+  },
   GROUP_ENTRY_AT + i * STAGGER,
 );
 ```

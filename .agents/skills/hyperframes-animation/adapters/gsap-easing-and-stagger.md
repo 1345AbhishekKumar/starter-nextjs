@@ -42,14 +42,14 @@ The full palette by character (each family has `.in`, `.out`, `.inOut` variants)
 ```javascript
 const tl = gsap.timeline({
   paused: true,
-  defaults: { duration: 0.6, ease: "power2.out" },
+  defaults: { duration: 0.6, ease: 'power2.out' },
 });
 ```
 
 Or globally:
 
 ```javascript
-gsap.defaults({ duration: 0.6, ease: "power2.out" });
+gsap.defaults({ duration: 0.6, ease: 'power2.out' });
 ```
 
 Setting defaults at timeline scope is preferred — it documents the motion language of that composition in one place.
@@ -57,24 +57,28 @@ Setting defaults at timeline scope is preferred — it documents the motion lang
 ## Stagger
 
 ```javascript
-gsap.fromTo(".item", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08 });
+gsap.fromTo(
+  '.item',
+  { y: 24, opacity: 0 },
+  { y: 0, opacity: 1, duration: 0.5, stagger: 0.08 },
+);
 ```
 
 Object form:
 
 ```javascript
 gsap.fromTo(
-  ".item",
+  '.item',
   { y: 24, opacity: 0 },
   {
     y: 0,
     opacity: 1,
     stagger: {
       each: 0.08, // delay between each
-      from: "center", // "start" | "end" | "center" | "edges" | "random" | index
+      from: 'center', // "start" | "end" | "center" | "edges" | "random" | index
       amount: 0.6, // total stagger time (overrides each if both set)
-      grid: "auto", // for 2D stagger
-      axis: "x" | "y",
+      grid: 'auto', // for 2D stagger
+      axis: 'x' | 'y',
     },
   },
 );
@@ -87,7 +91,7 @@ Prefer `stagger` over N separate tweens with manual delays — it stays correct 
 Any var can be a function `(index, target, targets) => value`:
 
 ```javascript
-gsap.to(".item", {
+gsap.to('.item', {
   x: (i, target, targets) => i * 50,
   rotation: (i) => (i % 2 === 0 ? 5 : -5),
   stagger: 0.1,
@@ -104,12 +108,12 @@ Use this for per-element values that depend on index, attributes, or measured si
 let mm = gsap.matchMedia();
 mm.add(
   {
-    isDesktop: "(min-width: 800px)",
-    reduceMotion: "(prefers-reduced-motion: reduce)",
+    isDesktop: '(min-width: 800px)',
+    reduceMotion: '(prefers-reduced-motion: reduce)',
   },
   (context) => {
     const { isDesktop, reduceMotion } = context.conditions;
-    gsap.to(".box", {
+    gsap.to('.box', {
       rotation: isDesktop ? 360 : 180,
       duration: reduceMotion ? 0 : 2,
     });

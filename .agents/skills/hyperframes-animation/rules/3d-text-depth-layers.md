@@ -79,21 +79,24 @@ Renders the same text N times at increasing offsets, with back layers translucen
 <script>
   window.__timelines = window.__timelines || {};
 
-  const TEXT = "{label}";
-  const stack = document.querySelector(".depth-stack");
+  const TEXT = '{label}';
+  const stack = document.querySelector('.depth-stack');
 
   // Build layers — back-to-front so the FRONT (i=0) is the LAST appended
   // and `position: relative` defines container size.
   for (let i = LAYER_COUNT - 1; i >= 0; i--) {
-    const el = document.createElement("div");
-    el.className = "depth-text " + (i === 0 ? "is-front" : "is-back");
+    const el = document.createElement('div');
+    el.className = 'depth-text ' + (i === 0 ? 'is-front' : 'is-back');
     el.textContent = TEXT;
     if (i > 0) {
-      const alpha = Math.max(BACK_ALPHA_MAX - i * BACK_ALPHA_STEP, BACK_ALPHA_MIN);
+      const alpha = Math.max(
+        BACK_ALPHA_MAX - i * BACK_ALPHA_STEP,
+        BACK_ALPHA_MIN,
+      );
       el.style.color = `rgba({backHueRGB}, ${alpha})`;
       el.style.transform = `translate(${i * OFFSET_X}px, ${i * OFFSET_Y}px)`;
     } else {
-      el.style.color = "{frontColor}";
+      el.style.color = '{frontColor}';
     }
     el.dataset.layer = String(i);
     stack.appendChild(el);
@@ -102,10 +105,10 @@ Renders the same text N times at increasing offsets, with back layers translucen
   const tl = gsap.timeline({ paused: true });
 
   // Layered entry — back layers appear first, building forward
-  const allLayers = stack.querySelectorAll(".depth-text");
+  const allLayers = stack.querySelectorAll('.depth-text');
   allLayers.forEach((el) => {
     const i = Number(el.dataset.layer);
-    const finalAlpha = el.classList.contains("is-front")
+    const finalAlpha = el.classList.contains('is-front')
       ? 1
       : Math.max(BACK_ALPHA_MAX - i * BACK_ALPHA_STEP, BACK_ALPHA_MIN);
     tl.fromTo(
@@ -114,7 +117,7 @@ Renders the same text N times at increasing offsets, with back layers translucen
       {
         opacity: finalAlpha,
         duration: LAYER_FADE_DUR,
-        ease: "power2.out",
+        ease: 'power2.out',
       },
       LAYER_CASCADE_START + (LAYER_COUNT - 1 - i) * LAYER_CASCADE_STEP,
     );
@@ -127,9 +130,9 @@ Renders the same text N times at increasing offsets, with back layers translucen
     {
       p: 1,
       duration: DEPTH_GROW_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
       onUpdate: () => {
-        stack.querySelectorAll(".depth-text.is-back").forEach((el) => {
+        stack.querySelectorAll('.depth-text.is-back').forEach((el) => {
           const i = Number(el.dataset.layer);
           const x = i * OFFSET_X * depthState.p;
           const y = i * OFFSET_Y * depthState.p;
@@ -140,7 +143,7 @@ Renders the same text N times at increasing offsets, with back layers translucen
     DEPTH_GROW_START,
   );
 
-  window.__timelines["depth-scene"] = tl;
+  window.__timelines['depth-scene'] = tl;
 </script>
 ```
 
@@ -153,7 +156,12 @@ Skip the cascade — render all layers in their final positions from t=0, option
 ```js
 tl.from(
   stack,
-  { opacity: 0, scale: STATIC_ENTRY_SCALE, duration: STATIC_ENTRY_DUR, ease: "power3.out" },
+  {
+    opacity: 0,
+    scale: STATIC_ENTRY_SCALE,
+    duration: STATIC_ENTRY_DUR,
+    ease: 'power3.out',
+  },
   0,
 );
 ```
@@ -169,10 +177,10 @@ tl.to(
   {
     p: Math.PI * 2 * BEAT_CYCLES,
     duration: BEAT_DUR,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       const mult = 1 + Math.sin(beat.p) * BEAT_AMP;
-      stack.querySelectorAll(".is-back").forEach((el) => {
+      stack.querySelectorAll('.is-back').forEach((el) => {
         const i = Number(el.dataset.layer);
         el.style.transform = `translate(${i * OFFSET_X * mult}px, ${i * OFFSET_Y * mult}px)`;
       });

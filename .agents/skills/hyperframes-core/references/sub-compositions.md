@@ -58,7 +58,12 @@ So `<template>` is not just a wrapper — it is the **transport container**. If 
         /* .label, #bar, … — descendants, plain selectors */
       </style>
 
-      <div id="root" data-composition-id="data-chart" data-width="1920" data-height="1080">
+      <div
+        id="root"
+        data-composition-id="data-chart"
+        data-width="1920"
+        data-height="1080"
+      >
         <!-- sub-composition markup -->
       </div>
 
@@ -66,7 +71,7 @@ So `<template>` is not just a wrapper — it is the **transport container**. If 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
         // ... build timeline ...
-        window.__timelines["data-chart"] = tl;
+        window.__timelines['data-chart'] = tl;
       </script>
     </template>
   </body>
@@ -115,18 +120,26 @@ Contrast with **standalone** compositions, which put the root directly in `<body
 ```html
 <!-- ❌ WRONG — host renames the slot; runtime can't find the timeline -->
 <!-- host file (e.g. index.html) -->
-<div data-composition-id="chart-mount" data-composition-src="compositions/chart.html" ...></div>
+<div
+  data-composition-id="chart-mount"
+  data-composition-src="compositions/chart.html"
+  ...
+></div>
 
 <!-- chart.html -->
 <template>
   <div data-composition-id="data-chart" ...>...</div>
   <script>
-    window.__timelines["data-chart"] = tl;
+    window.__timelines['data-chart'] = tl;
   </script>
 </template>
 
 <!-- ✅ RIGHT — both ids match, and the timeline key matches them too -->
-<div data-composition-id="data-chart" data-composition-src="compositions/chart.html" ...></div>
+<div
+  data-composition-id="data-chart"
+  data-composition-src="compositions/chart.html"
+  ...
+></div>
 <!-- chart.html template root: data-composition-id="data-chart" -->
 <!-- timeline: window.__timelines["data-chart"] = tl; -->
 ```

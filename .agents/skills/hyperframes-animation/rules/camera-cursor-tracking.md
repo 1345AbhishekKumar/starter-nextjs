@@ -40,7 +40,8 @@ finalWorldX = Math.min(INITIAL_OFFSET, trackingOffset)
   <div class="viewport">
     <div class="world">
       <div class="search-bar">
-        <span class="text" id="reveal-text">{phrase}</span><span class="cursor">|</span>
+        <span class="text" id="reveal-text">{phrase}</span
+        ><span class="cursor">|</span>
       </div>
     </div>
   </div>
@@ -113,21 +114,24 @@ finalWorldX = Math.min(INITIAL_OFFSET, trackingOffset)
   // Pre-measure target text width to compute tracking distance.
   // Build the timeline SYNCHRONOUSLY — see Critical Constraints for why
   // a fonts.ready gate causes worker-race flicker.
-  const textEl = document.getElementById("reveal-text");
+  const textEl = document.getElementById('reveal-text');
   const fullText = textEl.textContent;
   const targetCursorScreenX = CURSOR_TARGET_FRACTION * VIEWPORT_WIDTH;
   const fullWidth = textEl.scrollWidth; // total text width after full reveal
-  const trackingDelta = Math.max(0, VIEWPORT_PAD_LEFT + fullWidth - targetCursorScreenX);
+  const trackingDelta = Math.max(
+    0,
+    VIEWPORT_PAD_LEFT + fullWidth - targetCursorScreenX,
+  );
 
   // Phase 1 — text reveals progressively; camera holds.
   // Reveal via max-width tween (no layout-property tweens on width/left/top).
   tl.fromTo(
-    ".search-bar .text",
+    '.search-bar .text',
     { maxWidth: 0 },
     {
       maxWidth: fullWidth,
       duration: REVEAL_DUR,
-      ease: "none", // linear typing rate
+      ease: 'none', // linear typing rate
     },
     REVEAL_START,
   );
@@ -137,11 +141,11 @@ finalWorldX = Math.min(INITIAL_OFFSET, trackingOffset)
   // Math.min(INITIAL_OFFSET, trackingOffset) formulation makes the handoff
   // mathematically continuous; see How It Works.
   tl.to(
-    ".world",
+    '.world',
     {
       x: -trackingDelta,
       duration: TRACK_DUR,
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
     },
     TRACK_START,
   );
@@ -151,18 +155,18 @@ finalWorldX = Math.min(INITIAL_OFFSET, trackingOffset)
   // length so blinks land deterministically across frames.
   const blinkRepeats = Math.ceil(SCENE_DURATION / BLINK_HALF_PERIOD) - 1;
   tl.to(
-    ".search-bar .cursor",
+    '.search-bar .cursor',
     {
       opacity: 0,
       duration: BLINK_HALF_PERIOD,
-      ease: "steps(1)", // hard on/off, no fade
+      ease: 'steps(1)', // hard on/off, no fade
       yoyo: true,
       repeat: blinkRepeats,
     },
     0,
   );
 
-  window.__timelines["tracking-scene"] = tl;
+  window.__timelines['tracking-scene'] = tl;
 </script>
 ```
 

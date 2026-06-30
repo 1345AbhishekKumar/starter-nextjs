@@ -42,7 +42,7 @@ Read where the target actually is, once, at setup. This is immune to sign errors
 await document.fonts.ready; // metrics final; fallback fonts are 10–30px off → tens of px after a 3×+ zoom
 const W = 1920,
   H = 1080;
-const r = document.getElementById("target-card").getBoundingClientRect();
+const r = document.getElementById('target-card').getBoundingClientRect();
 const TARGET_OFFSET_X = r.left + r.width / 2 - W / 2;
 const TARGET_OFFSET_Y = r.top + r.height / 2 - H / 2;
 // bake these; feed counterX/Y = -TARGET_OFFSET_X/Y to the inner tween
@@ -194,8 +194,14 @@ A target that fills 97%+ of the frame reads as cut-off the instant its center is
 
   // Phase 1 — cards reveal
   tl.from(
-    ".card",
-    { opacity: 0, y: REVEAL_Y, stagger: REVEAL_STAGGER, duration: REVEAL_DUR, ease: "power3.out" },
+    '.card',
+    {
+      opacity: 0,
+      y: REVEAL_Y,
+      stagger: REVEAL_STAGGER,
+      duration: REVEAL_DUR,
+      ease: 'power3.out',
+    },
     REVEAL_START,
   );
 
@@ -203,36 +209,36 @@ A target that fills 97%+ of the frame reads as cut-off the instant its center is
 
   // Phase 3 — zoom into target
   tl.to(
-    "#zoom-outer",
+    '#zoom-outer',
     {
       scale: ZOOM_SCALE,
       duration: ZOOM_DUR,
-      ease: "power3.inOut",
+      ease: 'power3.inOut',
     },
     ZOOM_START,
   );
   tl.to(
-    "#zoom-inner",
+    '#zoom-inner',
     {
       x: counterX,
       y: counterY,
       duration: ZOOM_DUR,
-      ease: "power3.inOut",
+      ease: 'power3.inOut',
     },
     ZOOM_START,
   );
 
   // Phase 4 — target "tag" reveals inside the zoomed-in target
   tl.to(
-    ".target .tag",
-    { opacity: 1, duration: TAG_REVEAL_DUR, ease: "power2.out" },
+    '.target .tag',
+    { opacity: 1, duration: TAG_REVEAL_DUR, ease: 'power2.out' },
     TAG_REVEAL_START,
   );
 
   // Phase 5 — climax dwell — viewer reads the target content
   // (no additional motion; the zoomed-in state holds for DWELL_DUR seconds)
 
-  window.__timelines["zoom-scene"] = tl;
+  window.__timelines['zoom-scene'] = tl;
 </script>
 ```
 

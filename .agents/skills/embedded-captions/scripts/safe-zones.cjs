@@ -14,26 +14,27 @@
  * shoulders stays FREE (a bbox would wrongly claim it). The subject MOVES, so zones are
  * computed PER TIME WINDOW (the union over just that window's frames), not one global box.
  */
-const path = require("path");
-const fs = require("fs");
-const os = require("os");
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
 const THRESH = 30 / 255; // a cell is "subject" if ≥12% covered at any sampled frame in the window
 const SAMPLES = 48; // frames cached across the clip (windows aggregate the cached grids)
 
 const HF_ROOTS = [
   process.env.HYPERFRAMES_ROOT,
-  path.resolve(__dirname, "../../.."),
-  path.join(os.homedir(), "Downloads", "hyperframes"),
+  path.resolve(__dirname, '../../..'),
+  path.join(os.homedir(), 'Downloads', 'hyperframes'),
 ].filter(Boolean);
 let sharp = null;
 for (const root of HF_ROOTS) {
-  const cands = [path.join(root, "node_modules", "sharp")];
-  const bunDir = path.join(root, "node_modules", ".bun");
+  const cands = [path.join(root, 'node_modules', 'sharp')];
+  const bunDir = path.join(root, 'node_modules', '.bun');
   try {
     if (fs.existsSync(bunDir))
       for (const d of fs.readdirSync(bunDir))
-        if (d.startsWith("sharp@")) cands.push(path.join(bunDir, d, "node_modules", "sharp"));
+        if (d.startsWith('sharp@'))
+          cands.push(path.join(bunDir, d, 'node_modules', 'sharp'));
   } catch {}
   for (const c of cands) {
     try {
@@ -52,7 +53,8 @@ function largestRect(safe, GW, c0, c1, r0, r1) {
   const heights = new Array(cols).fill(0);
   let best = { area: 0, x: 0, y: 0, w: 0, h: 0 };
   for (let r = r0; r < r1; r++) {
-    for (let cc = 0; cc < cols; cc++) heights[cc] = safe[r * GW + (c0 + cc)] ? heights[cc] + 1 : 0;
+    for (let cc = 0; cc < cols; cc++)
+      heights[cc] = safe[r * GW + (c0 + cc)] ? heights[cc] + 1 : 0;
     const st = [];
     for (let cc = 0; cc <= cols; cc++) {
       const h = cc < cols ? heights[cc] : 0;
@@ -61,7 +63,13 @@ function largestRect(safe, GW, c0, c1, r0, r1) {
         const top = st.pop();
         const area = top.h * (cc - top.i);
         if (area > best.area)
-          best = { area, x: c0 + top.i, y: r - top.h + 1, w: cc - top.i, h: top.h };
+          best = {
+            area,
+            x: c0 + top.i,
+            y: r - top.h + 1,
+            w: cc - top.i,
+            h: top.h,
+          };
         start = top.i;
       }
       st.push({ i: start, h });
@@ -82,7 +90,8 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
         for (let dx = -1; dx <= 1 && !o; dx++) {
           const nx = x + dx,
             ny = y + dy;
-          if (nx >= 0 && nx < GW && ny >= 0 && ny < GH && occCell[ny * GW + nx]) o = 1;
+          if (nx >= 0 && nx < GW && ny >= 0 && ny < GH && occCell[ny * GW + nx])
+            o = 1;
         }
       safe[y * GW + x] = o ? 0 : 1;
     }
@@ -106,7 +115,7 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     rowMin = 0;
     rowMax = -1;
   }
-  const clearerSide = colMin >= GW - 1 - colMax ? "left" : "right";
+  const clearerSide = colMin >= GW - 1 - colMax ? 'left' : 'right';
   const cellW = W / GW,
     cellH = H / GH;
   // HERO anchor — where the ONE big promoted word should sit: ON the subject (centered,
@@ -120,7 +129,9 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     const yTop = (rowMin / GH) * 100,
       yBot = ((rowMax + 1) / GH) * 100;
     const wPct = Math.round(Math.min(92, Math.max(58, subjWpct + 26)));
-    const xPct = Math.round(Math.min(98 - wPct, Math.max(2, subjCx - wPct / 2)));
+    const xPct = Math.round(
+      Math.min(98 - wPct, Math.max(2, subjCx - wPct / 2)),
+    );
     const yPct = Math.round(yTop + (yBot - yTop) * 0.12); // band crosses the head / upper torso
     let bandLuma = null;
     if (lum) {
@@ -142,15 +153,15 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     }
     heroAnchor = {
       centerXPct: +subjCx.toFixed(1),
-      plane: { xPct, yPct, wPct, align: "center" },
+      plane: { xPct, yPct, wPct, align: 'center' },
       ...(bandLuma != null ? { bandLuma, washoutRisk: bandLuma > 175 } : {}),
       note:
-        "Place the ONE big hero here (centered on the subject); the head/torso occludes its middle (~30-55%) — that is the embed. Do NOT put the hero in a clean zone." +
+        'Place the ONE big hero here (centered on the subject); the head/torso occludes its middle (~30-55%) — that is the embed. Do NOT put the hero in a clean zone.' +
         (bandLuma != null && bandLuma > 175
-          ? " ⚠ BAND IS BRIGHT (luma " +
+          ? ' ⚠ BAND IS BRIGHT (luma ' +
             bandLuma +
-            "): cream/screen text will wash out — lower the hero onto the darker subject body, or use a template/mode with opaque text."
-          : ""),
+            '): cream/screen text will wash out — lower the hero onto the darker subject body, or use a template/mode with opaque text.'
+          : ''),
     };
   }
   const zoneLuma = (r) => {
@@ -202,7 +213,9 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
             ? {
                 meanLuma: zoneLuma(r),
                 bright: zoneLuma(r) > 180,
-                ...(zoneLumaPeak(r) != null ? { peakLuma: zoneLumaPeak(r) } : {}),
+                ...(zoneLumaPeak(r) != null
+                  ? { peakLuma: zoneLumaPeak(r) }
+                  : {}),
               }
             : {}),
         };
@@ -210,7 +223,9 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     largest: toZone(largestRect(safe, GW, 0, GW, 0, GH)),
     left: toZone(largestRect(safe, GW, 0, Math.round(GW / 2), 0, GH)),
     right: toZone(largestRect(safe, GW, Math.round(GW / 2), GW, 0, GH)),
-    top: toZone(largestRect(safe, GW, 0, GW, 0, Math.max(2, Math.round(GH * 0.38)))),
+    top: toZone(
+      largestRect(safe, GW, 0, GW, 0, Math.max(2, Math.round(GH * 0.38))),
+    ),
   };
   // HUGGING zones — clean strips that ABUT the silhouette (the embed aesthetic wants
   // text NEAR the subject, not parked in the farthest corner). Grown outward from the
@@ -219,9 +234,12 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     if (colMax < 0) return null;
     const pad = Math.max(1, Math.round(GW * 0.02));
     const y0 = rowMin,
-      y1 = Math.min(GH, rowMin + Math.max(3, Math.round((rowMax - rowMin + 1) * 0.45)));
+      y1 = Math.min(
+        GH,
+        rowMin + Math.max(3, Math.round((rowMax - rowMin + 1) * 0.45)),
+      );
     let x0, x1;
-    if (side === "right") {
+    if (side === 'right') {
       x0 = Math.min(GW - 1, colMax + 1 + pad);
       x1 = GW - pad;
     } else {
@@ -238,30 +256,46 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
         if (occCell[y * GW + x]) occN++;
       }
     if (tot === 0 || occN / tot > 0.08) return null;
-    const r = { x: x0, y: y0, w: x1 - x0, h: y1 - y0, area: (x1 - x0) * (y1 - y0) };
+    const r = {
+      x: x0,
+      y: y0,
+      w: x1 - x0,
+      h: y1 - y0,
+      area: (x1 - x0) * (y1 - y0),
+    };
     const z2 = toZone(r);
     // GLYPHS must hug, not just the plane: in a wide column, text aligned to the far
     // edge parks the words a third of the frame away from the subject. Align TOWARD
     // the silhouette: right-side column → text-align:left (text starts beside the
     // subject); left-side column → text-align:right.
-    if (z2) z2.align = side === "right" ? "left" : "right";
+    if (z2) z2.align = side === 'right' ? 'left' : 'right';
     return z2;
   };
-  zones.hugLeft = hug("left");
-  zones.hugRight = hug("right");
+  zones.hugLeft = hug('left');
+  zones.hugRight = hug('right');
   // HERO BAND PROFILE — per-height predicted occlusion of a centered hero band. The hero
   // WANTS ~30–55% (occlusion IS the embed); fg is the LAST resort, only when no height
   // achieves ≤62%. Even an 88%-coverage frame usually has a feasible band over the hairline.
   let heroBands = null;
   if (colMax >= 0) {
     const bandH = Math.max(2, Math.round(GH * 0.13));
-    const hx0 = Math.round(((heroAnchor ? heroAnchor.plane.xPct : 8) / 100) * GW);
+    const hx0 = Math.round(
+      ((heroAnchor ? heroAnchor.plane.xPct : 8) / 100) * GW,
+    );
     const hx1 = Math.min(
       GW,
-      Math.round(((heroAnchor ? heroAnchor.plane.xPct + heroAnchor.plane.wPct : 92) / 100) * GW),
+      Math.round(
+        ((heroAnchor ? heroAnchor.plane.xPct + heroAnchor.plane.wPct : 92) /
+          100) *
+          GW,
+      ),
     );
     const profile = [];
-    for (let y0 = 0; y0 + bandH <= GH; y0 += Math.max(1, Math.round(GH * 0.02))) {
+    for (
+      let y0 = 0;
+      y0 + bandH <= GH;
+      y0 += Math.max(1, Math.round(GH * 0.02))
+    ) {
       let n = 0,
         occN = 0,
         lsum = 0;
@@ -284,7 +318,8 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     heroBands = { feasible: ok.length > 0, best, profile };
   }
   const big = zones.largest;
-  const embeddable = !!big && big.areaPct >= 8 && big.hPct >= 10 && big.wPct >= 18;
+  const embeddable =
+    !!big && big.areaPct >= 8 && big.hPct >= 10 && big.wPct >= 18;
   return {
     coverage: +(coverage * 100).toFixed(1),
     subject: {
@@ -295,7 +330,7 @@ function analyze(occ, GW, GH, W, H, lum, lumSeries) {
     zones,
     heroAnchor,
     heroBands,
-    recommendation: embeddable ? "embed" : "fg",
+    recommendation: embeddable ? 'embed' : 'fg',
   };
 }
 
@@ -344,14 +379,14 @@ function hsv2hex(h, s, v) {
   const f = (n) =>
     Math.round((n + m) * 255)
       .toString(16)
-      .padStart(2, "0");
+      .padStart(2, '0');
   return `#${f(r)}${f(g)}${f(b)}`;
 }
 
 // dominant colors + accent suggestion from the BACKGROUND cells of a mid frame
 async function scenePalette(bgPath, occCell, GW, GH) {
   const { data, info } = await sharp(bgPath)
-    .resize(GW, GH, { fit: "fill" })
+    .resize(GW, GH, { fit: 'fill' })
     .removeAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
@@ -374,20 +409,29 @@ async function scenePalette(bgPath, occCell, GW, GH) {
     buckets.set(k, e);
   }
   const hex = (e) =>
-    "#" +
+    '#' +
     [e.r, e.g, e.b]
       .map((x) =>
         Math.round(x / e.n)
           .toString(16)
-          .padStart(2, "0"),
+          .padStart(2, '0'),
       )
-      .join("");
+      .join('');
   const dominant = [...buckets.values()]
     .sort((a, b) => b.n - a.n)
     .slice(0, 3)
-    .map((e) => ({ hex: hex(e), sharePct: +((e.n / cells.length) * 100).toFixed(1) }));
+    .map((e) => ({
+      hex: hex(e),
+      sharePct: +((e.n / cells.length) * 100).toFixed(1),
+    }));
   // chromatic accent: hue histogram over saturated cells, weighted s·v
-  const bins = Array.from({ length: 12 }, () => ({ w: 0, h: 0, s: 0, v: 0, n: 0 }));
+  const bins = Array.from({ length: 12 }, () => ({
+    w: 0,
+    h: 0,
+    s: 0,
+    v: 0,
+    n: 0,
+  }));
   let warmW = 0,
     coolW = 0;
   for (const [r, g, b] of cells) {
@@ -417,7 +461,8 @@ async function scenePalette(bgPath, occCell, GW, GH) {
       Math.min(0.8, Math.max(0.55, v * 1.15)),
     );
   }
-  const temperature = warmW > coolW * 1.25 ? "warm" : coolW > warmW * 1.25 ? "cool" : "neutral";
+  const temperature =
+    warmW > coolW * 1.25 ? 'warm' : coolW > warmW * 1.25 ? 'cool' : 'neutral';
   return { dominant, accentSuggestion: accent, temperature };
 }
 
@@ -436,7 +481,13 @@ async function regionSharpness(imgPath, rect, W, H) {
     .toBuffer();
   const st = await sharp(crop)
     .greyscale()
-    .convolve({ width: 3, height: 3, kernel: [0, 1, 0, 1, -4, 1, 0, 1, 0], scale: 1, offset: 128 })
+    .convolve({
+      width: 3,
+      height: 3,
+      kernel: [0, 1, 0, 1, -4, 1, 0, 1, 0],
+      scale: 1,
+      offset: 128,
+    })
     .stats();
   return st.channels[0].stdev;
 }
@@ -458,7 +509,8 @@ async function sceneOptics(project, bgPath, fgPath, zones, subjectBox, W, H) {
   if (bgSharp != null && subjSharp != null && subjSharp > 1) {
     ratio = +(bgSharp / subjSharp).toFixed(3);
     // strong bokeh → text in that depth plane should soften to match
-    suggestedTextBlurPx = ratio < 0.35 ? 1.6 : ratio < 0.55 ? 1.0 : ratio < 0.8 ? 0.5 : 0;
+    suggestedTextBlurPx =
+      ratio < 0.35 ? 1.6 : ratio < 0.55 ? 1.0 : ratio < 0.8 ? 0.5 : 0;
   }
   return {
     bgSharpness: bgSharp != null ? +bgSharp.toFixed(2) : null,
@@ -493,11 +545,11 @@ function sceneLighting(lum, occCell, GW, GH) {
       sx += w * (x / GW - 0.5);
       sy += w * (y / GH - 0.5);
     }
-  if (sw < 1) return { lightFrom: "flat", shadow: { dx: 0, dy: 3 } };
+  if (sw < 1) return { lightFrom: 'flat', shadow: { dx: 0, dy: 3 } };
   const lx = sx / sw,
     ly = sy / sw; // light centroid offset from center, −0.5..0.5
   const mag = Math.hypot(lx, ly);
-  if (mag < 0.04) return { lightFrom: "frontal", shadow: { dx: 0, dy: 3 } };
+  if (mag < 0.04) return { lightFrom: 'frontal', shadow: { dx: 0, dy: 3 } };
   // shadow direction = opposite the light, scaled to a subtle px offset
   const s = Math.min(1, mag / 0.25);
   const dx = Math.round((-lx / mag) * 4 * s),
@@ -505,23 +557,25 @@ function sceneLighting(lum, occCell, GW, GH) {
   const compass =
     Math.abs(lx) > Math.abs(ly) * 1.8
       ? lx > 0
-        ? "right"
-        : "left"
+        ? 'right'
+        : 'left'
       : Math.abs(ly) > Math.abs(lx) * 1.8
         ? ly > 0
-          ? "below"
-          : "above"
-        : `${ly > 0 ? "lower" : "upper"}-${lx > 0 ? "right" : "left"}`;
+          ? 'below'
+          : 'above'
+        : `${ly > 0 ? 'lower' : 'upper'}-${lx > 0 ? 'right' : 'left'}`;
   return { lightFrom: compass, shadow: { dx, dy } };
 }
 
 // split the transcript into sentence windows (punctuation, or a > 0.7s gap)
 function sentenceWindows(project) {
-  const tp = path.join(project, "transcript.json");
+  const tp = path.join(project, 'transcript.json');
   if (!fs.existsSync(tp)) return [];
   let words;
   try {
-    words = (JSON.parse(fs.readFileSync(tp, "utf8")).words || []).filter((w) => w && "start" in w);
+    words = (JSON.parse(fs.readFileSync(tp, 'utf8')).words || []).filter(
+      (w) => w && 'start' in w,
+    );
   } catch {
     return [];
   }
@@ -531,14 +585,14 @@ function sentenceWindows(project) {
     cur.push(words[i]);
     const w = words[i],
       nx = words[i + 1];
-    const ends = /[.!?…]$/.test((w.text || "").trim());
+    const ends = /[.!?…]$/.test((w.text || '').trim());
     const gap = nx ? nx.start - w.end > 0.7 : true;
     if (ends || gap || !nx) {
       if (cur.length)
         out.push({
           in: +cur[0].start.toFixed(2),
           out: +cur[cur.length - 1].end.toFixed(2),
-          text: cur.map((x) => x.text).join(" "),
+          text: cur.map((x) => x.text).join(' '),
         });
       cur = [];
     }
@@ -547,18 +601,18 @@ function sentenceWindows(project) {
 }
 
 async function main() {
-  const project = path.resolve(process.argv[2] || "");
+  const project = path.resolve(process.argv[2] || '');
   if (!process.argv[2]) {
-    console.error("usage: safe-zones.cjs <project-dir> [in out]");
+    console.error('usage: safe-zones.cjs <project-dir> [in out]');
     process.exit(1);
   }
-  const fgDir = path.join(project, "frames_fg");
+  const fgDir = path.join(project, 'frames_fg');
   if (!fs.existsSync(fgDir)) {
     console.error(`[safe-zones] no ${fgDir} — run matte.cjs first`);
     process.exit(2);
   }
   if (!sharp) {
-    console.error("[safe-zones] sharp unavailable — set HYPERFRAMES_ROOT");
+    console.error('[safe-zones] sharp unavailable — set HYPERFRAMES_ROOT');
     process.exit(0);
   }
 
@@ -567,7 +621,7 @@ async function main() {
     .filter((f) => /\.png$/i.test(f))
     .sort();
   if (!frames.length) {
-    console.error("[safe-zones] no PNG frames");
+    console.error('[safe-zones] no PNG frames');
     process.exit(2);
   }
   const meta = await sharp(path.join(fgDir, frames[0])).metadata();
@@ -579,35 +633,42 @@ async function main() {
   let fps = 24;
   try {
     const f = parseFloat(
-      String(fs.readFileSync(path.join(project, "matte.fps"), "utf8")).replace(/[^\d.]/g, ""),
+      String(fs.readFileSync(path.join(project, 'matte.fps'), 'utf8')).replace(
+        /[^\d.]/g,
+        '',
+      ),
     );
     if (f > 0) fps = f;
   } catch {}
 
-  const bgDir = path.join(project, "frames_bg");
+  const bgDir = path.join(project, 'frames_bg');
   const hasBg = fs.existsSync(bgDir);
   // cache evenly-sampled frame grids once (each = per-cell avg subject alpha 0..1,
   // plus per-cell mean LUMINANCE from frames_bg — bright zones wash out cream/screen text)
   const sampleIdx = [
     ...new Set(
       Array.from({ length: SAMPLES }, (_, i) =>
-        Math.min(frames.length - 1, Math.round((i / (SAMPLES - 1)) * (frames.length - 1))),
+        Math.min(
+          frames.length - 1,
+          Math.round((i / (SAMPLES - 1)) * (frames.length - 1)),
+        ),
       ),
     ),
   ];
   const grids = [];
   for (const i of sampleIdx) {
     const { data, info } = await sharp(path.join(fgDir, frames[i]))
-      .resize(GW, GH, { fit: "fill" })
+      .resize(GW, GH, { fit: 'fill' })
       .raw()
       .toBuffer({ resolveWithObject: true });
     const ch = info.channels,
       g = new Float32Array(GW * GH);
-    for (let c = 0; c < GW * GH; c++) g[c] = (ch >= 4 ? data[c * ch + 3] : 255) / 255;
+    for (let c = 0; c < GW * GH; c++)
+      g[c] = (ch >= 4 ? data[c * ch + 3] : 255) / 255;
     let lum = null;
     if (hasBg && fs.existsSync(path.join(bgDir, frames[i]))) {
       const { data: bd, info: bi } = await sharp(path.join(bgDir, frames[i]))
-        .resize(GW, GH, { fit: "fill" })
+        .resize(GW, GH, { fit: 'fill' })
         .greyscale()
         .raw()
         .toBuffer({ resolveWithObject: true });
@@ -620,7 +681,9 @@ async function main() {
   const lumWindow = (t0, t1) => {
     const acc = new Float32Array(GW * GH);
     let n = 0;
-    let inWin = grids.filter((s2) => s2.t >= t0 - 1e-6 && s2.t <= t1 + 1e-6 && s2.lum);
+    let inWin = grids.filter(
+      (s2) => s2.t >= t0 - 1e-6 && s2.t <= t1 + 1e-6 && s2.lum,
+    );
     if (!inWin.length) inWin = grids.filter((s2) => s2.lum);
     for (const s2 of inWin) {
       for (let c = 0; c < GW * GH; c++) acc[c] += s2.lum[c];
@@ -631,7 +694,9 @@ async function main() {
     return acc;
   };
   const lumSeriesWindow = (t0, t1) => {
-    let inWin = grids.filter((s2) => s2.t >= t0 - 1e-6 && s2.t <= t1 + 1e-6 && s2.lum);
+    let inWin = grids.filter(
+      (s2) => s2.t >= t0 - 1e-6 && s2.t <= t1 + 1e-6 && s2.lum,
+    );
     if (!inWin.length) inWin = grids.filter((s2) => s2.lum);
     return inWin.map((s2) => s2.lum);
   };
@@ -641,9 +706,14 @@ async function main() {
     if (!inWin.length) {
       // window between samples → use nearest grid
       const mid = (t0 + t1) / 2;
-      inWin = [grids.reduce((a, b) => (Math.abs(b.t - mid) < Math.abs(a.t - mid) ? b : a))];
+      inWin = [
+        grids.reduce((a, b) =>
+          Math.abs(b.t - mid) < Math.abs(a.t - mid) ? b : a,
+        ),
+      ];
     }
-    for (const s of inWin) for (let c = 0; c < GW * GH; c++) if (s.g[c] > occ[c]) occ[c] = s.g[c];
+    for (const s of inWin)
+      for (let c = 0; c < GW * GH; c++) if (s.g[c] > occ[c]) occ[c] = s.g[c];
     return occ;
   };
 
@@ -664,15 +734,26 @@ async function main() {
       `[safe-zones] window ${qIn}-${qOut}s: ${a.recommendation.toUpperCase()}  coverage ${a.coverage}%  clearer:${a.subject.clearerSide}`,
     );
     const z = a.zones;
-    for (const k of ["largest", "left", "right", "top"])
-      if (z[k]) console.log(`   ${k}: ${z[k].wPct}%×${z[k].hPct}% @ (${z[k].xPct}%,${z[k].yPct}%)`);
+    for (const k of ['largest', 'left', 'right', 'top'])
+      if (z[k])
+        console.log(
+          `   ${k}: ${z[k].wPct}%×${z[k].hPct}% @ (${z[k].xPct}%,${z[k].yPct}%)`,
+        );
     console.log(JSON.stringify({ in: qIn, out: qOut, ...a }));
     return;
   }
 
   const globalOcc = occWindow(-1e9, 1e9);
   const globalLum = lumWindow(-1e9, 1e9);
-  const global = analyze(globalOcc, GW, GH, W, H, globalLum, lumSeriesWindow(-1e9, 1e9));
+  const global = analyze(
+    globalOcc,
+    GW,
+    GH,
+    W,
+    H,
+    globalLum,
+    lumSeriesWindow(-1e9, 1e9),
+  );
   const windows = sentenceWindows(project).map((s) => {
     const a = analyze(
       occWindow(s.in, s.out),
@@ -700,7 +781,8 @@ async function main() {
     lighting = null;
   try {
     const occCellG = new Uint8Array(GW * GH);
-    for (let c = 0; c < GW * GH; c++) occCellG[c] = globalOcc[c] >= THRESH ? 1 : 0;
+    for (let c = 0; c < GW * GH; c++)
+      occCellG[c] = globalOcc[c] >= THRESH ? 1 : 0;
     const midName = frames[Math.floor(frames.length / 2)];
     const midBg = path.join(bgDir, midName);
     if (hasBg && fs.existsSync(midBg)) {
@@ -753,33 +835,36 @@ async function main() {
     lighting,
     windows,
   };
-  fs.writeFileSync(path.join(project, "safe-zones.json"), JSON.stringify(out, null, 2));
+  fs.writeFileSync(
+    path.join(project, 'safe-zones.json'),
+    JSON.stringify(out, null, 2),
+  );
 
   const z = (n, zn) =>
     zn
-      ? `${n}: ${zn.wPct}%×${zn.hPct}% @ (${zn.xPct}%,${zn.yPct}%) [${zn.areaPct}%${zn.meanLuma != null ? ` · luma ${zn.meanLuma}${zn.bright ? " ⚠BRIGHT" : ""}` : ""}]`
+      ? `${n}: ${zn.wPct}%×${zn.hPct}% @ (${zn.xPct}%,${zn.yPct}%) [${zn.areaPct}%${zn.meanLuma != null ? ` · luma ${zn.meanLuma}${zn.bright ? ' ⚠BRIGHT' : ''}` : ''}]`
       : `${n}: —`;
   console.log(
     `[safe-zones] ${W}×${H} grid ${GW}×${GH} @ ${fps}fps · GLOBAL coverage ${global.coverage}% · clearer ${global.subject.clearerSide} · verdict ${global.recommendation.toUpperCase()}`,
   );
   console.log(
-    `             ${z("largest", global.zones.largest)} | ${z("left", global.zones.left)} | ${z("right", global.zones.right)} | ${z("top", global.zones.top)}`,
+    `             ${z('largest', global.zones.largest)} | ${z('left', global.zones.left)} | ${z('right', global.zones.right)} | ${z('top', global.zones.top)}`,
   );
-  if (global.recommendation === "embed") {
+  if (global.recommendation === 'embed') {
     console.log(
       `[safe-zones] ✅ EMBED — NARRATION planes go in the clean zones (prefer ${global.subject.clearerSide}/top).`,
     );
     if (global.heroAnchor)
       console.log(
-        `[safe-zones] 🎯 HERO → centered ON the subject: plane ≈ x${global.heroAnchor.plane.xPct}% y${global.heroAnchor.plane.yPct}% w${global.heroAnchor.plane.wPct}% center · BIG (~0.22–0.34·h) · target ~30–55% occlusion${global.heroAnchor.bandLuma != null ? ` · band luma ${global.heroAnchor.bandLuma}${global.heroAnchor.washoutRisk ? " ⚠WASHOUT RISK — see heroAnchor.note" : ""}` : ""}`,
+        `[safe-zones] 🎯 HERO → centered ON the subject: plane ≈ x${global.heroAnchor.plane.xPct}% y${global.heroAnchor.plane.yPct}% w${global.heroAnchor.plane.wPct}% center · BIG (~0.22–0.34·h) · target ~30–55% occlusion${global.heroAnchor.bandLuma != null ? ` · band luma ${global.heroAnchor.bandLuma}${global.heroAnchor.washoutRisk ? ' ⚠WASHOUT RISK — see heroAnchor.note' : ''}` : ''}`,
       );
     if (global.heroBands)
       console.log(
-        `[safe-zones] hero bands: best top ${global.heroBands.best.topPct}% (predicted occlusion ${global.heroBands.best.occPct}%) · bg-hero ${global.heroBands.feasible ? "FEASIBLE — keep the hero EMBEDDED (fg is last resort)" : "INFEASIBLE (no band ≤62%) → hero fg"}`,
+        `[safe-zones] hero bands: best top ${global.heroBands.best.topPct}% (predicted occlusion ${global.heroBands.best.occPct}%) · bg-hero ${global.heroBands.feasible ? 'FEASIBLE — keep the hero EMBEDDED (fg is last resort)' : 'INFEASIBLE (no band ≤62%) → hero fg'}`,
       );
     if (global.zones.hugLeft || global.zones.hugRight)
       console.log(
-        `[safe-zones] hugging zones (narration belongs HERE, abutting the silhouette): L ${global.zones.hugLeft ? global.zones.hugLeft.wPct + "%×" + global.zones.hugLeft.hPct + "%@x" + global.zones.hugLeft.xPct + "%" + (global.zones.hugLeft.bright ? "⚠bright" : "") : "—"} · R ${global.zones.hugRight ? global.zones.hugRight.wPct + "%×" + global.zones.hugRight.hPct + "%@x" + global.zones.hugRight.xPct + "%" + (global.zones.hugRight.bright ? "⚠bright" : "") : "—"}`,
+        `[safe-zones] hugging zones (narration belongs HERE, abutting the silhouette): L ${global.zones.hugLeft ? global.zones.hugLeft.wPct + '%×' + global.zones.hugLeft.hPct + '%@x' + global.zones.hugLeft.xPct + '%' + (global.zones.hugLeft.bright ? '⚠bright' : '') : '—'} · R ${global.zones.hugRight ? global.zones.hugRight.wPct + '%×' + global.zones.hugRight.hPct + '%@x' + global.zones.hugRight.xPct + '%' + (global.zones.hugRight.bright ? '⚠bright' : '') : '—'}`,
       );
   } else {
     console.log(
@@ -788,24 +873,26 @@ async function main() {
   }
   if (palette)
     console.log(
-      `[safe-zones] 🎨 palette: dominant ${palette.dominant.map((d) => d.hex).join(" ")} · accent suggestion ${palette.accentSuggestion || "— (no chromatic anchor; use the DNA default)"} · ${palette.temperature}`,
+      `[safe-zones] 🎨 palette: dominant ${palette.dominant.map((d) => d.hex).join(' ')} · accent suggestion ${palette.accentSuggestion || '— (no chromatic anchor; use the DNA default)'} · ${palette.temperature}`,
     );
   if (optics && optics.sharpnessRatio != null)
     console.log(
-      `[safe-zones] 🔭 depth: bg/subject sharpness ${optics.sharpnessRatio} → embed text blur ${optics.suggestedTextBlurPx}px${optics.suggestedTextBlurPx ? " (match the scene's depth-of-field)" : " (scene is uniformly sharp)"}`,
+      `[safe-zones] 🔭 depth: bg/subject sharpness ${optics.sharpnessRatio} → embed text blur ${optics.suggestedTextBlurPx}px${optics.suggestedTextBlurPx ? " (match the scene's depth-of-field)" : ' (scene is uniformly sharp)'}`,
     );
   if (lighting)
     console.log(
       `[safe-zones] 💡 light from ${lighting.lightFrom} → contact shadow offset (${lighting.shadow.dx}px, ${lighting.shadow.dy}px)`,
     );
   if (windows.length) {
-    console.log(`[safe-zones] per-sentence windows (place each group using ITS window's zones):`);
+    console.log(
+      `[safe-zones] per-sentence windows (place each group using ITS window's zones):`,
+    );
     for (const w of windows)
       console.log(
-        `   [${w.in}-${w.out}s] ${w.recommendation.toUpperCase()} cov ${w.coverage}% clear:${w.clearerSide}  ${w.zones.largest ? `best ${w.zones.largest.wPct}%×${w.zones.largest.hPct}%@(${w.zones.largest.xPct}%,${w.zones.largest.yPct}%)` : ""}  "${w.text}"`,
+        `   [${w.in}-${w.out}s] ${w.recommendation.toUpperCase()} cov ${w.coverage}% clear:${w.clearerSide}  ${w.zones.largest ? `best ${w.zones.largest.wPct}%×${w.zones.largest.hPct}%@(${w.zones.largest.xPct}%,${w.zones.largest.yPct}%)` : ''}  "${w.text}"`,
       );
   }
-  console.log(`[safe-zones] → ${path.join(project, "safe-zones.json")}`);
+  console.log(`[safe-zones] → ${path.join(project, 'safe-zones.json')}`);
 }
 main().catch((e) => {
   console.error(`[safe-zones] (skipped — ${e.message})`);

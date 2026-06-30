@@ -25,7 +25,12 @@
     "setpiece": "colorflip",
     "inline": true,
     "fontPx": 196,
-    "params": { "crushFrom": 2.6, "dimKick": 0.62, "flash": 0.9, "dissolveLast": true }
+    "params": {
+      "crushFrom": 2.6,
+      "dimKick": 0.62,
+      "flash": 0.9,
+      "dissolveLast": true
+    }
   },
   "fx": { "flash": 0.9 },
   "plate": {

@@ -19,8 +19,8 @@ Read resolved values once during initialization:
 
 ```js
 const { title, accent } = window.__hyperframes.getVariables();
-document.getElementById("title").textContent = title;
-document.documentElement.style.setProperty("--accent", accent);
+document.getElementById('title').textContent = title;
+document.documentElement.style.setProperty('--accent', accent);
 ```
 
 ### Variable Rules

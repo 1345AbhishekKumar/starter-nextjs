@@ -44,13 +44,13 @@
  * Mark at most ONE line "hero": true per clip (scarcity); its words form the hero
  * (usually a single word; "text" overrides the display form).
  */
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
 const norm = (s) =>
-  String(s == null ? "" : s)
+  String(s == null ? '' : s)
     .toLowerCase()
-    .replace(/[^a-z0-9']/g, "");
+    .replace(/[^a-z0-9']/g, '');
 const LOOKAHEAD = 40;
 
 // Authored css WITHOUT a font-size renders at browser-default ~16px (an
@@ -58,7 +58,7 @@ const LOOKAHEAD = 40;
 // E2E. Guarantee the default is present whenever the author omitted it.
 function ensureFontSize(css, defaultDecl) {
   if (!css) return defaultDecl;
-  return /font-size\s*:/.test(css) ? css : defaultDecl + " " + css;
+  return /font-size\s*:/.test(css) ? css : defaultDecl + ' ' + css;
 }
 
 function die(m) {
@@ -67,22 +67,25 @@ function die(m) {
 }
 
 function main() {
-  const project = path.resolve(process.argv[2] || "");
-  if (!process.argv[2]) die("usage: make-cinematic.cjs <project-dir>");
-  const cj = path.join(project, "cinematic.json");
-  const tj = path.join(project, "transcript.json");
-  if (!fs.existsSync(cj)) die(`missing ${cj} — author it first (schema in this header)`);
+  const project = path.resolve(process.argv[2] || '');
+  if (!process.argv[2]) die('usage: make-cinematic.cjs <project-dir>');
+  const cj = path.join(project, 'cinematic.json');
+  const tj = path.join(project, 'transcript.json');
+  if (!fs.existsSync(cj))
+    die(`missing ${cj} — author it first (schema in this header)`);
   if (!fs.existsSync(tj)) die(`missing ${tj} — run prepare.sh first`);
-  const C = JSON.parse(fs.readFileSync(cj, "utf8"));
-  const tr = (JSON.parse(fs.readFileSync(tj, "utf8")).words || []).filter(
-    (w) => w && "start" in w && "end" in w,
+  const C = JSON.parse(fs.readFileSync(cj, 'utf8'));
+  const tr = (JSON.parse(fs.readFileSync(tj, 'utf8')).words || []).filter(
+    (w) => w && 'start' in w && 'end' in w,
   );
-  if (!tr.length) die("transcript has no word timings");
+  if (!tr.length) die('transcript has no word timings');
 
   // safe-zones: fg verdict + heroAnchor default
   let sz = null;
   try {
-    sz = JSON.parse(fs.readFileSync(path.join(project, "safe-zones.json"), "utf8"));
+    sz = JSON.parse(
+      fs.readFileSync(path.join(project, 'safe-zones.json'), 'utf8'),
+    );
   } catch {}
   // author override first (borderline scenes: coverage near the line, agitated subject),
   // else the safe-zones verdict.
@@ -90,8 +93,8 @@ function main() {
   // occlusion (~30–55% is the product). fg for the hero is the LAST resort: only when no
   // height band achieves ≤62% predicted occlusion (safe-zones heroBands). An explicit
   // author caption_layer:"fg" still forces everything front.
-  const authorFg = C.caption_layer === "fg";
-  const narrFg = authorFg || (sz && sz.recommendation === "fg");
+  const authorFg = C.caption_layer === 'fg';
+  const narrFg = authorFg || (sz && sz.recommendation === 'fg');
   const hb = sz && sz.heroBands;
   const heroFeasible = authorFg ? false : hb ? hb.feasible : !narrFg;
   const globalFg = narrFg; // narration layer (name kept for the lowering below)
@@ -100,7 +103,7 @@ function main() {
     H = C.height || 1080,
     FPS = C.fps || 24;
   const blocks = C.blocks || [];
-  if (!blocks.length) die("blocks is empty");
+  if (!blocks.length) die('blocks is empty');
 
   // ── sequence-match every word across blocks/lines ──────────────────────────
   let p = 0;
@@ -125,7 +128,7 @@ function main() {
     }
   if (missing.length)
     die(
-      `words not in transcript (in order): ${missing.join(" ")} — lines must match the transcript verbatim`,
+      `words not in transcript (in order): ${missing.join(' ')} — lines must match the transcript verbatim`,
     );
 
   // COMPLETENESS GATE — verbatim is a hard rule, so enforce it at compile time: the
@@ -136,18 +139,22 @@ function main() {
   {
     const consumed = new Set();
     for (const b of blocks)
-      for (const ln of b.lines || []) for (const w of ln._w) if (w.ti != null) consumed.add(w.ti);
+      for (const ln of b.lines || [])
+        for (const w of ln._w) if (w.ti != null) consumed.add(w.ti);
     const dropOk = new Set((C.drops || []).map(norm));
-    const FILLER = new Set(["um", "uh", "er", "ah", "hmm", "mm"]);
+    const FILLER = new Set(['um', 'uh', 'er', 'ah', 'hmm', 'mm']);
     const skipped = tr
       .map((w, i) => ({ w, i }))
       .filter(
-        ({ w, i }) => !consumed.has(i) && !dropOk.has(norm(w.text)) && !FILLER.has(norm(w.text)),
+        ({ w, i }) =>
+          !consumed.has(i) &&
+          !dropOk.has(norm(w.text)) &&
+          !FILLER.has(norm(w.text)),
       );
     if (skipped.length)
       die(
         `VERBATIM VIOLATION — ${skipped.length} transcript word(s) never authored (the matcher skipped them): ` +
-          `${skipped.map(({ w }) => `"${w.text}"`).join(" ")} — add them to a line, or declare true filler in "drops": []`,
+          `${skipped.map(({ w }) => `"${w.text}"`).join(' ')} — add them to a line, or declare true filler in "drops": []`,
       );
   }
 
@@ -165,29 +172,32 @@ function main() {
   const LEAD = 0.18;
   const bw = blocks.map((b) => {
     const ws = (b.lines || []).flatMap((l) => l._w);
-    return { first: Math.min(...ws.map((w) => w.start)), last: Math.max(...ws.map((w) => w.end)) };
+    return {
+      first: Math.min(...ws.map((w) => w.start)),
+      last: Math.max(...ws.map((w) => w.end)),
+    };
   });
   let srcDur = null;
   try {
-    const cp = require("child_process");
-    for (const f of ["source.mp4"].concat(
+    const cp = require('child_process');
+    for (const f of ['source.mp4'].concat(
       fs.readdirSync(project).filter((x) => /\.(mp4|mov|webm)$/i.test(x)),
     )) {
       const fp = path.join(project, f);
       if (!fs.existsSync(fp)) continue;
       const d = parseFloat(
         cp.execFileSync(
-          "ffprobe",
+          'ffprobe',
           [
-            "-v",
-            "error",
-            "-show_entries",
-            "format=duration",
-            "-of",
-            "default=nokey=1:noprint_wrappers=1",
+            '-v',
+            'error',
+            '-show_entries',
+            'format=duration',
+            '-of',
+            'default=nokey=1:noprint_wrappers=1',
             fp,
           ],
-          { encoding: "utf8" },
+          { encoding: 'utf8' },
         ),
       );
       if (d > 0) {
@@ -215,15 +225,17 @@ function main() {
       );
   }
   const fracOfLine = (css) => {
-    const m = (css || "").match(/font-size\s*:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--h\)/);
+    const m = (css || '').match(
+      /font-size\s*:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--h\)/,
+    );
     return m ? +m[1] : 0.05;
   };
   const planeBudgetPx = (pk) => {
     const css =
       (C.planes &&
         C.planes[pk] &&
-        (typeof C.planes[pk] === "string" ? C.planes[pk] : C.planes[pk].css)) ||
-      "";
+        (typeof C.planes[pk] === 'string' ? C.planes[pk] : C.planes[pk].css)) ||
+      '';
     const m = css.match(/height\s*:\s*([\d.]+)%/);
     return (m ? +m[1] / 100 : 0.3) * H;
   };
@@ -237,8 +249,8 @@ function main() {
   const planes = {};
   for (const [k, v] of Object.entries(C.planes || {})) {
     if (v == null) continue;
-    let css = typeof v === "string" ? v : v.css || "";
-    if (!/text-align\s*:/.test(css)) css += " text-align:center;"; // slot children are absolute; only alignment carries
+    let css = typeof v === 'string' ? v : v.css || '';
+    if (!/text-align\s*:/.test(css)) css += ' text-align:center;'; // slot children are absolute; only alignment carries
     planes[k] = { css };
   }
   // multiple heroes allowed — scarcity is per BLOCK (≤1 per thought), not per clip.
@@ -254,23 +266,38 @@ function main() {
         `block ${bi} has ${hs.length} hero lines — at most ONE hero per block (scarcity = per beat)`,
       );
     if (hs.length === 1)
-      allHeroBlocks.push({ b, bi, ln: hs[0], frac: fracOfLine(hs[0].css) || 0.24 });
+      allHeroBlocks.push({
+        b,
+        bi,
+        ln: hs[0],
+        frac: fracOfLine(hs[0].css) || 0.24,
+      });
   });
   const apexFracAll = Math.max(...allHeroBlocks.map((h) => h.frac), 0);
   // placement: "column" keeps even an APEX in its column's flow (the hero bursts the
   // column instead of crossing the subject) — the sanctioned alternative to the
   // subject-anchored lockup. Author it per hero line: { "hero": true, "placement": "column" }.
   const heroBlocks = allHeroBlocks.filter(
-    (h) => h.frac >= apexFracAll - 1e-6 && (h.ln.placement || "subject") !== "column",
+    (h) =>
+      h.frac >= apexFracAll - 1e-6 &&
+      (h.ln.placement || 'subject') !== 'column',
   );
   const minorHeroBis = new Set(
     allHeroBlocks
-      .filter((h) => h.frac < apexFracAll - 1e-6 || (h.ln.placement || "subject") === "column")
+      .filter(
+        (h) =>
+          h.frac < apexFracAll - 1e-6 ||
+          (h.ln.placement || 'subject') === 'column',
+      )
       .map((h) => h.bi),
   );
   const columnApexBis = new Set(
     allHeroBlocks
-      .filter((h) => h.frac >= apexFracAll - 1e-6 && (h.ln.placement || "subject") === "column")
+      .filter(
+        (h) =>
+          h.frac >= apexFracAll - 1e-6 &&
+          (h.ln.placement || 'subject') === 'column',
+      )
       .map((h) => h.bi),
   );
   if (minorHeroBis.size)
@@ -280,7 +307,7 @@ function main() {
   const lockupName = (bi) => `lockup-b${bi}`;
   const lockupTemplate =
     C.planes && C.planes.lockup
-      ? typeof C.planes.lockup === "string"
+      ? typeof C.planes.lockup === 'string'
         ? C.planes.lockup
         : C.planes.lockup.css
       : null;
@@ -292,7 +319,10 @@ function main() {
     let heroTop = a ? a.yPct : 30;
     if (hb && hb.profile && hb.profile.length) {
       const ok = hb.profile.filter(
-        (b2) => b2.occPct >= 12 && b2.occPct <= 62 && (b2.bgLuma == null || b2.bgLuma <= 165),
+        (b2) =>
+          b2.occPct >= 12 &&
+          b2.occPct <= 62 &&
+          (b2.bgLuma == null || b2.bgLuma <= 165),
       );
       const pool = ok.length ? ok : hb.profile;
       const best = pool.reduce((x, y) =>
@@ -300,7 +330,9 @@ function main() {
       );
       heroTop = +(best.topPct + 6.5).toFixed(1);
     }
-    const heroFrac = (hRef.ln.css || "").match(/calc\(\s*([\d.]+)\s*\*\s*var\(--h\)/);
+    const heroFrac = (hRef.ln.css || '').match(
+      /calc\(\s*([\d.]+)\s*\*\s*var\(--h\)/,
+    );
     // the lockup is taller than the hero alone (context above+below) — anchor so the
     // HERO band (not the plane top) lands on the target, then clamp so the WHOLE
     // lockup (pre + hero + post) stays on frame
@@ -309,19 +341,26 @@ function main() {
       .filter((l, i) => l !== hRef.ln && i < heroIdx2)
       .reduce(
         (s, l) =>
-          s + (fracOfLine(l.css) * 100 * 1.32 + Math.max(1.6, fracOfLine(l.css) * 100 * 0.38)),
+          s +
+          (fracOfLine(l.css) * 100 * 1.32 +
+            Math.max(1.6, fracOfLine(l.css) * 100 * 0.38)),
         0,
       );
     const postH = (hRef.b.lines || [])
       .filter((l, i) => l !== hRef.ln && i > heroIdx2)
       .reduce(
         (s, l) =>
-          s + (fracOfLine(l.css) * 100 * 1.32 + Math.max(1.6, fracOfLine(l.css) * 100 * 0.38)),
+          s +
+          (fracOfLine(l.css) * 100 * 1.32 +
+            Math.max(1.6, fracOfLine(l.css) * 100 * 0.38)),
         0,
       );
     const heroHpct = (heroFrac ? +heroFrac[1] : 0.24) * 100 * 1.12;
     const totalH = preH + heroHpct + postH;
-    let top = +Math.max(2, Math.min(96 - totalH, heroTop - heroHpct / 2 - preH)).toFixed(1);
+    let top = +Math.max(
+      2,
+      Math.min(96 - totalH, heroTop - heroHpct / 2 - preH),
+    ).toFixed(1);
     const css = lockupTemplate
       ? lockupTemplate.replace(/top:\s*[\d.]+%/, `top: ${top}%`)
       : a
@@ -345,9 +384,11 @@ function main() {
   //   luma 95–150 → keep the DNA blend, strengthen the glyph scrim
   const planeComp = {};
   if (sz && sz.zones) {
-    const zlist = Object.entries(sz.zones).filter(([, z]) => z && z.meanLuma != null);
+    const zlist = Object.entries(sz.zones).filter(
+      ([, z]) => z && z.meanLuma != null,
+    );
     for (const [pk, pv] of Object.entries(C.planes || {})) {
-      const css0 = typeof pv === "string" ? pv : (pv || {}).css || "";
+      const css0 = typeof pv === 'string' ? pv : (pv || {}).css || '';
       const lm = css0.match(/left:\s*([\d.]+)%/),
         wm = css0.match(/width:\s*([\d.]+)%/);
       if (!lm || !wm) continue;
@@ -369,12 +410,13 @@ function main() {
       const pkL = best.peakLuma != null ? best.peakLuma : best.meanLuma;
       if (best.meanLuma > 150 || pkL > 175)
         planeComp[pk] =
-          " mix-blend-mode: normal; text-shadow: 0 1px 6px rgba(0,0,0,.65), 0 2px 16px rgba(0,0,0,.4);";
+          ' mix-blend-mode: normal; text-shadow: 0 1px 6px rgba(0,0,0,.65), 0 2px 16px rgba(0,0,0,.4);';
       else if (best.meanLuma > 95 || pkL > 135)
-        planeComp[pk] = " text-shadow: 0 1px 5px rgba(0,0,0,.6), 0 2px 14px rgba(0,0,0,.35);";
+        planeComp[pk] =
+          ' text-shadow: 0 1px 5px rgba(0,0,0,.6), 0 2px 14px rgba(0,0,0,.35);';
       if (planeComp[pk])
         console.log(
-          `[make-cinematic] plane "${pk}" zone luma ${best.meanLuma} (peak ${pkL}) → legibility compensation (${best.meanLuma > 150 || pkL > 175 ? "opaque+scrim" : "scrim"})`,
+          `[make-cinematic] plane "${pk}" zone luma ${best.meanLuma} (peak ${pkL}) → legibility compensation (${best.meanLuma > 150 || pkL > 175 ? 'opaque+scrim' : 'scrim'})`,
         );
     }
   }
@@ -382,36 +424,42 @@ function main() {
   const bandLuma = sz && sz.heroAnchor && sz.heroAnchor.bandLuma;
   const lockupComp =
     bandLuma != null && bandLuma > 150
-      ? " mix-blend-mode: normal; text-shadow: 0 1px 6px rgba(0,0,0,.65), 0 2px 16px rgba(0,0,0,.4);"
+      ? ' mix-blend-mode: normal; text-shadow: 0 1px 6px rgba(0,0,0,.65), 0 2px 16px rgba(0,0,0,.4);'
       : bandLuma != null && bandLuma > 95
-        ? " text-shadow: 0 1px 5px rgba(0,0,0,.6), 0 2px 14px rgba(0,0,0,.35);"
-        : "";
+        ? ' text-shadow: 0 1px 5px rgba(0,0,0,.6), 0 2px 14px rgba(0,0,0,.35);'
+        : '';
 
   // ── lower to classic plan.json groups (slot layout + per-plane paging) ─────
   const tones = C.tones || {};
   let dnaBodyLayer = null;
   try {
-    const dnaLib0 = require("./lib-dna.cjs");
-    const dn0 = C.dna || (C.template ? dnaLib0.LEGACY[C.template] : "cream");
+    const dnaLib0 = require('./lib-dna.cjs');
+    const dn0 = C.dna || (C.template ? dnaLib0.LEGACY[C.template] : 'cream');
     if (dn0) {
       const d0 = dnaLib0.load(dn0);
       dnaBodyLayer = d0.bodyLayer || null;
       // category lock (symmetric): column is every classic DNA's home today,
       // so this only fires if a future DNA declares a different home.
-      if (d0.deliveries && d0.deliveries.home && d0.deliveries.home !== "column")
+      if (
+        d0.deliveries &&
+        d0.deliveries.home &&
+        d0.deliveries.home !== 'column'
+      )
         console.warn(
           `[make-cinematic] WARN: DNA "${dn0}" declares home="${d0.deliveries.home}" — cinematic use is cross-category and unvalidated.`,
         );
     }
   } catch (e) {
-    if (e.message && e.message.includes("does not support")) throw e;
+    if (e.message && e.message.includes('does not support')) throw e;
   }
   const groups = [];
   const heroRefs = heroBlocks; // [{b, bi, ln, plane}]
   const isHeroBlock = new Set(heroBlocks.map((h) => h.bi));
   const flat = [];
   blocks.forEach((b, bi) => {
-    const heroIdx = isHeroBlock.has(bi) ? (b.lines || []).findIndex((l) => l.hero === true) : -1;
+    const heroIdx = isHeroBlock.has(bi)
+      ? (b.lines || []).findIndex((l) => l.hero === true)
+      : -1;
     (b.lines || []).forEach((ln, li) => {
       if (ln.hero === true && isHeroBlock.has(bi)) return; // APEX heroes slot into their lockup below
       flat.push({
@@ -419,7 +467,7 @@ function main() {
         bi,
         ln,
         plane: heroIdx >= 0 ? lockupName(bi) : b.plane,
-        lockupPos: heroIdx >= 0 ? (li < heroIdx ? "pre" : "post") : null,
+        lockupPos: heroIdx >= 0 ? (li < heroIdx ? 'pre' : 'post') : null,
         isMinorHero: ln.hero === true && minorHeroBis.has(bi), // minor peak rides its column
         first: Math.min(...ln._w.map((w) => w.start)),
         lastEnd: Math.min(Math.max(...ln._w.map((w) => w.end)), DUR - 0.05),
@@ -429,13 +477,15 @@ function main() {
   });
   // size sanity: narration below 0.05·h is whisper-tier (36px at 720p) — warn loudly
   {
-    const tiny = flat.filter((l) => !l.isMinorHero && l.frac > 0 && l.frac < 0.05);
+    const tiny = flat.filter(
+      (l) => !l.isMinorHero && l.frac > 0 && l.frac < 0.05,
+    );
     if (tiny.length)
       console.log(
         `[make-cinematic] ⚠ ${tiny.length} narration line(s) authored below 0.05·h (whisper tier) — body narration wants 0.055–0.07·h: ${tiny
           .slice(0, 3)
-          .map((l) => `"${l.ln.words.slice(0, 3).join(" ")}…"`)
-          .join(" ")}`,
+          .map((l) => `"${l.ln.words.slice(0, 3).join(' ')}…"`)
+          .join(' ')}`,
       );
   }
   // RATIO LOCK — poster lockup typography: context is sized FROM the hero, the way a
@@ -446,15 +496,20 @@ function main() {
   for (const hRef of heroRefs) {
     const ctx = flat.filter((l) => l.bi === hRef.bi);
     if (!ctx.length) continue;
-    const heroFracV = fracOfLine(hRef.ln.css || "") || 0.24;
-    const ratioFrac = +Math.min(0.085, Math.max(0.05, heroFracV * 0.26)).toFixed(4);
+    const heroFracV = fracOfLine(hRef.ln.css || '') || 0.24;
+    const ratioFrac = +Math.min(
+      0.085,
+      Math.max(0.05, heroFracV * 0.26),
+    ).toFixed(4);
     if (ctx.length > 3)
       console.log(
         `[make-cinematic] ⚠ lockup-b${hRef.bi} has ${ctx.length} context lines — a lockup wants kicker + hero + tail; move narration to the column (a leading clause can be its own block)`,
       );
-    const moved = ctx.filter((l) => Math.abs(l.frac - ratioFrac) > 0.002).length;
+    const moved = ctx.filter(
+      (l) => Math.abs(l.frac - ratioFrac) > 0.002,
+    ).length;
     ctx.forEach((l) => {
-      l.ln.css = (l.ln.css || "").replace(
+      l.ln.css = (l.ln.css || '').replace(
         /font-size\s*:\s*[^;]+/,
         `font-size: calc(${ratioFrac} * var(--h))`,
       );
@@ -470,32 +525,39 @@ function main() {
     (byPlane[l.plane] = byPlane[l.plane] || []).push(l);
   });
   // make sure a lockup whose block has NO context lines still exists in the loop
-  for (const hRef of heroRefs) if (!byPlane[hRef.plane]) byPlane[hRef.plane] = [];
+  for (const hRef of heroRefs)
+    if (!byPlane[hRef.plane]) byPlane[hRef.plane] = [];
   for (const [pk, ls] of Object.entries(byPlane)) {
     const isLockup = /^lockup-b/.test(pk);
     const budget = isLockup ? H : planeBudgetPx(pk); // a lockup is ONE composition — never paginate inside it
     const hRef = isLockup ? heroRefs.find((h) => h.plane === pk) : null;
-    const heroH = hRef ? (fracOfLine(hRef.ln.css || "") || 0.24) * H * 1.12 + 12 : 0;
+    const heroH = hRef
+      ? (fracOfLine(hRef.ln.css || '') || 0.24) * H * 1.12 + 12
+      : 0;
     // ORBIT estimate: where do the hero's left/right edges land inside the (frame-wide,
     // centered) lockup plane — kicker hangs off the left edge, tail off the right
     let orbit = null;
     if (hRef) {
-      const disp = String(hRef.ln.text || (hRef.ln.words || []).join(" "));
-      const fpx = (fracOfLine(hRef.ln.css || "") || 0.24) * H;
+      const disp = String(hRef.ln.text || (hRef.ln.words || []).join(' '));
+      const fpx = (fracOfLine(hRef.ln.css || '') || 0.24) * H;
       const estW = Math.min(
         W * 0.94,
-        Math.max(fpx * 1.2, disp.replace(/\s/g, "").length * fpx * 0.6),
+        Math.max(fpx * 1.2, disp.replace(/\s/g, '').length * fpx * 0.6),
       );
-      const planeCss0 = (planes[pk] && planes[pk].css) || "";
-      const _pl = ((planeCss0.match(/left:\s*([\d.]+)%/) || [0, 0])[1] * W) / 100;
-      const pw = ((planeCss0.match(/width:\s*([\d.]+)%/) || [0, 100])[1] * W) / 100;
+      const planeCss0 = (planes[pk] && planes[pk].css) || '';
+      const _pl =
+        ((planeCss0.match(/left:\s*([\d.]+)%/) || [0, 0])[1] * W) / 100;
+      const pw =
+        ((planeCss0.match(/width:\s*([\d.]+)%/) || [0, 100])[1] * W) / 100;
       const heroLeft = Math.max(0, (pw - estW) / 2);
       // side-aware: anchor context to the CLEANER side of THIS hero's window — the
       // kicker/tail must land on scene, not on a large/moving subject
-      let side = (sz && sz.subject && sz.subject.clearerSide) || "left";
+      let side = (sz && sz.subject && sz.subject.clearerSide) || 'left';
       try {
         const hin = Math.min(...hRef.ln._w.map((w) => w.start));
-        const win = (sz.windows || []).find((w2) => hin >= w2.in - 0.3 && hin <= w2.out + 0.3);
+        const win = (sz.windows || []).find(
+          (w2) => hin >= w2.in - 0.3 && hin <= w2.out + 0.3,
+        );
         if (win && win.clearerSide) side = win.clearerSide;
       } catch {}
       orbit = {
@@ -510,11 +572,12 @@ function main() {
       slot = 0;
     for (const l of ls) {
       // the HERO occupies its slot between pre- and post-context, in spoken order
-      if (hRef && hRef.slotPx == null && l.lockupPos === "post") {
+      if (hRef && hRef.slotPx == null && l.lockupPos === 'post') {
         hRef.slotPx = Math.round(slot);
         slot += heroH;
       }
-      const lineH = l.frac * H * 1.32 + Math.max(12, Math.round(l.frac * H * 0.38)); // ink overflows the 1.0 line-box (+shadows) — breathe in proportion to the type
+      const lineH =
+        l.frac * H * 1.32 + Math.max(12, Math.round(l.frac * H * 0.38)); // ink overflows the 1.0 line-box (+shadows) — breathe in proportion to the type
       const prev = page[page.length - 1];
       const pauseGap = prev ? l.first - prev.lastEnd : 0;
       const boundary = prev && l.bi !== prev.bi;
@@ -524,7 +587,9 @@ function main() {
       if (
         page.length &&
         !unbreakable &&
-        (slot + lineH > budget || (boundary && l.b.flip === true) || (boundary && pauseGap >= 0.6))
+        (slot + lineH > budget ||
+          (boundary && l.b.flip === true) ||
+          (boundary && pauseGap >= 0.6))
       ) {
         pages.push(page);
         page = [];
@@ -562,17 +627,26 @@ function main() {
             const lkIn2 = bw[hRef2.bi].first - 0.18;
             const enter0 = Math.max(0, l.first - LEAD);
             if (enter0 > lkIn2 && enter0 < lkOut)
-              l._delayIn = +Math.min(l.first, Math.max(enter0, lkOut - 0.2)).toFixed(3);
+              l._delayIn = +Math.min(
+                l.first,
+                Math.max(enter0, lkOut - 0.2),
+              ).toFixed(3);
           }
         // a LOCKUP fades as ONE unit: context lines exit with the hero (block window),
         // never linger on page timing after the hero has left
-        l.out = l.lockupPos ? +Math.min(out, bw[l.bi].out).toFixed(3) : +out.toFixed(3);
-        l.in = l._delayIn != null ? l._delayIn : +Math.max(0, l.first - LEAD).toFixed(3);
+        l.out = l.lockupPos
+          ? +Math.min(out, bw[l.bi].out).toFixed(3)
+          : +out.toFixed(3);
+        l.in =
+          l._delayIn != null
+            ? l._delayIn
+            : +Math.max(0, l.first - LEAD).toFixed(3);
         // first line of a NEW page: don't enter before the old page has begun clearing
         if (li === 0 && pi > 0)
-          l.in = +Math.min(l.first, Math.max(l.first - LEAD, pages[pi - 1][0].out - 0.02)).toFixed(
-            3,
-          );
+          l.in = +Math.min(
+            l.first,
+            Math.max(l.first - LEAD, pages[pi - 1][0].out - 0.02),
+          ).toFixed(3);
       });
     });
   }
@@ -587,24 +661,32 @@ function main() {
     // edges) — so it EMBEDS (bg) like the hero; the whole composition shares one depth.
     // fg remains for: minor heroes (column emphasis), a DNA's bodyLayer (loud announces),
     // scene verdict FG (globalFg), and explicit per-line "layer" overrides.
-    const defLayer = l.isMinorHero ? "fg" : dnaBodyLayer || "bg";
+    const defLayer = l.isMinorHero ? 'fg' : dnaBodyLayer || 'bg';
     groups.push({
       id: l.gid,
       plane: l.plane,
-      layer: globalFg ? "fg" : l.ln.layer || l.b.layer || defLayer,
-      ...(l.isMinorHero ? { hero: true, ...(columnApexBis.has(l.bi) ? {} : { minor: true }) } : {}),
-      tone: l.isMinorHero ? tones.hero || "present" : l.ln.tone || tones.default || "soft",
+      layer: globalFg ? 'fg' : l.ln.layer || l.b.layer || defLayer,
+      ...(l.isMinorHero
+        ? { hero: true, ...(columnApexBis.has(l.bi) ? {} : { minor: true }) }
+        : {}),
+      tone: l.isMinorHero
+        ? tones.hero || 'present'
+        : l.ln.tone || tones.default || 'soft',
       allow_overlap: true,
       // a MINOR hero holds only to the end of ITS thought (+a breath) — lingering with
       // the page through a long pause leaves it co-visible with the next apex
       in: l.in,
-      out: l.isMinorHero ? +Math.min(l.out, bw[l.bi].out + 0.3).toFixed(3) : l.out,
+      out: l.isMinorHero
+        ? +Math.min(l.out, bw[l.bi].out + 0.3).toFixed(3)
+        : l.out,
       // carry the PLANE's text-align onto each slotted line (absolute children don't
       // reliably inherit through the template's .cap centering — authored "right edge
       // hugs the silhouette" was silently centered)
       css:
         (l.lockupPos && l._orbit
-          ? (l.ln.anchor || (l.lockupPos === "pre" ? l._orbit.side : l._orbit.side)) === "left"
+          ? (l.ln.anchor ||
+              (l.lockupPos === 'pre' ? l._orbit.side : l._orbit.side)) ===
+            'left'
             ? `position:absolute;top:${l.slotPx}px;left:${l._orbit.left}px;right:auto;max-width:${l._orbit.maxW}px;text-align:left; `
             : `position:absolute;top:${l.slotPx}px;right:${l._orbit.right}px;left:auto;max-width:${l._orbit.maxW}px;text-align:right; `
           : `position:absolute;left:0;right:0;top:${l.slotPx}px; ` +
@@ -612,18 +694,24 @@ function main() {
               const pc =
                 (C.planes &&
                   C.planes[l.plane] &&
-                  (typeof C.planes[l.plane] === "string"
+                  (typeof C.planes[l.plane] === 'string'
                     ? C.planes[l.plane]
                     : C.planes[l.plane].css)) ||
-                "";
+                '';
               const ta = pc.match(/text-align\s*:\s*(left|right|center)/);
-              return ta ? `text-align:${ta[1]}; ` : "";
+              return ta ? `text-align:${ta[1]}; ` : '';
             })()) +
-        ensureFontSize(l.ln.css, "font-size: calc(0.05 * var(--h)); font-weight: 600;") +
-        (l.lockupPos ? lockupComp : planeComp[l.plane] || ""),
+        ensureFontSize(
+          l.ln.css,
+          'font-size: calc(0.05 * var(--h)); font-weight: 600;',
+        ) +
+        (l.lockupPos ? lockupComp : planeComp[l.plane] || ''),
       words: l.ln._w.map((w, wi2) => ({
         // minor/column heroes honor the display-form override too (single-word lines)
-        text: l.isMinorHero && l.ln.text && wi2 === 0 && l.ln._w.length === 1 ? l.ln.text : w.text,
+        text:
+          l.isMinorHero && l.ln.text && wi2 === 0 && l.ln._w.length === 1
+            ? l.ln.text
+            : w.text,
         start: w.start,
         end: Math.min(w.end, DUR - 0.05),
         ti: w.ti,
@@ -637,8 +725,8 @@ function main() {
       id: `h-${bi}`,
       hero: true,
       plane: hRef.plane,
-      layer: ln.layer || (heroFeasible ? "bg" : "fg"),
-      tone: tones.hero || "present",
+      layer: ln.layer || (heroFeasible ? 'bg' : 'fg'),
+      tone: tones.hero || 'present',
       allow_overlap: true,
       in: +Math.max(0, w0.start - 0.02).toFixed(3),
       out: +bw[bi].out.toFixed(3),
@@ -646,7 +734,7 @@ function main() {
         `position:absolute;left:0;right:0;top:${hRef.slotPx || 0}px; text-align:center; ` +
         ensureFontSize(
           ln.css,
-          "font-size: calc(0.24 * var(--h)); font-weight: 900; white-space: nowrap;",
+          'font-size: calc(0.24 * var(--h)); font-weight: 900; white-space: nowrap;',
         ), // case/tracking come from the DNA's hero treatment
       words: ln._w.map((w, i) => ({
         text: i === 0 && ln.text ? ln.text : w.text,
@@ -657,11 +745,13 @@ function main() {
     });
     if (!heroFeasible)
       console.log(
-        "[make-cinematic] no hero band ≤62% predicted occlusion → hero rendered in FRONT (last resort)",
+        '[make-cinematic] no hero band ≤62% predicted occlusion → hero rendered in FRONT (last resort)',
       );
   }
   // scarcity spacing: heroes must breathe apart (≥ a beat between windows)
-  const heroGs = groups.filter((g) => g.hero === true).sort((a, b) => a.in - b.in);
+  const heroGs = groups
+    .filter((g) => g.hero === true)
+    .sort((a, b) => a.in - b.in);
   for (let i = 1; i < heroGs.length; i++) {
     const gap = heroGs[i].in - heroGs[i - 1].out;
     if (gap < 0.6)
@@ -673,8 +763,8 @@ function main() {
   // only when typography interacts with the subject) — warn on far-parked planes.
   if (sz && sz.subject) {
     for (const [pk2, pv] of Object.entries(C.planes || {})) {
-      if (/^lockup/.test(pk2) || pk2 === "hero" || pv == null) continue;
-      const css2 = typeof pv === "string" ? pv : pv.css || "";
+      if (/^lockup/.test(pk2) || pk2 === 'hero' || pv == null) continue;
+      const css2 = typeof pv === 'string' ? pv : pv.css || '';
       const lm = css2.match(/left\s*:\s*([\d.]+)%/),
         wm = css2.match(/width\s*:\s*([\d.]+)%/);
       if (!lm || !wm) continue;
@@ -693,29 +783,40 @@ function main() {
     }
   }
   const plan = {
-    mode: "template",
-    dna: C.dna || (C.template ? undefined : "cream"), // canonical: name a DNA; default cream
-    template: C.template || "cinematic-cream",
-    compiled_by: "make-cinematic.cjs",
+    mode: 'template',
+    dna: C.dna || (C.template ? undefined : 'cream'), // canonical: name a DNA; default cream
+    template: C.template || 'cinematic-cream',
+    compiled_by: 'make-cinematic.cjs',
     width: W,
     height: H,
     fps: FPS,
     duration: DUR,
-    ...(globalFg && (!heroRefs.length || !heroFeasible) ? { caption_layer: "fg" } : {}), // mixed narration-fg + hero-bg → per-group layers (hybrid render)
-    planes: Object.fromEntries(Object.entries(planes).map(([k, v]) => [k, { css: v.css }])),
+    ...(globalFg && (!heroRefs.length || !heroFeasible)
+      ? { caption_layer: 'fg' }
+      : {}), // mixed narration-fg + hero-bg → per-group layers (hybrid render)
+    planes: Object.fromEntries(
+      Object.entries(planes).map(([k, v]) => [k, { css: v.css }]),
+    ),
     groups,
   };
-  fs.writeFileSync(path.join(project, "plan.json"), JSON.stringify(plan, null, 2));
+  fs.writeFileSync(
+    path.join(project, 'plan.json'),
+    JSON.stringify(plan, null, 2),
+  );
   console.log(
     `[make-cinematic] ${blocks.length} block(s) → ${groups.length} group(s)` +
-      `${heroRefs.length ? `, ${heroRefs.length} hero(es): ${heroRefs.map((h) => `"${h.ln.text || h.ln.words[0]}"`).join(" · ")} (each holds to its block end, lockup-composed)` : ""}` +
-      `${globalFg ? ", caption_layer=fg (safe-zones verdict)" : ""}, canvas ${DUR}s`,
+      `${heroRefs.length ? `, ${heroRefs.length} hero(es): ${heroRefs.map((h) => `"${h.ln.text || h.ln.words[0]}"`).join(' · ')} (each holds to its block end, lockup-composed)` : ''}` +
+      `${globalFg ? ', caption_layer=fg (safe-zones verdict)' : ''}, canvas ${DUR}s`,
   );
   // straight into the existing template compiler
-  const cp2 = require("child_process");
-  let r = cp2.spawnSync("node", [path.join(__dirname, "make-composition.cjs"), project], {
-    stdio: "inherit",
-  });
+  const cp2 = require('child_process');
+  let r = cp2.spawnSync(
+    'node',
+    [path.join(__dirname, 'make-composition.cjs'), project],
+    {
+      stdio: 'inherit',
+    },
+  );
   if ((r.status || 0) !== 0) process.exit(r.status);
 
   // ── RE-SLOT pass (real measurement). Compile-time slots assume each line renders as
@@ -723,22 +824,27 @@ function main() {
   // wrapped tail. Measure every page's REAL text heights in Chromium and re-stack.
   {
     const textBoxH = (c) => {
-      const ws = (c.words || []).filter((w) => (w.opacity ?? 1) > 0.05 && w.w > 0);
+      const ws = (c.words || []).filter(
+        (w) => (w.opacity ?? 1) > 0.05 && w.w > 0,
+      );
       if (!ws.length) return c.cap_bbox ? c.cap_bbox.h : 0;
-      return Math.max(...ws.map((w) => w.y + w.h)) - Math.min(...ws.map((w) => w.y));
+      return (
+        Math.max(...ws.map((w) => w.y + w.h)) - Math.min(...ws.map((w) => w.y))
+      );
     };
     const pagesByKey = {};
     for (const l of flat) {
-      const key = l.plane + "|" + (l.pageIdx || 0);
-      (pagesByKey[key] = pagesByKey[key] || { t: +(l.out - 0.1).toFixed(2), lines: [] }).lines.push(
-        l,
-      );
+      const key = l.plane + '|' + (l.pageIdx || 0);
+      (pagesByKey[key] = pagesByKey[key] || {
+        t: +(l.out - 0.1).toFixed(2),
+        lines: [],
+      }).lines.push(l);
     }
     // the HERO is a real member of its lockup's stack — re-slot must move it (and the
     // post-context below it) from MEASURED heights, or a wrapped pre-line / raised hero
     // font reopens the very overlap this pass exists to prevent
     for (const hRef of heroRefs) {
-      const key = hRef.plane + "|0";
+      const key = hRef.plane + '|0';
       const hg2 = groups.find((g2) => g2.id === `h-${hRef.bi}`);
       if (!hg2) continue;
       (pagesByKey[key] = pagesByKey[key] || {
@@ -754,13 +860,19 @@ function main() {
     const times = [...new Set(Object.values(pagesByKey).map((pg) => pg.t))];
     if (times.length) {
       cp2.spawnSync(
-        "node",
-        [path.join(__dirname, "measure-layout.cjs"), project, ...times.map(String)],
-        { stdio: "ignore", timeout: 120000 },
+        'node',
+        [
+          path.join(__dirname, 'measure-layout.cjs'),
+          project,
+          ...times.map(String),
+        ],
+        { stdio: 'ignore', timeout: 120000 },
       );
       let lay = null;
       try {
-        lay = JSON.parse(fs.readFileSync(path.join(project, "_layout.json"), "utf8"));
+        lay = JSON.parse(
+          fs.readFileSync(path.join(project, '_layout.json'), 'utf8'),
+        );
       } catch {}
       if (lay && lay.samples) {
         let changes = 0;
@@ -778,7 +890,10 @@ function main() {
               : l.frac * H * 1.25;
             if (Math.abs(top - l.slotPx) > 3) {
               const g = groups.find((g2) => g2.id === l.gid);
-              g.css = g.css.replace(/top:\s*-?[\d.]+px/, "top:" + Math.round(top) + "px");
+              g.css = g.css.replace(
+                /top:\s*-?[\d.]+px/,
+                'top:' + Math.round(top) + 'px',
+              );
               if (l._hero) {
                 const hr = heroRefs.find((h) => `h-${h.bi}` === l.gid);
                 if (hr) hr.slotPx = Math.round(top);
@@ -787,19 +902,27 @@ function main() {
               changes++;
             }
             top +=
-              (realH || l.frac * H * 1.25) + Math.max(12, Math.round((l.frac || 0.05) * H * 0.38)); // box is lh1.12 — contains its own ink
+              (realH || l.frac * H * 1.25) +
+              Math.max(12, Math.round((l.frac || 0.05) * H * 0.38)); // box is lh1.12 — contains its own ink
           }
         }
         if (changes) {
           console.log(
             `[make-cinematic] re-slot: ${changes} line(s) re-stacked from MEASURED heights (wrapped lines accounted)`,
           );
-          fs.writeFileSync(path.join(project, "plan.json"), JSON.stringify(plan, null, 2));
-          cp2.spawnSync("node", [path.join(__dirname, "make-composition.cjs"), project], {
-            stdio: "ignore",
-          });
+          fs.writeFileSync(
+            path.join(project, 'plan.json'),
+            JSON.stringify(plan, null, 2),
+          );
+          cp2.spawnSync(
+            'node',
+            [path.join(__dirname, 'make-composition.cjs'), project],
+            {
+              stdio: 'ignore',
+            },
+          );
           try {
-            fs.unlinkSync(path.join(project, "_layout.json"));
+            fs.unlinkSync(path.join(project, '_layout.json'));
           } catch {}
         }
       }
@@ -826,7 +949,7 @@ function main() {
       console.log(
         `[make-cinematic] ⚠ line "${g.words
           .map((w) => w.text)
-          .join(" ")
+          .join(' ')
           .slice(
             0,
             28,
@@ -851,30 +974,37 @@ function main() {
   {
     let nwChanged = false;
     for (const g of groups)
-      if (g.hero && !/white-space\s*:\s*nowrap/.test(g.css || "")) {
-        g.css = (g.css || "") + " white-space: nowrap;";
+      if (g.hero && !/white-space\s*:\s*nowrap/.test(g.css || '')) {
+        g.css = (g.css || '') + ' white-space: nowrap;';
         nwChanged = true;
       }
     if (nwChanged) {
-      fs.writeFileSync(path.join(project, "plan.json"), JSON.stringify(plan, null, 2));
-      require("child_process").spawnSync(
-        "node",
-        [path.join(__dirname, "make-composition.cjs"), project],
-        { stdio: "ignore" },
+      fs.writeFileSync(
+        path.join(project, 'plan.json'),
+        JSON.stringify(plan, null, 2),
+      );
+      require('child_process').spawnSync(
+        'node',
+        [path.join(__dirname, 'make-composition.cjs'), project],
+        { stdio: 'ignore' },
       );
     }
   }
   const fracOf = (css) => {
-    const m = (css || "").match(/font-size\s*:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--h\)/);
+    const m = (css || '').match(
+      /font-size\s*:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--h\)/,
+    );
     return m ? +m[1] : null;
   };
   const setFrac = (css, f) =>
-    (css || "").replace(
+    (css || '').replace(
       /font-size\s*:\s*[^;]+/,
-      "font-size: calc(" + f.toFixed(3) + " * var(--h))",
+      'font-size: calc(' + f.toFixed(3) + ' * var(--h))',
     );
   const textBox = (c) => {
-    const ws = (c.words || []).filter((w) => (w.opacity ?? 1) > 0.05 && w.w > 0);
+    const ws = (c.words || []).filter(
+      (w) => (w.opacity ?? 1) > 0.05 && w.w > 0,
+    );
     if (!ws.length) return c.cap_bbox;
     const x0 = Math.min(...ws.map((w) => w.x)),
       x1 = Math.max(...ws.map((w) => w.x + w.w));
@@ -883,27 +1013,31 @@ function main() {
     return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   };
   let dnaSizeCap = 0.34,
-    dnaHeroCase = "none";
+    dnaHeroCase = 'none';
   try {
-    const dnaLib2 = require("./lib-dna.cjs");
+    const dnaLib2 = require('./lib-dna.cjs');
     const dn = plan.dna || dnaLib2.LEGACY[plan.template];
     if (dn) {
       const dj = dnaLib2.load(dn);
       if (dj.hero && dj.hero.sizeRange) dnaSizeCap = dj.hero.sizeRange[1];
-      if (dj.hero) dnaHeroCase = dj.hero.case || "none";
+      if (dj.hero) dnaHeroCase = dj.hero.case || 'none';
     }
   } catch {}
   // the APEX (largest authored hero) gets the width-fit raise; minor heroes keep their
   // authored size — inter-hero hierarchy is a deliberate choice, not timidity
   const apexFrac = Math.max(
-    ...heroRefs.map((h) => fracOf((groups.find((g) => g.id === `h-${h.bi}`) || {}).css) || 0),
+    ...heroRefs.map(
+      (h) => fracOf((groups.find((g) => g.id === `h-${h.bi}`) || {}).css) || 0,
+    ),
     0,
   );
   for (const hRef of heroRefs) {
     const heroG = groups.find((g) => g.id === `h-${hRef.bi}`);
     if (!heroG) continue;
     const isApex = (fracOf(heroG.css) || 0) >= apexFrac - 1e-6;
-    const lockupMates = groups.filter((g) => g.plane === hRef.plane && g.id !== heroG.id);
+    const lockupMates = groups.filter(
+      (g) => g.plane === hRef.plane && g.id !== heroG.id,
+    );
     // hero size changed → context follows the 0.26 poster ratio, and its orbit
     // max-width scales WITH the font (a stale max-width wraps re-locked context
     // into multi-row towers that blow the stack past the frame)
@@ -915,23 +1049,40 @@ function main() {
         const scale = rf / mf;
         m.css = setFrac(m.css, rf).replace(
           /max-width:\s*([\d.]+)px/,
-          (s2, px) => "max-width:" + Math.round(+px * scale) + "px",
+          (s2, px) => 'max-width:' + Math.round(+px * scale) + 'px',
         );
       }
     };
     const measure = () => {
-      const midT = ((heroG.in + Math.min(heroG.out, heroG.in + 1.0)) / 2).toFixed(2);
+      const midT = (
+        (heroG.in + Math.min(heroG.out, heroG.in + 1.0)) /
+        2
+      ).toFixed(2);
       const endT = Math.max(+midT + 0.05, heroG.out - 0.12).toFixed(2);
       cp2.spawnSync(
-        "node",
-        [path.join(__dirname, "measure-layout.cjs"), project, String(midT), String(endT)],
-        { stdio: "ignore", timeout: 90000 },
+        'node',
+        [
+          path.join(__dirname, 'measure-layout.cjs'),
+          project,
+          String(midT),
+          String(endT),
+        ],
+        { stdio: 'ignore', timeout: 90000 },
       );
       try {
-        const ss = JSON.parse(fs.readFileSync(path.join(project, "_layout.json"), "utf8")).samples;
+        const ss = JSON.parse(
+          fs.readFileSync(path.join(project, '_layout.json'), 'utf8'),
+        ).samples;
         const near = (t) =>
-          ss.reduce((a, b) => (Math.abs(b.t - t) < Math.abs((a ? a.t : 1e9) - t) ? b : a), null);
-        return { caps: (near(+midT) || {}).caps || [], capsEnd: (near(+endT) || {}).caps || [] };
+          ss.reduce(
+            (a, b) =>
+              Math.abs(b.t - t) < Math.abs((a ? a.t : 1e9) - t) ? b : a,
+            null,
+          );
+        return {
+          caps: (near(+midT) || {}).caps || [],
+          capsEnd: (near(+endT) || {}).caps || [],
+        };
       } catch {
         return null;
       }
@@ -951,7 +1102,7 @@ function main() {
           (c) =>
             c.id !== heroG.id &&
             !mateIds.has(c.id) &&
-            !/-glow$/.test(c.id || "") &&
+            !/-glow$/.test(c.id || '') &&
             c.cap_bbox &&
             c.opacity > 0.05,
         )
@@ -985,21 +1136,29 @@ function main() {
             // SHORT-WORD FILL: height cap bound before the width target → fill with
             // TRACKING (film-title craft — HER, DUNE), ≤0.32em so it stays a word.
             const wAtCap = (hc.cap_bbox.w * nf) / f0;
-            const dispT = String(heroG.text || (heroG.words || []).map((w) => w.text).join(" "));
+            const dispT = String(
+              heroG.text || (heroG.words || []).map((w) => w.text).join(' '),
+            );
             // never letterspace lowercase (tracked lowercase falls apart — caps only)
-            const capsy = dnaHeroCase === "uppercase" || dispT === dispT.toUpperCase();
+            const capsy =
+              dnaHeroCase === 'uppercase' || dispT === dispT.toUpperCase();
             if (fit > dnaSizeCap && wAtCap < maxW * 0.85 && capsy) {
               const disp = dispT;
               // letter-spacing adds a gap after EVERY char (N gaps) and the centering
               // text-indent adds one more — budget N+1 gaps or the word leaves the frame
               const gaps = disp.length + 1;
-              const tr = +Math.min(0.32, (maxW * 0.88 - wAtCap) / (gaps * nf * H)).toFixed(3);
+              const tr = +Math.min(
+                0.32,
+                (maxW * 0.88 - wAtCap) / (gaps * nf * H),
+              ).toFixed(3);
               if (tr >= 0.04) {
                 heroG.css =
                   heroG.css
-                    .replace(/letter-spacing\s*:[^;]+;?\s*/g, "")
-                    .replace(/text-indent\s*:[^;]+;?\s*/g, "") +
-                  (heroG.css.trim().endsWith(";") || !heroG.css.trim() ? "" : ";") +
+                    .replace(/letter-spacing\s*:[^;]+;?\s*/g, '')
+                    .replace(/text-indent\s*:[^;]+;?\s*/g, '') +
+                  (heroG.css.trim().endsWith(';') || !heroG.css.trim()
+                    ? ''
+                    : ';') +
                   ` letter-spacing:${tr}em; text-indent:${tr}em;`;
                 console.log(
                   `[make-cinematic] hero "${disp}" short word at height cap (${Math.round(wAtCap)}px of ${Math.round(maxW)}px) → tracked +${tr}em to fill`,
@@ -1022,7 +1181,9 @@ function main() {
         return ix > 8 && iy > 8;
       });
       if (hits.length) {
-        const maxBottom = Math.max(...hits.map((o) => o.cap_bbox.y + o.cap_bbox.h));
+        const maxBottom = Math.max(
+          ...hits.map((o) => o.cap_bbox.y + o.cap_bbox.h),
+        );
         const minTop = Math.min(...hits.map((o) => o.cap_bbox.y));
         const downTo = ((maxBottom + 14) / H) * 100;
         const upTo = Math.max(2, ((minTop - hbx.h - 14) / H) * 100);
@@ -1031,29 +1192,35 @@ function main() {
         const newTop = downTo + (hbx.h / H) * 100 < 96 ? downTo : upTo;
         plan.planes[hRef.plane].css = planeCss.replace(
           /top:\s*[\d.]+%/,
-          "top: " + newTop.toFixed(1) + "%",
+          'top: ' + newTop.toFixed(1) + '%',
         );
         console.log(
-          `[make-cinematic] hero "${heroG.words[0].text}" OVERLAPS ${hits.map((o) => o.id).join(",")} — lockup top ${curTop}% → ${newTop.toFixed(1)}%`,
+          `[make-cinematic] hero "${heroG.words[0].text}" OVERLAPS ${hits.map((o) => o.id).join(',')} — lockup top ${curTop}% → ${newTop.toFixed(1)}%`,
         );
         changed = true;
       }
       // ORBIT REFINE: anchor kicker/tail to the MEASURED hero edges (estimate → real)
       if (lockupMates.length && hc.cap_bbox && hc.cap_bbox.w > 0) {
-        const planeCss2 = (plan.planes[hRef.plane] && plan.planes[hRef.plane].css) || "";
-        const pl2 = ((planeCss2.match(/left:\s*([\d.]+)%/) || [0, 0])[1] * W) / 100;
+        const planeCss2 =
+          (plan.planes[hRef.plane] && plan.planes[hRef.plane].css) || '';
+        const pl2 =
+          ((planeCss2.match(/left:\s*([\d.]+)%/) || [0, 0])[1] * W) / 100;
         const relL = Math.max(0, Math.round(hc.cap_bbox.x - pl2));
-        const pw2 = ((planeCss2.match(/width:\s*([\d.]+)%/) || [0, 100])[1] * W) / 100;
-        const relR = Math.max(0, Math.round(pw2 - (hc.cap_bbox.x - pl2) - hc.cap_bbox.w));
+        const pw2 =
+          ((planeCss2.match(/width:\s*([\d.]+)%/) || [0, 100])[1] * W) / 100;
+        const relR = Math.max(
+          0,
+          Math.round(pw2 - (hc.cap_bbox.x - pl2) - hc.cap_bbox.w),
+        );
         for (const m of lockupMates) {
           if (/left:\s*\d+px;right:auto/.test(m.css)) {
-            const nc = m.css.replace(/left:\s*\d+px/, "left:" + relL + "px");
+            const nc = m.css.replace(/left:\s*\d+px/, 'left:' + relL + 'px');
             if (nc !== m.css) {
               m.css = nc;
               changed = true;
             }
           } else if (/right:\s*\d+px;left:auto/.test(m.css)) {
-            const nc = m.css.replace(/right:\s*\d+px/, "right:" + relR + "px");
+            const nc = m.css.replace(/right:\s*\d+px/, 'right:' + relR + 'px');
             if (nc !== m.css) {
               m.css = nc;
               changed = true;
@@ -1076,11 +1243,17 @@ function main() {
           if (!cm || !cm.cap_bbox || !mwM) continue;
           const rows = Math.round(cm.cap_bbox.h / (frm * H * 1.12));
           if (rows >= 3) {
-            const planeCssW2 = (plan.planes[hRef.plane] && plan.planes[hRef.plane].css) || "";
-            const pwX = W * (+(planeCssW2.match(/width:\s*([\d.]+)%/) || [0, 92])[1] / 100);
+            const planeCssW2 =
+              (plan.planes[hRef.plane] && plan.planes[hRef.plane].css) || '';
+            const pwX =
+              W *
+              (+(planeCssW2.match(/width:\s*([\d.]+)%/) || [0, 92])[1] / 100);
             const nw = Math.round(pwX * 0.62);
             if (nw > +mwM[1] + 10) {
-              m.css = m.css.replace(/max-width:\s*[\d.]+px/, "max-width:" + nw + "px");
+              m.css = m.css.replace(
+                /max-width:\s*[\d.]+px/,
+                'max-width:' + nw + 'px',
+              );
               console.log(
                 `[make-cinematic] context "${((m.words || [])[0] || {}).text}…" wrapped to ${rows} rows — orbit max-width ${Math.round(+mwM[1])}→${nw}px (towers break the stack)`,
               );
@@ -1098,17 +1271,25 @@ function main() {
             // still opacity-0 — glyph-box measured a wrapped line one row short and the
             // next line slotted INTO its wrap band (real text-on-text shipped).
             const measuredH = c && c.cap_bbox ? c.cap_bbox.h : null;
-            const h2 = g.id === heroG.id && didRaise ? fr * H * 1.12 : measuredH || fr * H * 1.25;
+            const h2 =
+              g.id === heroG.id && didRaise
+                ? fr * H * 1.12
+                : measuredH || fr * H * 1.25;
             return { g, curTop, h: h2 };
           })
           .sort((a, b) => a.curTop - b.curTop);
         let top = 0;
         for (const e of entries) {
           if (Math.abs(top - e.curTop) > 3) {
-            e.g.css = e.g.css.replace(/top:\s*-?[\d.]+px/, "top:" + Math.round(top) + "px");
+            e.g.css = e.g.css.replace(
+              /top:\s*-?[\d.]+px/,
+              'top:' + Math.round(top) + 'px',
+            );
             changed = true;
           }
-          top += e.h + Math.max(12, Math.round((fracOf(e.g.css) || 0.05) * H * 0.38)); // box is lh1.12 — contains its own ink
+          top +=
+            e.h +
+            Math.max(12, Math.round((fracOf(e.g.css) || 0.05) * H * 0.38)); // box is lh1.12 — contains its own ink
         }
         // RE-CLAMP the plane after MEASURED growth — keep the whole composition on frame
         const planeCss3 = plan.planes[hRef.plane].css;
@@ -1117,7 +1298,7 @@ function main() {
         if (curTopPct > maxTopPct + 0.3) {
           plan.planes[hRef.plane].css = planeCss3.replace(
             /top:\s*[\d.]+%/,
-            "top: " + maxTopPct.toFixed(1) + "%",
+            'top: ' + maxTopPct.toFixed(1) + '%',
           );
           console.log(
             `[make-cinematic] lockup measured ${Math.round(top)}px tall — plane top ${curTopPct}% → ${maxTopPct.toFixed(1)}% (kept on frame)`,
@@ -1131,7 +1312,10 @@ function main() {
           if (f0c && f0c > 0.14) {
             // decisive step: stack height scales ~linearly with the hero (context is
             // ratio-locked to it), so aim straight at a 93% fill instead of nibbling
-            const nf2 = +Math.max(0.14, Math.min(f0c * 0.92, (f0c * (H * 0.93)) / top)).toFixed(3);
+            const nf2 = +Math.max(
+              0.14,
+              Math.min(f0c * 0.92, (f0c * (H * 0.93)) / top),
+            ).toFixed(3);
             console.log(
               `[make-cinematic] lockup stack ${Math.round(top)}px exceeds the frame even at top 2% — hero ${f0c}h → ${nf2}h (fit)`,
             );
@@ -1143,12 +1327,19 @@ function main() {
         }
       }
       if (!changed) break;
-      fs.writeFileSync(path.join(project, "plan.json"), JSON.stringify(plan, null, 2));
-      r = cp2.spawnSync("node", [path.join(__dirname, "make-composition.cjs"), project], {
-        stdio: "ignore",
-      });
+      fs.writeFileSync(
+        path.join(project, 'plan.json'),
+        JSON.stringify(plan, null, 2),
+      );
+      r = cp2.spawnSync(
+        'node',
+        [path.join(__dirname, 'make-composition.cjs'), project],
+        {
+          stdio: 'ignore',
+        },
+      );
       try {
-        fs.unlinkSync(path.join(project, "_layout.json"));
+        fs.unlinkSync(path.join(project, '_layout.json'));
       } catch {}
     }
   }
@@ -1156,19 +1347,26 @@ function main() {
   // but never ship broken: wider than the frame's usable width shrinks to fit, and a
   // column overflow gets a loud note (centered spill is legal on a clear side only).
   {
-    const minors = groups.filter((g) => g.hero && !heroRefs.some((h) => `h-${h.bi}` === g.id));
+    const minors = groups.filter(
+      (g) => g.hero && !heroRefs.some((h) => `h-${h.bi}` === g.id),
+    );
     let minorChanged = false;
     for (const mg of minors) {
       const midT = ((mg.in + Math.min(mg.out, mg.in + 1.0)) / 2).toFixed(2);
-      cp2.spawnSync("node", [path.join(__dirname, "measure-layout.cjs"), project, String(midT)], {
-        stdio: "ignore",
-        timeout: 60000,
-      });
+      cp2.spawnSync(
+        'node',
+        [path.join(__dirname, 'measure-layout.cjs'), project, String(midT)],
+        {
+          stdio: 'ignore',
+          timeout: 60000,
+        },
+      );
       let mc = null;
       try {
         mc = (
-          JSON.parse(fs.readFileSync(path.join(project, "_layout.json"), "utf8")).samples[0].caps ||
-          []
+          JSON.parse(
+            fs.readFileSync(path.join(project, '_layout.json'), 'utf8'),
+          ).samples[0].caps || []
         ).find((c) => c.id === mg.id);
       } catch {}
       if (!mc || !mc.cap_bbox) continue;
@@ -1182,22 +1380,31 @@ function main() {
         mg.css = setFrac(mg.css, nf);
         minorChanged = true;
       } else {
-        const planeCssM = (plan.planes[mg.plane] && plan.planes[mg.plane].css) || "";
-        const pwPx = W * (+(planeCssM.match(/width:\s*([\d.]+)%/) || [0, 100])[1] / 100);
+        const planeCssM =
+          (plan.planes[mg.plane] && plan.planes[mg.plane].css) || '';
+        const pwPx =
+          W * (+(planeCssM.match(/width:\s*([\d.]+)%/) || [0, 100])[1] / 100);
         if (bb.w > pwPx * 1.05)
           console.log(
             `[make-cinematic] note: minor hero "${(mg.words[0] || {}).text}" (${Math.round(bb.w)}px) spills its ${Math.round(pwPx)}px column — fine on a clear side; reduce size if it crosses the subject`,
           );
       }
       try {
-        fs.unlinkSync(path.join(project, "_layout.json"));
+        fs.unlinkSync(path.join(project, '_layout.json'));
       } catch {}
     }
     if (minorChanged) {
-      fs.writeFileSync(path.join(project, "plan.json"), JSON.stringify(plan, null, 2));
-      cp2.spawnSync("node", [path.join(__dirname, "make-composition.cjs"), project], {
-        stdio: "ignore",
-      });
+      fs.writeFileSync(
+        path.join(project, 'plan.json'),
+        JSON.stringify(plan, null, 2),
+      );
+      cp2.spawnSync(
+        'node',
+        [path.join(__dirname, 'make-composition.cjs'), project],
+        {
+          stdio: 'ignore',
+        },
+      );
     }
   }
   process.exit(0);

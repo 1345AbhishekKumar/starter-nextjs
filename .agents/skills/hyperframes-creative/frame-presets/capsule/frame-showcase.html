@@ -25,8 +25,8 @@
         --peach: #f5b895;
         --mint: #a8e6cf;
         --shadow: rgba(26, 26, 26, 0.08);
-        --serif: "Bodoni Moda", serif;
-        --sans: "Space Grotesk", sans-serif;
+        --serif: 'Bodoni Moda', serif;
+        --sans: 'Space Grotesk', sans-serif;
       }
       * {
         margin: 0;
@@ -39,9 +39,21 @@
       body {
         background: var(--cream);
         background-image:
-          radial-gradient(ellipse at 12% 8%, rgba(229, 93, 78, 0.1), transparent 45%),
-          radial-gradient(ellipse at 88% 22%, rgba(139, 180, 247, 0.12), transparent 42%),
-          radial-gradient(ellipse at 70% 95%, rgba(196, 217, 78, 0.1), transparent 45%);
+          radial-gradient(
+            ellipse at 12% 8%,
+            rgba(229, 93, 78, 0.1),
+            transparent 45%
+          ),
+          radial-gradient(
+            ellipse at 88% 22%,
+            rgba(139, 180, 247, 0.12),
+            transparent 42%
+          ),
+          radial-gradient(
+            ellipse at 70% 95%,
+            rgba(196, 217, 78, 0.1),
+            transparent 45%
+          );
         color: var(--ink);
         font-family: var(--sans);
         -webkit-font-smoothing: antialiased;
@@ -424,8 +436,16 @@
         overflow: hidden;
         background: var(--cream);
         background-image:
-          radial-gradient(ellipse at 15% 12%, rgba(229, 93, 78, 0.1), transparent 46%),
-          radial-gradient(ellipse at 85% 85%, rgba(139, 180, 247, 0.12), transparent 46%);
+          radial-gradient(
+            ellipse at 15% 12%,
+            rgba(229, 93, 78, 0.1),
+            transparent 46%
+          ),
+          radial-gradient(
+            ellipse at 85% 85%,
+            rgba(139, 180, 247, 0.12),
+            transparent 46%
+          );
         border: 2px solid var(--outline);
         border-radius: 1.4rem;
       }
@@ -691,11 +711,11 @@
         font-weight: 700;
       }
       .do-card.do li::before {
-        content: "+";
+        content: '+';
         color: var(--coral);
       }
       .do-card.dont li::before {
-        content: "\00d7";
+        content: '\00d7';
         color: var(--violet);
       }
 
@@ -742,14 +762,14 @@
         --secondary: #1a1a1a !important;
         --tertiary: #c4d94e !important;
         --accent: #e85d4e !important;
-        --f-disp: "Bodoni Moda", sans-serif !important;
-        --f-body: "Space Grotesk", sans-serif !important;
+        --f-disp: 'Bodoni Moda', sans-serif !important;
+        --f-body: 'Space Grotesk', sans-serif !important;
         --cream: #f5f5f0 !important;
         --ink: #1a1a1a !important;
         --coral: #e85d4e !important;
         --lime: #c4d94e !important;
-        --serif: "Bodoni Moda", sans-serif !important;
-        --sans: "Space Grotesk", sans-serif !important;
+        --serif: 'Bodoni Moda', sans-serif !important;
+        --sans: 'Space Grotesk', sans-serif !important;
         --outline: #1e1e1e !important;
         --white: #ffffff !important;
         --lavender: #c5b5e0 !important;
@@ -767,30 +787,62 @@
     <section class="cover">
       <span
         class="fp"
-        style="background: var(--coral); top: 14%; left: 8%; transform: rotate(-12deg)"
+        style="
+          background: var(--coral);
+          top: 14%;
+          left: 8%;
+          transform: rotate(-12deg);
+        "
         >Editorial</span
       >
-      <span class="fp" style="background: var(--sky); top: 24%; right: 10%; transform: rotate(9deg)"
+      <span
+        class="fp"
+        style="
+          background: var(--sky);
+          top: 24%;
+          right: 10%;
+          transform: rotate(9deg);
+        "
         >Playful</span
       >
       <span
         class="fp circ"
-        style="background: var(--peach); top: 60%; left: 6%; transform: rotate(-6deg)"
+        style="
+          background: var(--peach);
+          top: 60%;
+          left: 6%;
+          transform: rotate(-6deg);
+        "
         >★</span
       >
       <span
         class="fp"
-        style="background: var(--mint); bottom: 16%; right: 8%; transform: rotate(-14deg)"
+        style="
+          background: var(--mint);
+          bottom: 16%;
+          right: 8%;
+          transform: rotate(-14deg);
+        "
         >Memphis</span
       >
       <span
         class="fp"
-        style="background: var(--lavender); bottom: 24%; left: 13%; transform: rotate(7deg)"
+        style="
+          background: var(--lavender);
+          bottom: 24%;
+          left: 13%;
+          transform: rotate(7deg);
+        "
         >Candy</span
       >
       <span
         class="fp circ"
-        style="background: var(--lime); top: 18%; right: 24%; transform: rotate(10deg)"
+        style="
+          background: var(--lime);
+          top: 18%;
+          right: 24%;
+          transform: rotate(10deg);
+        "
         >+</span
       >
       <div class="titlepill">Frame System · Vol. 01</div>
@@ -866,7 +918,10 @@
         <div class="sw">
           <div
             class="chip"
-            style="background: var(--cream); border-bottom: 2px solid var(--outline)"
+            style="
+              background: var(--cream);
+              border-bottom: 2px solid var(--outline);
+            "
           ></div>
           <div class="meta">
             <div class="name">Cream</div>
@@ -898,7 +953,12 @@
         <div class="spec">
           <span
             class="serif"
-            style="font-weight: 800; font-size: 88px; line-height: 0.9; letter-spacing: -0.02em"
+            style="
+              font-weight: 800;
+              font-size: 88px;
+              line-height: 0.9;
+              letter-spacing: -0.02em;
+            "
             >Inflated.</span
           >
         </div>
@@ -909,7 +969,9 @@
           <div class="m">Bodoni Moda 700 · ink, never colored</div>
         </div>
         <div class="spec">
-          <span class="serif" style="font-weight: 700; font-size: 54px">A friendly pill</span>
+          <span class="serif" style="font-weight: 700; font-size: 54px"
+            >A friendly pill</span
+          >
         </div>
       </div>
       <div class="type-row">
@@ -920,7 +982,12 @@
         <div class="spec">
           <span
             class="serif"
-            style="font-weight: 800; font-size: 64px; color: var(--coral); letter-spacing: -0.03em"
+            style="
+              font-weight: 800;
+              font-size: 64px;
+              color: var(--coral);
+              letter-spacing: -0.03em;
+            "
             >240%</span
           >
         </div>
@@ -939,8 +1006,8 @@
               color: rgba(26, 26, 26, 0.7);
             "
           >
-            Space Grotesk carries every paragraph and label — the clean grotesque against Bodoni's
-            glamour.
+            Space Grotesk carries every paragraph and label — the clean
+            grotesque against Bodoni's glamour.
           </p>
         </div>
       </div>
@@ -979,7 +1046,9 @@
           <div class="p-card">
             <div class="ic" style="background: var(--coral)">I</div>
             <div class="t">Pill Geometry</div>
-            <div class="x">Every container is a pill — 9999px small, 2rem for cards.</div>
+            <div class="x">
+              Every container is a pill — 9999px small, 2rem for cards.
+            </div>
           </div>
         </div>
         <div class="s4">
@@ -1000,17 +1069,25 @@
         <div class="s4">
           <div class="cnote">Bar tracks + chips</div>
           <div class="bartrack">
-            <div class="barfill" style="width: 78%; background: var(--lime)">78</div>
+            <div class="barfill" style="width: 78%; background: var(--lime)">
+              78
+            </div>
           </div>
           <div class="bartrack">
-            <div class="barfill" style="width: 54%; background: var(--violet); color: var(--white)">
+            <div
+              class="barfill"
+              style="width: 54%; background: var(--violet); color: var(--white)"
+            >
               54
             </div>
           </div>
           <div class="chips">
             <span class="chip-pill" style="background: var(--peach)">Soft</span
-            ><span class="chip-pill" style="background: var(--lavender)">Lifted</span
-            ><span class="chip-pill" style="background: var(--mint)">Friendly</span>
+            ><span class="chip-pill" style="background: var(--lavender)"
+              >Lifted</span
+            ><span class="chip-pill" style="background: var(--mint)"
+              >Friendly</span
+            >
           </div>
         </div>
       </div>
@@ -1022,22 +1099,42 @@
             <div class="center">01</div>
             <span
               class="sat"
-              style="background: var(--coral); top: 14%; left: 18%; transform: rotate(-10deg)"
+              style="
+                background: var(--coral);
+                top: 14%;
+                left: 18%;
+                transform: rotate(-10deg);
+              "
               >Vision</span
             >
             <span
               class="sat"
-              style="background: var(--sky); top: 20%; right: 16%; transform: rotate(8deg)"
+              style="
+                background: var(--sky);
+                top: 20%;
+                right: 16%;
+                transform: rotate(8deg);
+              "
               >Future</span
             >
             <span
               class="sat"
-              style="background: var(--yellow); bottom: 16%; left: 24%; transform: rotate(6deg)"
+              style="
+                background: var(--yellow);
+                bottom: 16%;
+                left: 24%;
+                transform: rotate(6deg);
+              "
               >Next</span
             >
             <span
               class="sat"
-              style="background: var(--mint); bottom: 20%; right: 20%; transform: rotate(-7deg)"
+              style="
+                background: var(--mint);
+                bottom: 20%;
+                right: 20%;
+                transform: rotate(-7deg);
+              "
               >Now</span
             >
           </div>
@@ -1045,7 +1142,13 @@
         <div class="s6">
           <div class="cnote">Diagram nodes + connectors</div>
           <div
-            style="display: flex; align-items: center; gap: 0; margin-top: 40px; flex-wrap: wrap"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0;
+              margin-top: 40px;
+              flex-wrap: wrap;
+            "
           >
             <span
               class="pill"
@@ -1161,26 +1264,48 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Cover</b><span>· identity · pill wallpaper · centered</span></div>
+          <div class="flabel">
+            <b>Cover</b><span>· identity · pill wallpaper · centered</span>
+          </div>
           <div class="frame qf1">
             <span
               class="ffp"
-              style="background: var(--coral); top: 12%; left: 8%; transform: rotate(-12deg)"
+              style="
+                background: var(--coral);
+                top: 12%;
+                left: 8%;
+                transform: rotate(-12deg);
+              "
               >Editorial</span
             >
             <span
               class="ffp"
-              style="background: var(--sky); top: 18%; right: 10%; transform: rotate(9deg)"
+              style="
+                background: var(--sky);
+                top: 18%;
+                right: 10%;
+                transform: rotate(9deg);
+              "
               >Playful</span
             >
             <span
               class="ffp circ"
-              style="background: var(--lime); bottom: 16%; left: 9%; transform: rotate(-8deg)"
+              style="
+                background: var(--lime);
+                bottom: 16%;
+                left: 9%;
+                transform: rotate(-8deg);
+              "
               >+</span
             >
             <span
               class="ffp"
-              style="background: var(--mint); bottom: 14%; right: 11%; transform: rotate(-12deg)"
+              style="
+                background: var(--mint);
+                bottom: 14%;
+                right: 11%;
+                transform: rotate(-12deg);
+              "
               >Memphis</span
             >
             <div class="body">
@@ -1192,7 +1317,9 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Pillar Cards</b><span>· catalog · 3-up · left</span></div>
+          <div class="flabel">
+            <b>Pillar Cards</b><span>· catalog · 3-up · left</span>
+          </div>
           <div class="frame qf2">
             <div class="body">
               <div class="tp">Three Pillars</div>
@@ -1219,16 +1346,24 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Pull Quote</b><span>· quote · highlight pill · left</span></div>
+          <div class="flabel">
+            <b>Pull Quote</b><span>· quote · highlight pill · left</span>
+          </div>
           <div class="frame qf3">
             <span
               class="ffp"
-              style="background: var(--peach); top: 14%; right: 9%; transform: rotate(8deg)"
+              style="
+                background: var(--peach);
+                top: 14%;
+                right: 9%;
+                transform: rotate(8deg);
+              "
               >Voice</span
             >
             <div class="body">
               <div class="q">
-                Wrap emphasis in a <span class="hl">candy pill</span>, never in bold.
+                Wrap emphasis in a <span class="hl">candy pill</span>, never in
+                bold.
               </div>
               <div class="at">— The System Voice</div>
             </div>
@@ -1237,17 +1372,28 @@
 
         <div class="fw">
           <div class="flabel">
-            <b>Closing Plate</b><span>· closer · pill wallpaper · centered</span>
+            <b>Closing Plate</b
+            ><span>· closer · pill wallpaper · centered</span>
           </div>
           <div class="frame qf4">
             <span
               class="ffp"
-              style="background: var(--lavender); top: 16%; left: 10%; transform: rotate(-10deg)"
+              style="
+                background: var(--lavender);
+                top: 16%;
+                left: 10%;
+                transform: rotate(-10deg);
+              "
               >Thanks</span
             >
             <span
               class="ffp circ"
-              style="background: var(--yellow); bottom: 18%; right: 12%; transform: rotate(9deg)"
+              style="
+                background: var(--yellow);
+                bottom: 18%;
+                right: 12%;
+                transform: rotate(9deg);
+              "
               >★</span
             >
             <div class="body">
@@ -1271,10 +1417,17 @@
         <div class="do-card do">
           <span class="hpill" style="background: var(--lime)">Do</span>
           <ul>
-            <li>Make every text container a pill — 9999px small, 2rem for cards.</li>
+            <li>
+              Make every text container a pill — 9999px small, 2rem for cards.
+            </li>
             <li>Wrap every pill, card, and icon in the 2px ink outline.</li>
-            <li>Set Bodoni headlines in ink, sentence case; color lives on stats + pill fills.</li>
-            <li>Use soft offset shadows (4/6/8/12px) in 8% ink — never blur.</li>
+            <li>
+              Set Bodoni headlines in ink, sentence case; color lives on stats +
+              pill fills.
+            </li>
+            <li>
+              Use soft offset shadows (4/6/8/12px) in 8% ink — never blur.
+            </li>
             <li>Float 5–8 candy pills as wallpaper on declarative frames.</li>
           </ul>
         </div>
@@ -1284,7 +1437,9 @@
             <li>No sharp-cornered text containers; no unstroked pills.</li>
             <li>No colored Bodoni headlines; no uppercase Bodoni.</li>
             <li>No blurred shadows; no tenth accent color.</li>
-            <li>No shadows on decorative floating pills (atmosphere is flat).</li>
+            <li>
+              No shadows on decorative floating pills (atmosphere is flat).
+            </li>
             <li>Don't blow a headline edge-to-edge — fit to measure.</li>
           </ul>
         </div>
@@ -1373,16 +1528,28 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Active line</b><span>· spoken · current · upcoming</span></div>
+          <div class="flabel">
+            <b>Active line</b><span>· spoken · current · upcoming</span>
+          </div>
           <div class="frame capdemo">
             <span
               class="ffp"
-              style="background: var(--lavender); top: 12%; left: 8%; transform: rotate(-11deg)"
+              style="
+                background: var(--lavender);
+                top: 12%;
+                left: 8%;
+                transform: rotate(-11deg);
+              "
               >Live</span
             >
             <span
               class="ffp circ"
-              style="background: var(--lime); top: 16%; right: 10%; transform: rotate(8deg)"
+              style="
+                background: var(--lime);
+                top: 16%;
+                right: 10%;
+                transform: rotate(8deg);
+              "
               >+</span
             >
             <div class="bandline"></div>
@@ -1402,7 +1569,9 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Settled line</b><span>· all spoken · highlight cleared</span></div>
+          <div class="flabel">
+            <b>Settled line</b><span>· all spoken · highlight cleared</span>
+          </div>
           <div class="frame capdemo">
             <span
               class="ffp"
@@ -1458,7 +1627,14 @@
           stroke-width="2"
           transform="rotate(-10 27 26)"
         />
-        <circle cx="76" cy="72" r="8" fill="#C4D94E" stroke="#1E1E1E" stroke-width="2" />
+        <circle
+          cx="76"
+          cy="72"
+          r="8"
+          fill="#C4D94E"
+          stroke="#1E1E1E"
+          stroke-width="2"
+        />
       </svg>
     </template>
   </body>

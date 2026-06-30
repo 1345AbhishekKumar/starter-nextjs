@@ -23,8 +23,8 @@
         --card-bg: rgba(30, 43, 250, 0.04);
         --positive: #059669;
         --negative: #dc2626;
-        --disp: "Space Grotesk", sans-serif;
-        --body: "Inter", sans-serif;
+        --disp: 'Space Grotesk', sans-serif;
+        --body: 'Inter', sans-serif;
       }
       * {
         margin: 0;
@@ -693,7 +693,7 @@
         z-index: 1;
       }
       .gf4 .rings::before {
-        content: "";
+        content: '';
         position: absolute;
         inset: 20%;
         border: 0.1cqw solid var(--border);
@@ -780,10 +780,10 @@
         color: var(--primary);
       }
       .do-card.do li::before {
-        content: "+";
+        content: '+';
       }
       .do-card.dont li::before {
-        content: "\00d7";
+        content: '\00d7';
         color: var(--light);
       }
 
@@ -832,14 +832,14 @@
         --secondary: #111111 !important;
         --tertiary: #6b6b6b !important;
         --accent: #1e2bfa !important;
-        --f-disp: "Space Grotesk", sans-serif !important;
-        --f-body: "Inter", sans-serif !important;
+        --f-disp: 'Space Grotesk', sans-serif !important;
+        --f-body: 'Inter', sans-serif !important;
         --bg: #fdfae7 !important;
         --primary: #1e2bfa !important;
         --text: #111111 !important;
         --muted: #6b6b6b !important;
-        --disp: "Space Grotesk", sans-serif !important;
-        --body: "Inter", sans-serif !important;
+        --disp: 'Space Grotesk', sans-serif !important;
+        --body: 'Inter', sans-serif !important;
         --light: #9a9a9a !important;
         --positive: #059669 !important;
         --negative: #dc2626 !important;
@@ -854,14 +854,16 @@
     <!-- COVER -->
     <section class="cover">
       <div class="deco"></div>
-      <div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="dots">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
       <div class="inner">
         <div class="aline"></div>
         <div class="meta">FRAME SYSTEM · VOL. 01 · CONFIDENTIAL</div>
         <h1>Restraint, with one strong commitment.</h1>
         <div class="sub">
-          A consulting-grade frame system — warm cream, a single saturated cobalt carrying every
-          accent, and soft tinted cards that never shout.
+          A consulting-grade frame system — warm cream, a single saturated
+          cobalt carrying every accent, and soft tinted cards that never shout.
         </div>
       </div>
       <div class="counter">01 / 06</div>
@@ -875,13 +877,17 @@
           <div class="aline"></div>
           <h2>Palette</h2>
         </div>
-        <span class="sp"></span><span class="tagpill">One Accent, Three Grays</span>
+        <span class="sp"></span
+        ><span class="tagpill">One Accent, Three Grays</span>
       </div>
       <div class="swatches">
         <div class="sw">
           <div
             class="chip"
-            style="background: var(--bg); box-shadow: inset 0 0 0 1px var(--border)"
+            style="
+              background: var(--bg);
+              box-shadow: inset 0 0 0 1px var(--border);
+            "
           ></div>
           <div class="meta">
             <div class="name">Canvas</div>
@@ -947,7 +953,8 @@
           <div class="aline"></div>
           <h2>Typography</h2>
         </div>
-        <span class="sp"></span><span class="tagpill">Space Grotesk + Inter</span>
+        <span class="sp"></span
+        ><span class="tagpill">Space Grotesk + Inter</span>
       </div>
       <div class="type-row">
         <div>
@@ -957,7 +964,12 @@
         <div class="spec">
           <span
             class="disp"
-            style="font-weight: 700; font-size: 66px; letter-spacing: -0.02em; color: var(--text)"
+            style="
+              font-weight: 700;
+              font-size: 66px;
+              letter-spacing: -0.02em;
+              color: var(--text);
+            "
             >Measured.</span
           >
         </div>
@@ -975,7 +987,9 @@
           <div class="m">Space Grotesk 700 · cobalt</div>
         </div>
         <div class="spec">
-          <span class="disp" style="font-weight: 700; font-size: 54px; color: var(--primary)"
+          <span
+            class="disp"
+            style="font-weight: 700; font-size: 54px; color: var(--primary)"
             >$24.3M</span
           >
         </div>
@@ -987,8 +1001,8 @@
         </div>
         <div class="spec">
           <p style="font-size: 17px; line-height: 1.6; max-width: 660px">
-            Inter carries every paragraph in muted gray — readable, premium, never competing with
-            the cobalt accent or the near-black headline.
+            Inter carries every paragraph in muted gray — readable, premium,
+            never competing with the cobalt accent or the near-black headline.
           </p>
         </div>
       </div>
@@ -1008,7 +1022,8 @@
           <div class="aline"></div>
           <h2>Components</h2>
         </div>
-        <span class="sp"></span><span class="tagpill">Soft Tints, No Shadows</span>
+        <span class="sp"></span
+        ><span class="tagpill">Soft Tints, No Shadows</span>
       </div>
 
       <div class="cgrid">
@@ -1023,7 +1038,9 @@
         </div>
         <div class="s4">
           <div class="cnote">Stat cells</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem">
+          <div
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem"
+          >
             <div class="statcell">
               <div class="n">94%</div>
               <div class="nm">Retention</div>
@@ -1041,17 +1058,20 @@
           <div class="bars">
             <div class="row">
               <span class="bl">Cobalt</span
-              ><span class="track"><span class="fill" style="width: 88%"></span></span
+              ><span class="track"
+                ><span class="fill" style="width: 88%"></span></span
               ><span class="pct">88</span>
             </div>
             <div class="row">
               <span class="bl">Restraint</span
-              ><span class="track"><span class="fill" style="width: 64%"></span></span
+              ><span class="track"
+                ><span class="fill" style="width: 64%"></span></span
               ><span class="pct">64</span>
             </div>
             <div class="row">
               <span class="bl">Density</span
-              ><span class="track"><span class="fill" style="width: 46%"></span></span
+              ><span class="track"
+                ><span class="fill" style="width: 46%"></span></span
               ><span class="pct">46</span>
             </div>
           </div>
@@ -1105,10 +1125,14 @@
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Cover</b><span>· identity · diagonal accent · left</span></div>
+          <div class="flabel">
+            <b>Cover</b><span>· identity · diagonal accent · left</span>
+          </div>
           <div class="frame gf1">
             <div class="deco"></div>
-            <div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="dots">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
             <div class="body">
               <div class="aline"></div>
               <div class="ey">FRAME SYSTEM · VOL. 01</div>
@@ -1155,24 +1179,29 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Bar Ranking</b><span>· data · cobalt fills · left</span></div>
+          <div class="flabel">
+            <b>Bar Ranking</b><span>· data · cobalt fills · left</span>
+          </div>
           <div class="frame gf3">
             <div class="body">
               <div class="ey">Drivers</div>
               <h3>What Moves the Number</h3>
               <div class="row">
                 <span class="bl">Expansion</span
-                ><span class="track"><span class="fill" style="width: 88%"></span></span
+                ><span class="track"
+                  ><span class="fill" style="width: 88%"></span></span
                 ><span class="pct">88</span>
               </div>
               <div class="row">
                 <span class="bl">New Logos</span
-                ><span class="track"><span class="fill" style="width: 62%"></span></span
+                ><span class="track"
+                  ><span class="fill" style="width: 62%"></span></span
                 ><span class="pct">62</span>
               </div>
               <div class="row">
                 <span class="bl">Pricing</span
-                ><span class="track"><span class="fill" style="width: 41%"></span></span
+                ><span class="track"
+                  ><span class="fill" style="width: 41%"></span></span
                 ><span class="pct">41</span>
               </div>
             </div>
@@ -1188,7 +1217,9 @@
             <div class="rings"></div>
             <div class="body">
               <div class="qm">&ldquo;</div>
-              <div class="q">Quiet is the most expensive thing on the page.</div>
+              <div class="q">
+                Quiet is the most expensive thing on the page.
+              </div>
               <div class="c">— Managing Partner</div>
             </div>
             <div class="pbar" style="width: 82%"></div>
@@ -1211,13 +1242,21 @@
           <h4>Do</h4>
           <div class="aline"></div>
           <ul>
-            <li>Start every frame on warm cream; cobalt carries every accent.</li>
             <li>
-              Set headlines near-black with −0.02em tracking; eyebrows cobalt, uppercase, 0.08em.
+              Start every frame on warm cream; cobalt carries every accent.
+            </li>
+            <li>
+              Set headlines near-black with −0.02em tracking; eyebrows cobalt,
+              uppercase, 0.08em.
             </li>
             <li>Render every numeral in cobalt Space Grotesk 600–700.</li>
-            <li>Use tinted cards — 4% fill, 20% border, 10–14px radius; soft, never outlined.</li>
-            <li>Pill chrome at 100px; body in Inter 400, muted gray, line 1.6.</li>
+            <li>
+              Use tinted cards — 4% fill, 20% border, 10–14px radius; soft,
+              never outlined.
+            </li>
+            <li>
+              Pill chrome at 100px; body in Inter 400, muted gray, line 1.6.
+            </li>
           </ul>
         </div>
         <div class="do-card dont">
@@ -1228,7 +1267,9 @@
             <li>No drop shadows (save the one soft cobalt CTA hover).</li>
             <li>No square corners; no opaque cobalt borders.</li>
             <li>No font substitutes; no uppercase body.</li>
-            <li>Don't fill space with heavier borders — add substance, not noise.</li>
+            <li>
+              Don't fill space with heavier borders — add substance, not noise.
+            </li>
           </ul>
         </div>
       </div>
@@ -1258,7 +1299,8 @@
         max-width: 80cqw;
         padding: 1.4cqw 3cqw 1.7cqw;
         background: color-mix(in srgb, var(--cap-accent) 4%, var(--cap-canvas));
-        border: 0.16cqw solid color-mix(in srgb, var(--cap-accent) 20%, transparent);
+        border: 0.16cqw solid
+          color-mix(in srgb, var(--cap-accent) 20%, transparent);
         border-radius: 1cqw;
       }
       .capdemo .line {
@@ -1312,11 +1354,14 @@
           <div class="aline"></div>
           <h2>Captions</h2>
         </div>
-        <span class="sp"></span><span class="tagpill">Lower-third · Karaoke</span>
+        <span class="sp"></span
+        ><span class="tagpill">Lower-third · Karaoke</span>
       </div>
       <div class="gallery">
         <div class="fw">
-          <div class="flabel"><b>Active line</b><span>· spoken · current · upcoming</span></div>
+          <div class="flabel">
+            <b>Active line</b><span>· spoken · current · upcoming</span>
+          </div>
           <div class="frame capdemo">
             <div class="deco"></div>
             <div class="bandline"></div>
@@ -1337,7 +1382,9 @@
         </div>
 
         <div class="fw">
-          <div class="flabel"><b>Settled line</b><span>· all spoken · chip cleared</span></div>
+          <div class="flabel">
+            <b>Settled line</b><span>· all spoken · chip cleared</span>
+          </div>
           <div class="frame capdemo">
             <div class="stage">
               <div class="pill">
@@ -1362,7 +1409,14 @@
     <template id="__bundler_thumbnail">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" fill="#fdfae7" />
-        <rect x="58" y="0" width="42" height="100" fill="#1e2bfa" opacity="0.08" />
+        <rect
+          x="58"
+          y="0"
+          width="42"
+          height="100"
+          fill="#1e2bfa"
+          opacity="0.08"
+        />
         <rect x="14" y="40" width="6" height="20" fill="#1e2bfa" />
         <rect x="26" y="44" width="44" height="6" rx="3" fill="#111111" />
         <rect x="26" y="56" width="30" height="4" rx="2" fill="#1e2bfa" />

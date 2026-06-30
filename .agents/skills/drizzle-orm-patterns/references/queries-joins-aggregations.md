@@ -18,10 +18,13 @@ await db.insert(users).values([
 ]);
 
 // Returning inserted row
-const [newUser] = await db.insert(users).values({
-  name: 'John',
-  email: 'john@example.com',
-}).returning();
+const [newUser] = await db
+  .insert(users)
+  .values({
+    name: 'John',
+    email: 'john@example.com',
+  })
+  .returning();
 ```
 
 ### Select
@@ -31,10 +34,12 @@ const [newUser] = await db.insert(users).values({
 const allUsers = await db.select().from(users);
 
 // Select specific columns
-const result = await db.select({
-  id: users.id,
-  name: users.name,
-}).from(users);
+const result = await db
+  .select({
+    id: users.id,
+    name: users.name,
+  })
+  .from(users);
 
 // Select with where
 const user = await db.select().from(users).where(eq(users.id, 1));
@@ -50,12 +55,11 @@ const activeCount = await db.$count(users, eq(users.verified, true));
 ### Update
 
 ```typescript
-await db.update(users)
-  .set({ name: 'John Updated' })
-  .where(eq(users.id, 1));
+await db.update(users).set({ name: 'John Updated' }).where(eq(users.id, 1));
 
 // With returning
-const [updatedUser] = await db.update(users)
+const [updatedUser] = await db
+  .update(users)
   .set({ verified: true })
   .where(eq(users.email, 'john@example.com'))
   .returning();
@@ -67,7 +71,8 @@ const [updatedUser] = await db.update(users)
 await db.delete(users).where(eq(users.id, 1));
 
 // With returning
-const [deletedUser] = await db.delete(users)
+const [deletedUser] = await db
+  .delete(users)
   .where(eq(users.email, 'john@example.com'))
   .returning();
 ```
@@ -75,40 +80,51 @@ const [deletedUser] = await db.delete(users)
 ## Query Operators
 
 ```typescript
-import { eq, ne, gt, gte, lt, lte, like, ilike, inArray, isNull, isNotNull, and, or, between, exists, notExists } from 'drizzle-orm';
+import {
+  eq,
+  ne,
+  gt,
+  gte,
+  lt,
+  lte,
+  like,
+  ilike,
+  inArray,
+  isNull,
+  isNotNull,
+  and,
+  or,
+  between,
+  exists,
+  notExists,
+} from 'drizzle-orm';
 
 // Comparison
-eq(users.id, 1)           // id = 1
-ne(users.name, 'John')    // name != 'John'
-gt(users.age, 18)         // age > 18
-gte(users.age, 18)        // age >= 18
-lt(users.age, 65)         // age < 65
-lte(users.age, 65)        // age <= 65
+eq(users.id, 1); // id = 1
+ne(users.name, 'John'); // name != 'John'
+gt(users.age, 18); // age > 18
+gte(users.age, 18); // age >= 18
+lt(users.age, 65); // age < 65
+lte(users.age, 65); // age <= 65
 
 // String matching
-like(users.name, '%John%')   // case-sensitive
-ilike(users.name, '%john%')  // case-insensitive
+like(users.name, '%John%'); // case-sensitive
+ilike(users.name, '%john%'); // case-insensitive
 
 // Null checks
-isNull(users.deletedAt)       // deleted_at IS NULL
-isNotNull(users.deletedAt)    // deleted_at IS NOT NULL
+isNull(users.deletedAt); // deleted_at IS NULL
+isNotNull(users.deletedAt); // deleted_at IS NOT NULL
 
 // Array
-inArray(users.id, [1, 2, 3])  // id IN (1, 2, 3)
+inArray(users.id, [1, 2, 3]); // id IN (1, 2, 3)
 
 // Range
-between(users.createdAt, startDate, endDate)  // created_at BETWEEN start AND end
+between(users.createdAt, startDate, endDate); // created_at BETWEEN start AND end
 
 // Combining conditions
-and(
-  gte(users.age, 18),
-  eq(users.verified, true)
-)
+and(gte(users.age, 18), eq(users.verified, true));
 
-or(
-  eq(users.role, 'admin'),
-  eq(users.role, 'moderator')
-)
+or(eq(users.role, 'admin'), eq(users.role, 'moderator'));
 ```
 
 ## Pagination

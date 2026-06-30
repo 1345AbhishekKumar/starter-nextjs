@@ -331,6 +331,11 @@
       "sourceType": "local",
       "computedHash": "f98931159fa9c7fed043bcd18a891a46dcf89ababa38df13a4c5b7b30dc0ce07"
     },
+    "vibe-code-security": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-nextjs\\.agents\\skills\\vibe-code-security",
+      "sourceType": "local",
+      "computedHash": "8dc202226ce819ddb7d6a24658d37bc2bf82c9da3127b25f4ea6bc2b2bac37ed"
+    },
     "web-design-guidelines": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",

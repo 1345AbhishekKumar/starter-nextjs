@@ -25,26 +25,37 @@ Every HTML-in-Canvas effect shares this structure. Learn this once, adapt it for
 </canvas>
 
 <!-- 2. Render target — the visible canvas that shows the effect -->
-<canvas id="hic-output" width="1920" height="1080" style="position:absolute;inset:0;"></canvas>
+<canvas
+  id="hic-output"
+  width="1920"
+  height="1080"
+  style="position:absolute;inset:0;"
+></canvas>
 ```
 
 ```js
 // 3. Feature detection — always check, always provide fallback
 function isHiCSupported() {
-  var tc = document.createElement("canvas");
-  if (!("layoutSubtree" in tc)) return false;
-  tc.setAttribute("layoutsubtree", "");
-  var ctx = tc.getContext("2d");
-  return ctx && typeof ctx.drawElementImage === "function";
+  var tc = document.createElement('canvas');
+  if (!('layoutSubtree' in tc)) return false;
+  tc.setAttribute('layoutsubtree', '');
+  var ctx = tc.getContext('2d');
+  return ctx && typeof ctx.drawElementImage === 'function';
 }
 var apiOk = isHiCSupported();
 
 // 4. Capture function — call this every frame in onUpdate
-var capCanvas = document.getElementById("hic-source");
-var capCtx = capCanvas.getContext("2d");
+var capCanvas = document.getElementById('hic-source');
+var capCtx = capCanvas.getContext('2d');
 function captureContent() {
   if (apiOk) {
-    capCtx.drawElementImage(document.getElementById("hic-content"), 0, 0, 1920, 1080);
+    capCtx.drawElementImage(
+      document.getElementById('hic-content'),
+      0,
+      0,
+      1920,
+      1080,
+    );
   }
 }
 
@@ -54,7 +65,7 @@ tl.to(
   {
     /* your animation properties */
     duration: BEAT_DURATION,
-    ease: "sine.inOut",
+    ease: 'sine.inOut',
     onUpdate: function () {
       captureContent();
       // render your effect here (Three.js or WebGL2)
@@ -85,7 +96,7 @@ var camera = new THREE.PerspectiveCamera(45, 1920 / 1080, 0.1, 100);
 camera.position.set(0, 0, 4);
 
 var renderer = new THREE.WebGLRenderer({
-  canvas: document.getElementById("hic-output"),
+  canvas: document.getElementById('hic-output'),
   antialias: true,
   alpha: true,
 });
@@ -104,7 +115,9 @@ scene3d.add(mesh);
 // versions. Three.js r150+ removed the UMD `examples/js/` globals.
 var composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene3d, camera));
-composer.addPass(new UnrealBloomPass(new THREE.Vector2(1920, 1080), 0.3, 0.4, 0.85));
+composer.addPass(
+  new UnrealBloomPass(new THREE.Vector2(1920, 1080), 0.3, 0.4, 0.85),
+);
 
 var proxy = { rotY: -0.12, zoom: 4.2 };
 tl.to(
@@ -113,7 +126,7 @@ tl.to(
     rotY: 0.12,
     zoom: 3.6,
     duration: BEAT_DURATION,
-    ease: "sine.inOut",
+    ease: 'sine.inOut',
     onUpdate: function () {
       captureContent();
       texture.needsUpdate = true;
@@ -130,11 +143,11 @@ tl.to(
 
 ```html
 <script type="module">
-  import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.181.2/+esm";
-  import { EffectComposer } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/EffectComposer.js";
-  import { RenderPass } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/RenderPass.js";
-  import { ShaderPass } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/ShaderPass.js";
-  import { UnrealBloomPass } from "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/UnrealBloomPass.js";
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.181.2/+esm';
+  import { EffectComposer } from 'https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/EffectComposer.js';
+  import { RenderPass } from 'https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/RenderPass.js';
+  import { ShaderPass } from 'https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/ShaderPass.js';
+  import { UnrealBloomPass } from 'https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/postprocessing/UnrealBloomPass.js';
   // ... rest of composition code using these imports
 </script>
 ```
@@ -153,7 +166,7 @@ The `examples/js/` path was removed in Three.js r152. Use `examples/jsm/` (ES mo
 
 ```js
 // WebGL2 setup
-var gl = document.getElementById("hic-output").getContext("webgl2", {
+var gl = document.getElementById('hic-output').getContext('webgl2', {
   alpha: false,
   preserveDrawingBuffer: true,
 });
@@ -203,7 +216,7 @@ tl.to(
     cy: 0.4,
     strength: 1.0,
     duration: BEAT_DURATION,
-    ease: "power2.inOut",
+    ease: 'power2.inOut',
     onUpdate: function () {
       captureContent();
       // Upload texture, set uniforms, draw
@@ -246,9 +259,16 @@ var rng = mulberry32(42);
 var fragments = [];
 for (var i = 0; i < NUM_FRAGMENTS; i++) {
   var geom = new THREE.BufferGeometry();
-  var mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ map: texture }));
+  var mesh = new THREE.Mesh(
+    geom,
+    new THREE.MeshBasicMaterial({ map: texture }),
+  );
   scene3d.add(mesh);
-  fragments.push({ mesh: mesh, targetPos: randomExplosionVector(rng), delay: rng() * 0.5 });
+  fragments.push({
+    mesh: mesh,
+    targetPos: randomExplosionVector(rng),
+    delay: rng() * 0.5,
+  });
 }
 
 // 3. Animate: first hold still, then EXPLODE
@@ -261,13 +281,13 @@ fragments.forEach(function (frag) {
       y: frag.targetPos.y,
       z: frag.targetPos.z,
       duration: 0.8,
-      ease: "power3.in",
+      ease: 'power3.in',
     },
     holdTime + frag.delay,
   );
   tl.to(
     frag.mesh.rotation,
-    { x: rng() * 4, y: rng() * 4, duration: 0.8, ease: "power2.in" },
+    { x: rng() * 4, y: rng() * 4, duration: 0.8, ease: 'power2.in' },
     holdTime + frag.delay,
   );
 });

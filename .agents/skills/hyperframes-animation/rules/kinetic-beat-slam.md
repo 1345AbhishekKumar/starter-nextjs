@@ -38,7 +38,9 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
     <div class="kbs-line" id="p3"><span class="verb">Act</span> now.</div>
   </div>
   <!-- optional rhythm chrome -->
-  <div class="kbs-metronome" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="kbs-metronome" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i>
+  </div>
 </section>
 ```
 
@@ -56,7 +58,8 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
   box-sizing: border-box;
 }
 .kbs-line {
-  font-family: "Archivo Black", "League Gothic", sans-serif; /* embedded display face */
+  font-family:
+    'Archivo Black', 'League Gothic', sans-serif; /* embedded display face */
   font-size: 150px;
   line-height: 0.96;
   letter-spacing: -0.03em;
@@ -96,30 +99,36 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
 
   // Distinct entrances per phrase (NOT one reused helper).
   tl.fromTo(
-    "#p1",
-    { scale: 1.5, filter: "blur(16px)", opacity: 0 },
-    { scale: 1, filter: "blur(0px)", opacity: 1, duration: 0.5, ease: "power4.out" },
+    '#p1',
+    { scale: 1.5, filter: 'blur(16px)', opacity: 0 },
+    {
+      scale: 1,
+      filter: 'blur(0px)',
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power4.out',
+    },
     BEATS[0],
   );
   tl.fromTo(
-    "#p2",
+    '#p2',
     { x: -320, opacity: 0 },
-    { x: 0, opacity: 1, duration: 0.45, ease: "expo.out" },
+    { x: 0, opacity: 1, duration: 0.45, ease: 'expo.out' },
     BEATS[1],
   );
   tl.fromTo(
-    "#p3",
+    '#p3',
     { y: 90, rotation: 6, opacity: 0 },
-    { y: 0, rotation: 0, opacity: 1, duration: 0.55, ease: "circ.out" },
+    { y: 0, rotation: 0, opacity: 1, duration: 0.55, ease: 'circ.out' },
     BEATS[2],
   );
 
   // Rhythm chrome: each metronome tick flashes on the SAME grid (PULSE), not a magic offset.
-  const ticks = gsap.utils.toArray(".kbs-metronome i");
+  const ticks = gsap.utils.toArray('.kbs-metronome i');
   ticks.forEach((tick, i) => {
     tl.to(
       tick,
-      { opacity: 1, duration: 0.08, yoyo: true, repeat: 1, ease: "none" },
+      { opacity: 1, duration: 0.08, yoyo: true, repeat: 1, ease: 'none' },
       PULSE * (i + 1),
     );
   });
@@ -131,18 +140,18 @@ Use **at least 3 distinct easings** across the piece (entrances are its "tone of
     cycle = 1.6,
     holdDur = 15 - holdStart;
   tl.to(
-    ".kbs-stage",
+    '.kbs-stage',
     {
       scale: 1.01,
       duration: cycle / 2,
-      ease: "sine.inOut",
+      ease: 'sine.inOut',
       yoyo: true,
       repeat: Math.max(0, Math.floor(holdDur / cycle) - 1),
     },
     holdStart,
   );
 
-  window.__timelines["main"] = tl;
+  window.__timelines['main'] = tl;
 </script>
 ```
 

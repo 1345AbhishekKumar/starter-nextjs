@@ -155,8 +155,8 @@ Placeholder tokens:
   // (compositionWidth/2, compositionHeight × CENTER_Y_FACTOR).
   const SCREEN_CENTER = { x: CENTER_X, y: CENTER_Y };
 
-  const hubWrap = document.querySelector(".hub-wrap");
-  const linesSvg = document.querySelector(".lines");
+  const hubWrap = document.querySelector('.hub-wrap');
+  const linesSvg = document.querySelector('.lines');
 
   // Build avatars + lines
   const avatarPositions = [];
@@ -167,22 +167,22 @@ Placeholder tokens:
     avatarPositions.push({ x, y, angle });
 
     // Avatar
-    const av = document.createElement("div");
-    av.className = "avatar";
+    const av = document.createElement('div');
+    av.className = 'avatar';
     av.style.left = `${x}px`;
     av.style.top = `${y}px`;
     // assign avatar image / glyph from your authoring data (see {avatar[i]})
     hubWrap.appendChild(av);
 
     // Line from hub to avatar
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", SCREEN_CENTER.x);
-    line.setAttribute("y1", SCREEN_CENTER.y);
-    line.setAttribute("x2", x);
-    line.setAttribute("y2", y);
-    line.setAttribute("stroke", "{lineColor}");
-    line.setAttribute("stroke-width", "2");
-    line.setAttribute("stroke-dasharray", "6 8");
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', SCREEN_CENTER.x);
+    line.setAttribute('y1', SCREEN_CENTER.y);
+    line.setAttribute('x2', x);
+    line.setAttribute('y2', y);
+    line.setAttribute('stroke', '{lineColor}');
+    line.setAttribute('stroke-width', '2');
+    line.setAttribute('stroke-dasharray', '6 8');
     const len = Math.hypot(x - SCREEN_CENTER.x, y - SCREEN_CENTER.y);
     line.style.strokeDashoffset = String(len);
     line.dataset.length = String(len);
@@ -192,13 +192,18 @@ Placeholder tokens:
 
   // Phase 1 — hub fade in
   tl.from(
-    ".hub",
-    { opacity: 0, scale: 0.8, duration: HUB_FADE_DUR, ease: `back.out(${HUB_BOUNCE})` },
+    '.hub',
+    {
+      opacity: 0,
+      scale: 0.8,
+      duration: HUB_FADE_DUR,
+      ease: `back.out(${HUB_BOUNCE})`,
+    },
     HUB_FADE_START,
   );
 
   // Phase 2 — avatars cascade-in (staggered spring)
-  const avatars = document.querySelectorAll(".avatar");
+  const avatars = document.querySelectorAll('.avatar');
   avatars.forEach((av, i) => {
     tl.from(
       av,
@@ -213,14 +218,14 @@ Placeholder tokens:
   });
 
   // Phase 3 — connection lines draw outward (staggered) — starts after most avatars land
-  const lines = linesSvg.querySelectorAll("line");
+  const lines = linesSvg.querySelectorAll('line');
   lines.forEach((line, i) => {
     tl.to(
       line,
       {
         strokeDashoffset: 0,
         duration: LINES_DUR,
-        ease: "power2.out",
+        ease: 'power2.out',
       },
       LINES_START + i * LINE_STAGGER,
     );
@@ -234,7 +239,7 @@ Placeholder tokens:
     {
       p: Math.PI * 2 * BREATH_CYCLES,
       duration: BREATH_DUR,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         avatars.forEach((av, i) => {
           const phase = breathDriver.p + (i / avatars.length) * Math.PI * 2;
@@ -246,7 +251,7 @@ Placeholder tokens:
     BREATH_START,
   );
 
-  window.__timelines["cloud-scene"] = tl;
+  window.__timelines['cloud-scene'] = tl;
 </script>
 ```
 

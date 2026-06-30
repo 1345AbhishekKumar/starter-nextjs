@@ -37,7 +37,12 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
     <div class="brand">{Brand}</div>
   </div>
   <!-- Cursor lives at scene-root level so it can translate freely -->
-  <svg class="cursor" id="cursor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    class="cursor"
+    id="cursor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M3 2 L21 12 L12 13 L7 22 Z"
       fill="{cursorFill}"
@@ -119,37 +124,37 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
   const tl = gsap.timeline({ paused: true });
 
   // Position cursor initially off-target (off-screen or far corner).
-  gsap.set("#cursor", { x: CURSOR_START_X, y: CURSOR_START_Y });
+  gsap.set('#cursor', { x: CURSOR_START_X, y: CURSOR_START_Y });
 
   // The button's screen center, in composition coordinates.
   const BUTTON_CENTER = { x: BUTTON_CENTER_X, y: BUTTON_CENTER_Y };
 
   // Phase 1 — cursor approaches button
   tl.to(
-    "#cursor",
+    '#cursor',
     {
       x: BUTTON_CENTER.x,
       y: BUTTON_CENTER.y,
       duration: APPROACH_DUR,
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
     },
     APPROACH_START,
   );
 
   // Phase 2 — coordinated press down (button + cursor both scale to 1 - PRESS_INTENSITY)
   tl.to(
-    ["#btn", "#cursor"],
+    ['#btn', '#cursor'],
     {
       scale: 1 - PRESS_INTENSITY,
       duration: PRESS_DOWN_DUR,
-      ease: "power1.in",
+      ease: 'power1.in',
     },
     PRESS_DOWN_AT,
   );
 
   // Phase 3 — release (both spring back to 1.0 with overshoot)
   tl.to(
-    ["#btn", "#cursor"],
+    ['#btn', '#cursor'],
     {
       scale: 1,
       duration: RELEASE_DUR,
@@ -160,39 +165,49 @@ The cursor ALSO translates to the button's center during the approach phase BEFO
 
   // Phase 4 — inner glow during press (boxShadow change synced to press scale)
   tl.to(
-    "#btn",
+    '#btn',
     {
       boxShadow: `{btnPressedShadow}`,
       duration: PRESS_DOWN_DUR,
-      ease: "power1.in",
+      ease: 'power1.in',
     },
     PRESS_DOWN_AT,
   );
   tl.to(
-    "#btn",
+    '#btn',
     {
       boxShadow: `{btnRestingShadow}`,
       duration: RELEASE_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     RELEASE_AT,
   );
 
   // Brand fades in early (context)
   tl.from(
-    ".brand",
-    { opacity: 0, y: BRAND_REVEAL_Y_PX, duration: BRAND_REVEAL_DUR, ease: "power3.out" },
+    '.brand',
+    {
+      opacity: 0,
+      y: BRAND_REVEAL_Y_PX,
+      duration: BRAND_REVEAL_DUR,
+      ease: 'power3.out',
+    },
     BRAND_REVEAL_AT,
   );
 
   // Cursor optionally moves off after press (or holds for dwell)
   tl.to(
-    "#cursor",
-    { x: CURSOR_EXIT_X, y: CURSOR_EXIT_Y, duration: CURSOR_EXIT_DUR, ease: "power2.out" },
+    '#cursor',
+    {
+      x: CURSOR_EXIT_X,
+      y: CURSOR_EXIT_Y,
+      duration: CURSOR_EXIT_DUR,
+      ease: 'power2.out',
+    },
     CURSOR_EXIT_AT,
   );
 
-  window.__timelines["press-react-scene"] = tl;
+  window.__timelines['press-react-scene'] = tl;
 </script>
 ```
 
@@ -217,10 +232,10 @@ tl.to(
   {
     p: Math.PI * GLOW_PULSE_CYCLES * 2,
     duration: HOLD_DUR,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       const alpha = GLOW_BASE_ALPHA + Math.sin(holdGlow.p) * GLOW_PULSE_AMP;
-      document.getElementById("btn").style.boxShadow =
+      document.getElementById('btn').style.boxShadow =
         `inset 0 0 GLOW_BLUR rgba(255, 255, 255, ${alpha})`;
     },
   },

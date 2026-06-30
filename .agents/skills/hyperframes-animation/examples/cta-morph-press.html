@@ -54,12 +54,24 @@
         height: 1080px;
         overflow: hidden;
         background:
-          radial-gradient(ellipse at 50% 42%, rgba(24, 217, 232, 0.14), transparent 50%),
-          radial-gradient(ellipse at 62% 48%, rgba(124, 58, 237, 0.2), transparent 56%),
-          radial-gradient(ellipse at 42% 58%, rgba(34, 197, 94, 0.1), transparent 58%),
+          radial-gradient(
+            ellipse at 50% 42%,
+            rgba(24, 217, 232, 0.14),
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 62% 48%,
+            rgba(124, 58, 237, 0.2),
+            transparent 56%
+          ),
+          radial-gradient(
+            ellipse at 42% 58%,
+            rgba(34, 197, 94, 0.1),
+            transparent 58%
+          ),
           linear-gradient(135deg, #050711 0%, #090b18 48%, #120717 100%);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -190,7 +202,13 @@
       data-width="1920"
       data-height="1080"
     >
-      <div class="stage clip" data-start="0" data-duration="5.5" data-track-index="1" id="stage">
+      <div
+        class="stage clip"
+        data-start="0"
+        data-duration="5.5"
+        data-track-index="1"
+        id="stage"
+      >
         <!-- =====================================================
              HERO LOCKUP — "HyperFrames" + logo
              ===================================================== -->
@@ -203,17 +221,31 @@
           data-layout-allow-overflow
           aria-hidden="true"
         >
-          <h1 class="hero-text">Hyper<span class="brand-accent">Frames</span></h1>
+          <h1 class="hero-text">
+            Hyper<span class="brand-accent">Frames</span>
+          </h1>
           <div class="hero-logo" id="hero-logo">
             <!-- Inline-SVG placeholder mark — swap for your logo image -->
-            <svg class="logo-mark" viewBox="0 0 100 100" role="img" aria-label="HyperFrames">
+            <svg
+              class="logo-mark"
+              viewBox="0 0 100 100"
+              role="img"
+              aria-label="HyperFrames"
+            >
               <defs>
                 <linearGradient id="hfMark" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0" stop-color="#8b7bff" />
                   <stop offset="1" stop-color="#3ddc97" />
                 </linearGradient>
               </defs>
-              <rect x="4" y="4" width="92" height="92" rx="22" fill="url(#hfMark)" />
+              <rect
+                x="4"
+                y="4"
+                width="92"
+                height="92"
+                rx="22"
+                fill="url(#hfMark)"
+              />
               <text
                 x="50"
                 y="63"
@@ -248,8 +280,19 @@
             aria-hidden="true"
           >
             <defs>
-              <filter id="cursorShadow" x="-50%" y="-50%" width="200%" height="200%">
-                <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.3" />
+              <filter
+                id="cursorShadow"
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
+              >
+                <feDropShadow
+                  dx="2"
+                  dy="4"
+                  stdDeviation="3"
+                  flood-opacity="0.3"
+                />
               </filter>
             </defs>
             <path
@@ -300,16 +343,16 @@
          INITIAL STATES (via gsap.set, before the timeline runs)
          ================================================================ */
       // Hero: starts at opacity 0, y +40 (will fade up)
-      gsap.set("#hero", { opacity: 0, y: 40 });
+      gsap.set('#hero', { opacity: 0, y: 40 });
 
       // CTA: starts invisible (scale 0, opacity 0) — morph pops it in
-      gsap.set("#cta", { scale: 0, opacity: 0 });
+      gsap.set('#cta', { scale: 0, opacity: 0 });
 
       // CTA text: starts at opacity 0 + y 10 — reveals after container is recognizable
-      gsap.set(".cta-text", { opacity: 0, y: 10 });
+      gsap.set('.cta-text', { opacity: 0, y: 10 });
 
       // Cursor: starts off-screen bottom-right + invisible + scale 1 baseline
-      gsap.set("#cursor", {
+      gsap.set('#cursor', {
         x: W + 100,
         y: H + 200,
         scale: 1,
@@ -321,18 +364,18 @@
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       /* ----------------------------------------------------------------
          PHASE 1: Hero entrance + breathing rotation on logo
          ---------------------------------------------------------------- */
       tl.to(
-        "#hero",
+        '#hero',
         {
           opacity: 1,
           y: 0,
           duration: TIMING.introDur,
-          ease: "power3.out", // spring(stiffness:120, damping:14)
+          ease: 'power3.out', // spring(stiffness:120, damping:14)
         },
         TIMING.introStart,
       );
@@ -340,13 +383,13 @@
       // Continuous breathing rotation on the logo. ±4° over ~6.3 s period.
       // For a 5.5 s composition this is just under one cycle — subtle but alive.
       // Use Form 2 (onUpdate reading tl.time) per sine-wave-loop rule.
-      const logoEl = document.querySelector("#hero-logo");
+      const logoEl = document.querySelector('#hero-logo');
       tl.to(
         { tick: 0 },
         {
           tick: 1,
           duration: TOTAL_DUR,
-          ease: "none",
+          ease: 'none',
           onUpdate: function () {
             const t = tl.time();
             gsap.set(logoEl, { rotation: Math.sin(t * 1.0) * 4 });
@@ -361,28 +404,28 @@
          ---------------------------------------------------------------- */
       // (1) Hero shrinks
       tl.to(
-        "#hero",
+        '#hero',
         {
           scale: 0.6,
           duration: TIMING.morphExitDur,
-          ease: "power3.out", // spring(stiffness:150, damping:18)
+          ease: 'power3.out', // spring(stiffness:150, damping:18)
         },
         TIMING.morphAt,
       );
 
       // (2) Hero fades fast (30% of shrink dur)
       tl.to(
-        "#hero",
+        '#hero',
         {
           opacity: 0,
           duration: TIMING.morphFadeDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.morphAt,
       );
 
       tl.set(
-        "#hero",
+        '#hero',
         {
           x: -4000,
         },
@@ -391,24 +434,24 @@
 
       // (3) CTA pops in with overshoot
       tl.to(
-        "#cta",
+        '#cta',
         {
           scale: 1,
           opacity: 1,
           duration: TIMING.morphEntDur,
-          ease: "back.out(2)", // spring(stiffness:200, damping:15, mass:0.6)
+          ease: 'back.out(2)', // spring(stiffness:200, damping:15, mass:0.6)
         },
         TIMING.morphAt,
       );
 
       // (4) CTA text reveals after container reaches recognizable scale
       tl.to(
-        ".cta-text",
+        '.cta-text',
         {
           opacity: 1,
           y: 0,
           duration: TIMING.textRevealDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.textRevealAt,
       );
@@ -419,21 +462,21 @@
       // Hard-cut opacity (cursors don't fade in — they appear).
       // 0.001 s tween creates a step change that scrubs correctly.
       tl.fromTo(
-        "#cursor",
+        '#cursor',
         { opacity: 0 },
-        { opacity: 1, duration: 0.001, ease: "none" },
+        { opacity: 1, duration: 0.001, ease: 'none' },
         TIMING.cursorEnterAt,
       );
 
       // Spring-driven approach to a target slightly offset from center
       // (where a human would naturally aim — not dead-center).
       tl.to(
-        "#cursor",
+        '#cursor',
         {
           x: W / 2 + 120,
           y: H / 2 + 50,
           duration: TIMING.cursorPathDur,
-          ease: "power2.out", // spring(stiffness:60, damping:20)
+          ease: 'power2.out', // spring(stiffness:60, damping:20)
         },
         TIMING.cursorEnterAt,
       );
@@ -444,22 +487,22 @@
          ---------------------------------------------------------------- */
       // Press DOWN — both elements compress to (1 - intensity)
       tl.to(
-        ["#cta", "#cursor"],
+        ['#cta', '#cursor'],
         {
           scale: 1 - TIMING.pressIntensity,
           duration: TIMING.clickDownDur,
-          ease: "power3.out", // spring(stiffness:300, damping:20)
+          ease: 'power3.out', // spring(stiffness:300, damping:20)
         },
         TIMING.clickDownAt,
       );
 
       // RELEASE — back to scale 1.0
       tl.to(
-        ["#cta", "#cursor"],
+        ['#cta', '#cursor'],
         {
           scale: 1.0,
           duration: TIMING.clickUpDur,
-          ease: "power2.out", // spring(stiffness:200, damping:15)
+          ease: 'power2.out', // spring(stiffness:200, damping:15)
         },
         TIMING.clickUpAt,
       );

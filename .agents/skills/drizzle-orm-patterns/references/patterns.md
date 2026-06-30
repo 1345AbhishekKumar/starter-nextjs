@@ -23,7 +23,15 @@ This file contains detailed patterns for Drizzle ORM operations. For basic usage
 ### PostgreSQL Table
 
 ```typescript
-import { pgTable, serial, text, integer, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  pgEnum,
+} from 'drizzle-orm/pg-core';
 
 // Enum definition
 export const rolesEnum = pgEnum('roles', ['guest', 'user', 'admin']);
@@ -42,7 +50,14 @@ export const users = pgTable('users', {
 ### MySQL Table
 
 ```typescript
-import { mysqlTable, serial, text, int, tinyint, datetime } from 'drizzle-orm/mysql-core';
+import {
+  mysqlTable,
+  serial,
+  text,
+  int,
+  tinyint,
+  datetime,
+} from 'drizzle-orm/mysql-core';
 
 export const users = mysqlTable('users', {
   id: serial('id').primaryKey(),
@@ -70,28 +85,38 @@ export const users = sqliteTable('users', {
 ```typescript
 import { uniqueIndex, index, primaryKey } from 'drizzle-orm/pg-core';
 
-export const posts = pgTable('posts', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  slug: text('slug').notNull(),
-  authorId: integer('author_id').references(() => users.id),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-}, (table) => [
-  uniqueIndex('slug_idx').on(table.slug),
-  index('author_idx').on(table.authorId),
-  index('created_idx').on(table.createdAt),
-]);
+export const posts = pgTable(
+  'posts',
+  {
+    id: serial('id').primaryKey(),
+    title: text('title').notNull(),
+    slug: text('slug').notNull(),
+    authorId: integer('author_id').references(() => users.id),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('slug_idx').on(table.slug),
+    index('author_idx').on(table.authorId),
+    index('created_idx').on(table.createdAt),
+  ],
+);
 ```
 
 ### Composite Primary Key
 
 ```typescript
-export const usersToGroups = pgTable('users_to_groups', {
-  userId: integer('user_id').notNull().references(() => users.id),
-  groupId: integer('group_id').notNull().references(() => groups.id),
-}, (table) => [
-  primaryKey({ columns: [table.userId, table.groupId] }),
-]);
+export const usersToGroups = pgTable(
+  'users_to_groups',
+  {
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    groupId: integer('group_id')
+      .notNull()
+      .references(() => groups.id),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.groupId] })],
+);
 ```
 
 ---
@@ -131,7 +156,9 @@ export const postsRelations = relations(posts, ({ one }) => ({
 ```typescript
 export const profiles = pgTable('profiles', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id).unique(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .unique(),
   bio: text('bio'),
 });
 
@@ -158,22 +185,33 @@ export const groups = pgTable('groups', {
   name: text('name').notNull(),
 });
 
-export const usersToGroups = pgTable('users_to_groups', {
-  userId: integer('user_id').notNull().references(() => users.id),
-  groupId: integer('group_id').notNull().references(() => groups.id),
-}, (t) => [primaryKey({ columns: [t.userId, t.groupId] })]);
+export const usersToGroups = pgTable(
+  'users_to_groups',
+  {
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    groupId: integer('group_id')
+      .notNull()
+      .references(() => groups.id),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.groupId] })],
+);
 
-export const relations = defineRelations({ users, groups, usersToGroups }, (r) => ({
-  users: {
-    groups: r.many.groups({
-      from: r.users.id.through(r.usersToGroups.userId),
-      to: r.groups.id.through(r.usersToGroups.groupId),
-    }),
-  },
-  groups: {
-    participants: r.many.users(),
-  },
-}));
+export const relations = defineRelations(
+  { users, groups, usersToGroups },
+  (r) => ({
+    users: {
+      groups: r.many.groups({
+        from: r.users.id.through(r.usersToGroups.userId),
+        to: r.groups.id.through(r.usersToGroups.groupId),
+      }),
+    },
+    groups: {
+      participants: r.many.users(),
+    },
+  }),
+);
 ```
 
 ### Self-Referential Relation
@@ -215,10 +253,13 @@ await db.insert(users).values([
 ]);
 
 // Returning inserted row
-const [newUser] = await db.insert(users).values({
-  name: 'John',
-  email: 'john@example.com',
-}).returning();
+const [newUser] = await db
+  .insert(users)
+  .values({
+    name: 'John',
+    email: 'john@example.com',
+  })
+  .returning();
 ```
 
 ### Select
@@ -228,10 +269,12 @@ const [newUser] = await db.insert(users).values({
 const allUsers = await db.select().from(users);
 
 // Select specific columns
-const result = await db.select({
-  id: users.id,
-  name: users.name,
-}).from(users);
+const result = await db
+  .select({
+    id: users.id,
+    name: users.name,
+  })
+  .from(users);
 
 // Select with where
 const user = await db.select().from(users).where(eq(users.id, 1));
@@ -247,12 +290,11 @@ const activeCount = await db.$count(users, eq(users.verified, true));
 ### Update
 
 ```typescript
-await db.update(users)
-  .set({ name: 'John Updated' })
-  .where(eq(users.id, 1));
+await db.update(users).set({ name: 'John Updated' }).where(eq(users.id, 1));
 
 // With returning
-const [updatedUser] = await db.update(users)
+const [updatedUser] = await db
+  .update(users)
   .set({ verified: true })
   .where(eq(users.email, 'john@example.com'))
   .returning();
@@ -264,7 +306,8 @@ const [updatedUser] = await db.update(users)
 await db.delete(users).where(eq(users.id, 1));
 
 // With returning
-const [deletedUser] = await db.delete(users)
+const [deletedUser] = await db
+  .delete(users)
   .where(eq(users.email, 'john@example.com'))
   .returning();
 ```
@@ -274,40 +317,51 @@ const [deletedUser] = await db.delete(users)
 ## Query Operators
 
 ```typescript
-import { eq, ne, gt, gte, lt, lte, like, ilike, inArray, isNull, isNotNull, and, or, between, exists, notExists } from 'drizzle-orm';
+import {
+  eq,
+  ne,
+  gt,
+  gte,
+  lt,
+  lte,
+  like,
+  ilike,
+  inArray,
+  isNull,
+  isNotNull,
+  and,
+  or,
+  between,
+  exists,
+  notExists,
+} from 'drizzle-orm';
 
 // Comparison
-eq(users.id, 1)
-ne(users.name, 'John')
-gt(users.age, 18)
-gte(users.age, 18)
-lt(users.age, 65)
-lte(users.age, 65)
+eq(users.id, 1);
+ne(users.name, 'John');
+gt(users.age, 18);
+gte(users.age, 18);
+lt(users.age, 65);
+lte(users.age, 65);
 
 // String matching
-like(users.name, '%John%')      // case-sensitive
-ilike(users.name, '%john%')     // case-insensitive
+like(users.name, '%John%'); // case-sensitive
+ilike(users.name, '%john%'); // case-insensitive
 
 // Null checks
-isNull(users.deletedAt)
-isNotNull(users.deletedAt)
+isNull(users.deletedAt);
+isNotNull(users.deletedAt);
 
 // Array
-inArray(users.id, [1, 2, 3])
+inArray(users.id, [1, 2, 3]);
 
 // Range
-between(users.createdAt, startDate, endDate)
+between(users.createdAt, startDate, endDate);
 
 // Combining conditions
-and(
-  gte(users.age, 18),
-  eq(users.verified, true)
-)
+and(gte(users.age, 18), eq(users.verified, true));
 
-or(
-  eq(users.role, 'admin'),
-  eq(users.role, 'moderator')
-)
+or(eq(users.role, 'admin'), eq(users.role, 'moderator'));
 ```
 
 ---
@@ -433,18 +487,21 @@ const ageGroups = await db
 ```typescript
 // Basic transaction
 await db.transaction(async (tx) => {
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} - 100` })
     .where(eq(accounts.userId, 1));
 
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} + 100` })
     .where(eq(accounts.userId, 2));
 });
 
 // Transaction with rollback
 await db.transaction(async (tx) => {
-  const [account] = await tx.select()
+  const [account] = await tx
+    .select()
     .from(accounts)
     .where(eq(accounts.userId, 1));
 
@@ -452,18 +509,21 @@ await db.transaction(async (tx) => {
     tx.rollback(); // Throws exception
   }
 
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} - 100` })
     .where(eq(accounts.userId, 1));
 });
 
 // Transaction with return value
 const newBalance = await db.transaction(async (tx) => {
-  await tx.update(accounts)
+  await tx
+    .update(accounts)
     .set({ balance: sql`${accounts.balance} - 100` })
     .where(eq(accounts.userId, 1));
 
-  const [account] = await tx.select()
+  const [account] = await tx
+    .select()
     .from(accounts)
     .where(eq(accounts.userId, 1));
 
@@ -582,10 +642,7 @@ const activeUsers = await db
   .where(isNull(users.deletedAt));
 
 // Soft delete
-await db
-  .update(users)
-  .set({ deletedAt: new Date() })
-  .where(eq(users.id, id));
+await db.update(users).set({ deletedAt: new Date() }).where(eq(users.id, id));
 ```
 
 ### Upsert
@@ -596,9 +653,11 @@ import { onConflict } from 'drizzle-orm';
 await db
   .insert(users)
   .values({ id: 1, name: 'John', email: 'john@example.com' })
-  .onConflict(onConflict(users.email).doUpdateSet({
-    name: excluded.name,
-  }));
+  .onConflict(
+    onConflict(users.email).doUpdateSet({
+      name: excluded.name,
+    }),
+  );
 ```
 
 ### Batch Operations
@@ -608,7 +667,7 @@ await db
 await db.insert(users).values(batch).returning();
 
 // Batch update
-const updates = batch.map(item => ({
+const updates = batch.map((item) => ({
   id: item.id,
   name: item.name,
 }));

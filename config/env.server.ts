@@ -14,7 +14,9 @@ export const serverEnv = createEnv({
     RESEND_API_KEY: z.string().min(1),
 
     // Environment
-    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    NODE_ENV: z
+      .enum(['development', 'test', 'production'])
+      .default('development'),
   },
 
   // For Next.js server components

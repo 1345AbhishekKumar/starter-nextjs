@@ -21,11 +21,11 @@ Confirm layout, breakpoints, pseudos, data-attribute selectors, transitions, and
 
 Use [checklist.md](checklist.md) section by section. Flag issues with severity:
 
-| Level       | Meaning                                      |
-| ----------- | -------------------------------------------- |
-| **Blocker** | Wrong behavior or obvious rule violations    |
-| **Should fix** | Token misuse, fixable arbitrary values   |
-| **Consider** | Readability, future theme consolidation      |
+| Level          | Meaning                                   |
+| -------------- | ----------------------------------------- |
+| **Blocker**    | Wrong behavior or obvious rule violations |
+| **Should fix** | Token misuse, fixable arbitrary values    |
+| **Consider**   | Readability, future theme consolidation   |
 
 ### 4. Output
 
@@ -41,6 +41,6 @@ Small change: skim [checklist.md](checklist.md) only; skip formal report unless 
 
 ## References
 
-| File                               | Contents     |
-| ---------------------------------- | ------------ |
+| File                                                     | Contents            |
+| -------------------------------------------------------- | ------------------- |
 | [../references/migration.md](../references/migration.md) | Authoritative rules |

@@ -25,31 +25,33 @@
  *         <project>/frames_bg/f_%04d.png, <project>/matte.fps
  * Env:    HYPERFRAMES_ROOT — hyperframes checkout (default ~/Downloads/hyperframes)
  */
-const path = require("path");
-const fs = require("fs");
-const os = require("os");
-const cp = require("child_process");
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const cp = require('child_process');
 
 function hfCli() {
   const roots = [
     process.env.HYPERFRAMES_ROOT,
-    path.resolve(__dirname, "..", "..", ".."), // skills/embedded-captions/scripts → repo root if in-repo
-    path.join(os.homedir(), "Downloads", "hyperframes"),
+    path.resolve(__dirname, '..', '..', '..'), // skills/embedded-captions/scripts → repo root if in-repo
+    path.join(os.homedir(), 'Downloads', 'hyperframes'),
   ].filter(Boolean);
   for (const root of roots) {
-    const cli = path.join(root, "packages", "cli", "dist", "cli.js");
+    const cli = path.join(root, 'packages', 'cli', 'dist', 'cli.js');
     if (fs.existsSync(cli)) return cli;
   }
-  console.error("[matte] cannot find hyperframes cli — set HYPERFRAMES_ROOT to a built checkout");
+  console.error(
+    '[matte] cannot find hyperframes cli — set HYPERFRAMES_ROOT to a built checkout',
+  );
   process.exit(3);
 }
 
 function ensureSource(project) {
-  const src = path.join(project, "source.mp4");
+  const src = path.join(project, 'source.mp4');
   if (!fs.existsSync(src)) {
     const found = fs
       .readdirSync(project)
-      .filter((f) => /\.(mp4|mov|webm|mkv)$/i.test(f) && !f.startsWith("_"))
+      .filter((f) => /\.(mp4|mov|webm|mkv)$/i.test(f) && !f.startsWith('_'))
       .map((f) => path.join(project, f))[0];
     if (!found) return src;
     try {
@@ -63,8 +65,8 @@ function ensureSource(project) {
 }
 
 function rateOf(expr) {
-  const [n, d] = String(expr || "").split("/");
-  const f = parseFloat(n) / parseFloat(d || "1");
+  const [n, d] = String(expr || '').split('/');
+  const f = parseFloat(n) / parseFloat(d || '1');
   return Number.isFinite(f) && f > 0 ? f : 0;
 }
 
@@ -74,20 +76,20 @@ function rateOf(expr) {
 function probeRates(src) {
   try {
     const out = cp
-      .execFileSync("ffprobe", [
-        "-v",
-        "0",
-        "-select_streams",
-        "v:0",
-        "-show_entries",
-        "stream=r_frame_rate,avg_frame_rate",
-        "-of",
-        "default=nk=1:nw=1",
+      .execFileSync('ffprobe', [
+        '-v',
+        '0',
+        '-select_streams',
+        'v:0',
+        '-show_entries',
+        'stream=r_frame_rate,avg_frame_rate',
+        '-of',
+        'default=nk=1:nw=1',
         src,
       ])
       .toString()
       .trim()
-      .split("\n");
+      .split('\n');
     return { r: rateOf(out[0]), avg: rateOf(out[1]) };
   } catch {
     return { r: 0, avg: 0 };
@@ -110,27 +112,35 @@ function isVfr(src) {
 
 function extractFrames(src, dst, fps, extra = []) {
   fs.mkdirSync(dst, { recursive: true });
-  if (fs.readdirSync(dst).some((f) => f.endsWith(".png"))) return false;
+  if (fs.readdirSync(dst).some((f) => f.endsWith('.png'))) return false;
   cp.execFileSync(
-    "ffmpeg",
-    ["-y", "-i", src, "-vf", `fps=${fps}`, ...extra, path.join(dst, "f_%04d.png")],
-    { stdio: "ignore" },
+    'ffmpeg',
+    [
+      '-y',
+      '-i',
+      src,
+      '-vf',
+      `fps=${fps}`,
+      ...extra,
+      path.join(dst, 'f_%04d.png'),
+    ],
+    { stdio: 'ignore' },
   );
   return true;
 }
 
 function countPngs(dir) {
   try {
-    return fs.readdirSync(dir).filter((f) => f.endsWith(".png")).length;
+    return fs.readdirSync(dir).filter((f) => f.endsWith('.png')).length;
   } catch {
     return 0;
   }
 }
 
 async function main() {
-  const project = path.resolve(process.argv[2] || "");
+  const project = path.resolve(process.argv[2] || '');
   if (!process.argv[2]) {
-    console.error("usage: matte.cjs <project-dir>");
+    console.error('usage: matte.cjs <project-dir>');
     process.exit(1);
   }
   const src = ensureSource(project);
@@ -139,26 +149,29 @@ async function main() {
     process.exit(2);
   }
 
-  const fpsFile = path.join(project, "matte.fps");
+  const fpsFile = path.join(project, 'matte.fps');
   // read-with-catch (no exists-then-read TOCTOU): a missing/corrupt fps file
   // simply falls through to probing the source.
   let fps = 0;
   try {
-    fps = parseInt(fs.readFileSync(fpsFile, "utf8").replace(/\D/g, ""), 10) || 0;
+    fps =
+      parseInt(fs.readFileSync(fpsFile, 'utf8').replace(/\D/g, ''), 10) || 0;
   } catch {
     /* no cached fps — probe below */
   }
   if (!fps) fps = probeFps(src);
   fs.writeFileSync(fpsFile, String(fps));
 
-  const framesBg = path.join(project, "frames_bg");
-  const framesFg = path.join(project, "frames_fg");
+  const framesBg = path.join(project, 'frames_bg');
+  const framesFg = path.join(project, 'frames_fg');
   if (extractFrames(src, framesBg, fps))
     console.log(`[matte] source fps=${fps} → frames_bg extracted`);
 
   const want = countPngs(framesBg);
   if (want > 0 && countPngs(framesFg) >= want) {
-    console.log(`[matte] frames_fg already complete (${want} frames) — nothing to do`);
+    console.log(
+      `[matte] frames_fg already complete (${want} frames) — nothing to do`,
+    );
     return;
   }
 
@@ -168,66 +181,81 @@ async function main() {
   //    double-subject bug: the pasted matte runs at the wrong speed).
   let matteSrc = src;
   if (isVfr(src)) {
-    const cfr = path.join(project, "_src_cfr.mp4");
+    const cfr = path.join(project, '_src_cfr.mp4');
     if (!fs.existsSync(cfr)) {
       console.log(
         `[matte] VFR source detected (nominal != actual fps) → normalizing to ${fps}fps CFR for matting`,
       );
       cp.execFileSync(
-        "ffmpeg",
+        'ffmpeg',
         [
-          "-y",
-          "-i",
+          '-y',
+          '-i',
           src,
-          "-fps_mode",
-          "cfr",
-          "-r",
+          '-fps_mode',
+          'cfr',
+          '-r',
           String(fps),
-          "-c:v",
-          "libx264",
-          "-crf",
-          "16",
-          "-preset",
-          "fast",
-          "-an",
+          '-c:v',
+          'libx264',
+          '-crf',
+          '16',
+          '-preset',
+          'fast',
+          '-an',
           cfr,
         ],
-        { stdio: "ignore" },
+        { stdio: 'ignore' },
       );
     }
     matteSrc = cfr;
   }
-  const mov = path.join(project, "_matte_tmp.mov");
+  const mov = path.join(project, '_matte_tmp.mov');
   const t0 = Date.now();
   const cached = fs.existsSync(
     path.join(
       os.homedir(),
-      ".cache",
-      "hyperframes",
-      "background-removal",
-      "models",
-      "u2net_human_seg.onnx",
+      '.cache',
+      'hyperframes',
+      'background-removal',
+      'models',
+      'u2net_human_seg.onnx',
     ),
   );
   console.log(
-    `[matte] hyperframes remove-background (u2net_human_seg${cached ? "" : "; first run downloads ~168 MB"})… model load takes ~1-2 min with no output — not hung`,
+    `[matte] hyperframes remove-background (u2net_human_seg${cached ? '' : '; first run downloads ~168 MB'})… model load takes ~1-2 min with no output — not hung`,
   );
-  const r = cp.spawnSync("node", [hfCli(), "remove-background", matteSrc, "-o", mov], {
-    stdio: ["ignore", "pipe", "pipe"],
-    encoding: "utf8",
-  });
+  const r = cp.spawnSync(
+    'node',
+    [hfCli(), 'remove-background', matteSrc, '-o', mov],
+    {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      encoding: 'utf8',
+    },
+  );
   if (r.status !== 0 || !fs.existsSync(mov)) {
-    console.error("[matte] remove-background FAILED:");
-    console.error((r.stderr || r.stdout || "").split("\n").slice(-8).join("\n"));
+    console.error('[matte] remove-background FAILED:');
+    console.error(
+      (r.stderr || r.stdout || '').split('\n').slice(-8).join('\n'),
+    );
     process.exit(4);
   }
 
   // 2) burst to RGBA pngs at the project rate
   fs.mkdirSync(framesFg, { recursive: true });
   cp.execFileSync(
-    "ffmpeg",
-    ["-y", "-i", mov, "-vf", `fps=${fps}`, "-pix_fmt", "rgba", path.join(framesFg, "f_%04d.png")],
-    { stdio: "ignore" },
+    'ffmpeg',
+    [
+      '-y',
+      '-i',
+      mov,
+      '-vf',
+      `fps=${fps}`,
+      '-pix_fmt',
+      'rgba',
+      path.join(framesFg, 'f_%04d.png'),
+    ],
+    { stdio: 'ignore' },
   );
   fs.rmSync(mov, { force: true });
 
@@ -248,13 +276,15 @@ async function main() {
     // keep want frames sampled evenly across got (re-times fg onto the bg timeline)
     const keep = [];
     for (let j = 1; j <= want; j++)
-      keep.push(Math.min(got, Math.max(1, Math.round((j - 0.5) * (got / want)))));
-    const tmp = path.join(project, "_fg_remap");
+      keep.push(
+        Math.min(got, Math.max(1, Math.round((j - 0.5) * (got / want)))),
+      );
+    const tmp = path.join(project, '_fg_remap');
     fs.mkdirSync(tmp, { recursive: true });
     keep.forEach((srcIdx, k) => {
       fs.copyFileSync(
-        path.join(framesFg, `f_${String(srcIdx).padStart(4, "0")}.png`),
-        path.join(tmp, `f_${String(k + 1).padStart(4, "0")}.png`),
+        path.join(framesFg, `f_${String(srcIdx).padStart(4, '0')}.png`),
+        path.join(tmp, `f_${String(k + 1).padStart(4, '0')}.png`),
       );
     });
     fs.rmSync(framesFg, { recursive: true, force: true });
@@ -263,17 +293,17 @@ async function main() {
   }
   while (got < want && got > 0) {
     fs.copyFileSync(
-      path.join(framesFg, `f_${String(got).padStart(4, "0")}.png`),
-      path.join(framesFg, `f_${String(got + 1).padStart(4, "0")}.png`),
+      path.join(framesFg, `f_${String(got).padStart(4, '0')}.png`),
+      path.join(framesFg, `f_${String(got + 1).padStart(4, '0')}.png`),
     );
     got++;
   }
   console.log(
-    `[matte] done in ${((Date.now() - t0) / 1000).toFixed(1)}s → fg=${got} bg=${want} @ ${fps}fps${got === want ? " (parity ok)" : ""}`,
+    `[matte] done in ${((Date.now() - t0) / 1000).toFixed(1)}s → fg=${got} bg=${want} @ ${fps}fps${got === want ? ' (parity ok)' : ''}`,
   );
 }
 
 main().catch((e) => {
-  console.error("[matte]", e.message);
+  console.error('[matte]', e.message);
   process.exit(1);
 });

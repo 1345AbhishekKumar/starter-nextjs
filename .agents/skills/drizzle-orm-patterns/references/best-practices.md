@@ -27,7 +27,9 @@ async function createUser(data: typeof users.$inferInsert) {
   return db.insert(users).values(data).returning();
 }
 
-async function getUser(id: number): Promise<typeof users.$inferSelect | undefined> {
+async function getUser(
+  id: number,
+): Promise<typeof users.$inferSelect | undefined> {
   const [user] = await db.select().from(users).where(eq(users.id, id));
   return user;
 }
@@ -58,24 +60,36 @@ Use transactions for multi-step operations that must succeed together.
 ```typescript
 // Good: Transfer with transaction
 await db.transaction(async (tx) => {
-  await tx.update(accounts).set({ balance: fromBalance - amount }).where(eq(accounts.id, fromId));
-  await tx.update(accounts).set({ balance: toBalance + amount }).where(eq(accounts.id, toId));
+  await tx
+    .update(accounts)
+    .set({ balance: fromBalance - amount })
+    .where(eq(accounts.id, fromId));
+  await tx
+    .update(accounts)
+    .set({ balance: toBalance + amount })
+    .where(eq(accounts.id, toId));
 });
 
 // Bad: No transaction - partial failure possible
-await db.update(accounts).set({ balance: fromBalance - amount }).where(eq(accounts.id, fromId));
-await db.update(accounts).set({ balance: toBalance + amount }).where(eq(accounts.id, toId));
+await db
+  .update(accounts)
+  .set({ balance: fromBalance - amount })
+  .where(eq(accounts.id, fromId));
+await db
+  .update(accounts)
+  .set({ balance: toBalance + amount })
+  .where(eq(accounts.id, toId));
 ```
 
 ### 4. Migrations
 
 Use the appropriate migration strategy for each environment:
 
-| Environment | Command | Use Case |
-|-------------|---------|----------|
-| Development | `drizzle-kit push` | Quick schema sync |
-| Production | `drizzle-kit generate` + `drizzle-kit migrate` | Versioned migrations |
-| Recovery | `drizzle-kit pull` | Recreate schema from DB |
+| Environment | Command                                        | Use Case                |
+| ----------- | ---------------------------------------------- | ----------------------- |
+| Development | `drizzle-kit push`                             | Quick schema sync       |
+| Production  | `drizzle-kit generate` + `drizzle-kit migrate` | Versioned migrations    |
+| Recovery    | `drizzle-kit pull`                             | Recreate schema from DB |
 
 ```typescript
 // drizzle.config.ts
@@ -96,15 +110,19 @@ export default defineConfig({
 Add indexes on frequently queried columns and foreign keys.
 
 ```typescript
-export const posts = pgTable('posts', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  authorId: integer('author_id').references(() => users.id),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-}, (table) => [
-  index('author_idx').on(table.authorId),    // For filtering by author
-  index('created_idx').on(table.createdAt),  // For sorting by date
-]);
+export const posts = pgTable(
+  'posts',
+  {
+    id: serial('id').primaryKey(),
+    title: text('title').notNull(),
+    authorId: integer('author_id').references(() => users.id),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [
+    index('author_idx').on(table.authorId), // For filtering by author
+    index('created_idx').on(table.createdAt), // For sorting by date
+  ],
+);
 ```
 
 ### 6. Soft Deletes
@@ -200,12 +218,12 @@ try {
 
 Not all databases support `.returning()`. Check your dialect compatibility:
 
-| Database | Returning Support |
-|----------|-------------------|
-| PostgreSQL | Full support |
-| MySQL | Limited (8.0.19+) |
-| SQLite | Limited (3.35.0+) |
-| MSSQL | Use `OUTPUT` clause |
+| Database   | Returning Support   |
+| ---------- | ------------------- |
+| PostgreSQL | Full support        |
+| MySQL      | Limited (8.0.19+)   |
+| SQLite     | Limited (3.35.0+)   |
+| MSSQL      | Use `OUTPUT` clause |
 
 ### Type Inference
 
@@ -298,7 +316,10 @@ await db.select().from(users).where(eq(users.id, userId));
 // Acceptable: Dynamic with caution
 const conditions = [eq(users.active, true)];
 if (name) conditions.push(like(users.name, `%${name}%`));
-await db.select().from(users).where(and(...conditions));
+await db
+  .select()
+  .from(users)
+  .where(and(...conditions));
 ```
 
 ### Select Only Needed Columns

@@ -69,10 +69,10 @@
         overflow: hidden;
         background: var(--bg);
         font-family:
-          "Inter",
+          'Inter',
           -apple-system,
           BlinkMacSystemFont,
-          "Segoe UI",
+          'Segoe UI',
           Roboto,
           sans-serif;
         color: var(--text-primary);
@@ -139,9 +139,21 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 42% 48%, rgba(24, 217, 232, 0.32), transparent 42%),
-          radial-gradient(ellipse at 58% 52%, rgba(123, 234, 90, 0.26), transparent 44%),
-          radial-gradient(ellipse at 50% 50%, rgba(8, 16, 18, 0.42), transparent 70%);
+          radial-gradient(
+            ellipse at 42% 48%,
+            rgba(24, 217, 232, 0.32),
+            transparent 42%
+          ),
+          radial-gradient(
+            ellipse at 58% 52%,
+            rgba(123, 234, 90, 0.26),
+            transparent 44%
+          ),
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(8, 16, 18, 0.42),
+            transparent 70%
+          );
         pointer-events: none;
       }
     </style>
@@ -180,20 +192,20 @@
          ============================================================ */
       const SCRIPT = [
         {
-          textMain: "Build video with ",
-          textAccent: "HTML",
+          textMain: 'Build video with ',
+          textAccent: 'HTML',
           charSpeed: 0.083, // seconds per character (= 2.5 frames @ 30 fps)
           hold: 1.0,
         },
         {
-          textMain: "Seek ",
-          textAccent: "any frame",
+          textMain: 'Seek ',
+          textAccent: 'any frame',
           charSpeed: 0.083,
           hold: 1.0,
         },
         {
-          textMain: "Render to ",
-          textAccent: "MP4",
+          textMain: 'Render to ',
+          textAccent: 'MP4',
           charSpeed: 0.083,
           hold: 2.0, // longer closing beat
         },
@@ -226,13 +238,13 @@
       /* ============================================================
          COLORS & BLINK
          ============================================================ */
-      const MAIN_COLOR = "#FFFFFF";
-      const ACCENT_COLOR = "#32FFF6";
+      const MAIN_COLOR = '#FFFFFF';
+      const ACCENT_COLOR = '#32FFF6';
       const BLINK_CYCLE = 1.0; // seconds — 0.5s on, 0.5s off (matches 30-frame square wave)
 
-      const mainEl = document.querySelector(".phrase-main");
-      const accentEl = document.querySelector(".phrase-accent");
-      const cursorEl = document.querySelector(".phrase-cursor");
+      const mainEl = document.querySelector('.phrase-main');
+      const accentEl = document.querySelector('.phrase-accent');
+      const cursorEl = document.querySelector('.phrase-cursor');
 
       /* ============================================================
          MASTER ENGINE — single onUpdate writes text + cursor every frame.
@@ -257,13 +269,13 @@
 
       function renderAt(t) {
         // ----- Cursor blink (square wave, runs always) -----
-        cursorEl.style.opacity = t % BLINK_CYCLE < BLINK_CYCLE / 2 ? "1" : "0";
+        cursorEl.style.opacity = t % BLINK_CYCLE < BLINK_CYCLE / 2 ? '1' : '0';
 
         // ----- Find current phrase -----
         const phrase = findPhrase(t);
         if (!phrase) {
-          if (mainEl.textContent !== "") mainEl.textContent = "";
-          if (accentEl.textContent !== "") accentEl.textContent = "";
+          if (mainEl.textContent !== '') mainEl.textContent = '';
+          if (accentEl.textContent !== '') accentEl.textContent = '';
           cursorEl.style.background = MAIN_COLOR;
           return;
         }
@@ -279,7 +291,8 @@
 
         // ----- DOM writes (guarded) -----
         if (mainEl.textContent !== visMain) mainEl.textContent = visMain;
-        if (accentEl.textContent !== visAccent) accentEl.textContent = visAccent;
+        if (accentEl.textContent !== visAccent)
+          accentEl.textContent = visAccent;
 
         // ----- Cursor color follows active segment -----
         const inAccent = visMain.length === mainLen && visAccent.length > 0;
@@ -291,7 +304,7 @@
         {
           tick: 1,
           duration: 7.5, // matches data-duration; clips the timeline
-          ease: "none",
+          ease: 'none',
           onUpdate: () => renderAt(tl.time()),
         },
         0,
@@ -300,24 +313,24 @@
       const pauseTimeline = tl.pause.bind(tl);
       tl.pause = (time, suppressEvents) => {
         const result = pauseTimeline(time, suppressEvents);
-        if (typeof time === "number") renderAt(time);
+        if (typeof time === 'number') renderAt(time);
         return result;
       };
 
       function wrapSeekOwner(owner) {
         if (!owner || owner.__multiPhraseSeekWrapped) return;
         let currentSeek = owner.seek;
-        Object.defineProperty(owner, "seek", {
+        Object.defineProperty(owner, 'seek', {
           configurable: true,
           get: () => currentSeek,
           set: (value) => {
-            if (typeof value !== "function") {
+            if (typeof value !== 'function') {
               currentSeek = value;
               return;
             }
             currentSeek = function (time) {
               const result = value.apply(this, arguments);
-              if (typeof time === "number") renderAt(time);
+              if (typeof time === 'number') renderAt(time);
               return result;
             };
           },
@@ -341,12 +354,12 @@
           },
         });
       }
-      installWindowSeekHook("__player");
-      installWindowSeekHook("__hf");
+      installWindowSeekHook('__player');
+      installWindowSeekHook('__hf');
 
       renderAt(0);
 
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
     </script>
   </body>
 </html>

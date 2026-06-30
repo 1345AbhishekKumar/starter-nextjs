@@ -21,7 +21,16 @@
     "kraft3": "#e6d6af",
     "strut1": "#4f93c4",
     "strut2": "#6cb6e3",
-    "conf": ["#f6ecd4", "#6cb6e3", "#e3d2ac", "#f6ecd4", "#6cb6e3", "#33271a", "#f6ecd4", "#e3d2ac"]
+    "conf": [
+      "#f6ecd4",
+      "#6cb6e3",
+      "#e3d2ac",
+      "#f6ecd4",
+      "#6cb6e3",
+      "#33271a",
+      "#f6ecd4",
+      "#e3d2ac"
+    ]
   },
   "body": {
     "paradigm": "popuprail",

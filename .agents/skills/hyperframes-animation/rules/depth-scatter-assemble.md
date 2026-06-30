@@ -100,7 +100,7 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const frags = Array.from(document.querySelectorAll(".frag"));
+  const frags = Array.from(document.querySelectorAll('.frag'));
   const n = frags.length;
   const GOLDEN = Math.PI * (3 - Math.sqrt(5)); // ~2.39943 — even spread, no clumps
 
@@ -137,8 +137,8 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
 
   // 2) The cloud rotates so the scatter has life before / during assembly.
   tl.to(
-    ".cloud-stage",
-    { rotationY: CLOUD_SPIN_DEG, duration: CLOUD_SPIN_DUR, ease: "power1.out" },
+    '.cloud-stage',
+    { rotationY: CLOUD_SPIN_DEG, duration: CLOUD_SPIN_DUR, ease: 'power1.out' },
     0,
   );
 
@@ -160,7 +160,7 @@ For a logo lockup, `targetX/Y` describe the parts' resting layout; for kinetic t
     );
   });
 
-  window.__timelines["assemble-scene"] = tl;
+  window.__timelines['assemble-scene'] = tl;
 </script>
 ```
 
@@ -178,7 +178,7 @@ tl.to(
   {
     p: 1,
     duration: SWAP_DUR,
-    ease: "power2.inOut",
+    ease: 'power2.inOut',
     onUpdate: () => {
       const p = swap.p;
       outgoing.forEach((el, i) => {

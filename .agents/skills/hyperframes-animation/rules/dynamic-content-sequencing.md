@@ -32,7 +32,9 @@ The "dynamic" part: items with longer text get more screen time (formula: `baseD
     <div class="eyebrow" id="eyebrow">{eyebrow}</div>
     <div class="title" id="title"></div>
     <div class="body" id="body"></div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
   </div>
   <div class="brand">— {Brand}</div>
 </div>
@@ -120,24 +122,24 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
   // The final entry typically uses a larger `hold` (closing beat).
   const CONTENT = [
     {
-      eyebrow: "{eyebrow1}",
-      title: "{title1}",
-      body: "{body1}",
+      eyebrow: '{eyebrow1}',
+      title: '{title1}',
+      body: '{body1}',
       speedFactor: SPEED_FACTOR,
       hold: HOLD_MID,
     },
     {
-      eyebrow: "{eyebrow2}",
-      title: "{title2}",
-      body: "{body2}",
+      eyebrow: '{eyebrow2}',
+      title: '{title2}',
+      body: '{body2}',
       speedFactor: SPEED_FACTOR,
       hold: HOLD_MID,
     },
     // …
     {
-      eyebrow: "{eyebrowN}",
-      title: "{titleN}",
-      body: "{bodyN}",
+      eyebrow: '{eyebrowN}',
+      title: '{titleN}',
+      body: '{bodyN}',
       speedFactor: SPEED_FACTOR,
       hold: HOLD_FINAL,
     },
@@ -162,21 +164,21 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
     return TIMELINE[0];
   }
 
-  const eyebrowEl = document.getElementById("eyebrow");
-  const titleEl = document.getElementById("title");
-  const bodyEl = document.getElementById("body");
-  const progressEl = document.getElementById("progress-fill");
+  const eyebrowEl = document.getElementById('eyebrow');
+  const titleEl = document.getElementById('title');
+  const bodyEl = document.getElementById('body');
+  const progressEl = document.getElementById('progress-fill');
 
   const TOTAL_DURATION = cumulative + TAIL_PAD;
   const driver = { t: 0 };
-  let lastTitle = "";
+  let lastTitle = '';
 
   tl.to(
     driver,
     {
       t: TOTAL_DURATION,
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         const entry = entryAt(driver.t);
         // Only swap content on transitions (avoid per-frame DOM thrash)
@@ -193,7 +195,7 @@ Placeholders: `{font}` is the project sans-serif stack; `{bgColor1}`/`{bgColor2}
     0,
   );
 
-  window.__timelines["seq-scene"] = tl;
+  window.__timelines['seq-scene'] = tl;
 </script>
 ```
 
@@ -225,8 +227,8 @@ If you don't know upfront how long the sequence will be (dynamic content count),
 
 ```js
 document
-  .querySelector("[data-composition-id]")
-  .setAttribute("data-duration", String(Math.ceil(TOTAL_DURATION)));
+  .querySelector('[data-composition-id]')
+  .setAttribute('data-duration', String(Math.ceil(TOTAL_DURATION)));
 ```
 
 (Caveat: HF reads `data-duration` at composition load; setting after init may not take effect — author the duration manually based on a rough TOTAL calc.)

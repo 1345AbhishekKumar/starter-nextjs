@@ -125,36 +125,36 @@ Card starts as a wide rectangle (shot 1 state). All properties present from the 
 
   // Phase 1 — Morph container properties simultaneously
   tl.to(
-    ".morph-card",
+    '.morph-card',
     {
       width: SHOT_TWO_W,
       height: SHOT_TWO_H,
       borderRadius: SHOT_TWO_RADIUS,
-      background: "{surfaceShotTwo}",
+      background: '{surfaceShotTwo}',
       duration: MORPH_DUR,
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
     },
     MORPH_START,
   );
 
   // Phase 2 — Old content fades during the FIRST OLD_FADE_FRAC of the morph
   tl.to(
-    ".content-old",
+    '.content-old',
     {
       opacity: 0,
       duration: MORPH_DUR * OLD_FADE_FRAC,
-      ease: "power1.in",
+      ease: 'power1.in',
     },
     MORPH_START,
   );
 
   // Phase 3 — New content fades in during the LAST NEW_FADE_FRAC of the morph
   tl.to(
-    ".content-new",
+    '.content-new',
     {
       opacity: 1,
       duration: MORPH_DUR * NEW_FADE_FRAC,
-      ease: "power1.out",
+      ease: 'power1.out',
     },
     MORPH_START + MORPH_DUR * (1 - NEW_FADE_FRAC),
   );
@@ -162,16 +162,16 @@ Card starts as a wide rectangle (shot 1 state). All properties present from the 
   // Optional Phase 4 — Final fade: morph container disappears at the very end,
   // revealing the actual next-shot element behind it.
   tl.to(
-    ".morph-card",
+    '.morph-card',
     {
       opacity: 0,
       duration: MORPH_DUR * FINAL_FADE_FRAC,
-      ease: "power1.in",
+      ease: 'power1.in',
     },
     MORPH_START + MORPH_DUR * (1 - FINAL_FADE_FRAC),
   );
 
-  window.__timelines["morph-scene"] = tl;
+  window.__timelines['morph-scene'] = tl;
 </script>
 ```
 

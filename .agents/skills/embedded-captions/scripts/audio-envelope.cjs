@@ -10,14 +10,14 @@
  * actually SPOKEN (percentile of the hero window's loudness within the clip). ffmpeg
  * astats over fixed windows — deterministic, no network, no Python.
  */
-const path = require("path");
-const fs = require("fs");
-const cp = require("child_process");
+const path = require('path');
+const fs = require('fs');
+const cp = require('child_process');
 
 const HOP = 0.05;
 
 function findSource(project) {
-  for (const c of ["source.mp4"].concat(
+  for (const c of ['source.mp4'].concat(
     fs
       .readdirSync(project)
       .filter(
@@ -33,14 +33,14 @@ function findSource(project) {
 }
 
 function main() {
-  const project = path.resolve(process.argv[2] || "");
+  const project = path.resolve(process.argv[2] || '');
   if (!process.argv[2]) {
-    console.error("usage: audio-envelope.cjs <project-dir>");
+    console.error('usage: audio-envelope.cjs <project-dir>');
     process.exit(1);
   }
   const src = findSource(project);
   if (!src) {
-    console.error("[envelope] no source media found");
+    console.error('[envelope] no source media found');
     process.exit(2);
   }
 
@@ -52,41 +52,48 @@ function main() {
     // resample INSIDE the filter chain — an output-option -ar applies after the
     // filtergraph, which would make each window n/<input-rate> seconds instead of HOP
     out = cp.execFileSync(
-      "ffmpeg",
+      'ffmpeg',
       [
-        "-v",
-        "info",
-        "-i",
+        '-v',
+        'info',
+        '-i',
         src,
-        "-map",
-        "a:0",
-        "-af",
+        '-map',
+        'a:0',
+        '-af',
         `aresample=${sr},aformat=channel_layouts=mono,asetnsamples=n=${n}:p=0,astats=metadata=1:reset=1,ametadata=mode=print:key=lavfi.astats.Overall.RMS_level:file=-`,
-        "-f",
-        "null",
-        "-",
+        '-f',
+        'null',
+        '-',
       ],
-      { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] },
+      {
+        encoding: 'utf8',
+        maxBuffer: 64 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
     );
   } catch (e) {
     // ffmpeg writes the metadata to stdout before exiting; some containers still exit 0 — re-throw only if nothing parsed
-    out = (e.stdout || "") + "";
-    if (!out.includes("RMS_level")) {
+    out = (e.stdout || '') + '';
+    if (!out.includes('RMS_level')) {
       console.error(`[envelope] ffmpeg failed: ${e.message}`);
       process.exit(2);
     }
   }
   const rmsDb = [];
-  for (const line of String(out).split("\n")) {
+  for (const line of String(out).split('\n')) {
     const m = line.match(/lavfi\.astats\.Overall\.RMS_level=(-?[\d.]+|-inf)/);
-    if (m) rmsDb.push(m[1] === "-inf" ? -90 : Math.max(-90, parseFloat(m[1])));
+    if (m) rmsDb.push(m[1] === '-inf' ? -90 : Math.max(-90, parseFloat(m[1])));
   }
   if (!rmsDb.length) {
-    console.error("[envelope] no RMS windows parsed");
+    console.error('[envelope] no RMS windows parsed');
     process.exit(2);
   }
   const rms = rmsDb.map((db) => +Math.pow(10, db / 20).toFixed(5)); // linear 0..1
-  fs.writeFileSync(path.join(project, "envelope.json"), JSON.stringify({ hop: HOP, rms }));
+  fs.writeFileSync(
+    path.join(project, 'envelope.json'),
+    JSON.stringify({ hop: HOP, rms }),
+  );
   const peakAt = rms.indexOf(Math.max(...rms)) * HOP;
   console.log(
     `[envelope] ${rms.length} windows @ ${HOP}s → envelope.json (loudest beat ~${peakAt.toFixed(2)}s)`,

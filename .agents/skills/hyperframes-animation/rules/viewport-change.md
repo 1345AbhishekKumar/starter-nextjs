@@ -111,7 +111,7 @@ This is **different from [coordinate-target-zoom](coordinate-target-zoom.md)**, 
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const world = document.getElementById("world");
+  const world = document.getElementById('world');
 
   // Camera state — single source of truth. World transform is composed from
   // this object inside applyCamera() so the transform string order is stable.
@@ -123,10 +123,14 @@ This is **different from [coordinate-target-zoom](coordinate-target-zoom.md)**, 
   applyCamera();
 
   // Phase 1 — content reveal at neutral camera
-  tl.from(".hero", { opacity: 0, y: HERO_Y, duration: HERO_DUR, ease: "power3.out" }, HERO_START);
   tl.from(
-    ".tagline",
-    { opacity: 0, y: TAGLINE_Y, duration: TAGLINE_DUR, ease: "power3.out" },
+    '.hero',
+    { opacity: 0, y: HERO_Y, duration: HERO_DUR, ease: 'power3.out' },
+    HERO_START,
+  );
+  tl.from(
+    '.tagline',
+    { opacity: 0, y: TAGLINE_Y, duration: TAGLINE_DUR, ease: 'power3.out' },
     TAGLINE_START,
   );
 
@@ -142,7 +146,7 @@ This is **different from [coordinate-target-zoom](coordinate-target-zoom.md)**, 
       scale: TARGET_SCALE,
       y: counterY,
       duration: ZOOM_DUR,
-      ease: "power3.inOut",
+      ease: 'power3.inOut',
       onUpdate: applyCamera,
     },
     ZOOM_START,
@@ -150,7 +154,7 @@ This is **different from [coordinate-target-zoom](coordinate-target-zoom.md)**, 
 
   // Phase 3 — CTA reveals/dwells after zoom settles
   tl.from(
-    "#cta",
+    '#cta',
     {
       opacity: 0,
       scale: CTA_REVEAL_SCALE,
@@ -160,7 +164,7 @@ This is **different from [coordinate-target-zoom](coordinate-target-zoom.md)**, 
     CTA_REVEAL_START,
   );
 
-  window.__timelines["viewport-scene"] = tl;
+  window.__timelines['viewport-scene'] = tl;
 </script>
 ```
 
@@ -187,7 +191,7 @@ This is **different from [coordinate-target-zoom](coordinate-target-zoom.md)**, 
 For an element moving across the world, keep it at fixed screen X. Compute world offset per-frame:
 
 ```js
-const focusEl = document.querySelector(".moving-cursor");
+const focusEl = document.querySelector('.moving-cursor');
 const targetScreenX = VIEWPORT_WIDTH * FOCUS_SCREEN_X_FRAC;
 const focusUpdate = { p: 0 };
 tl.to(
@@ -195,7 +199,7 @@ tl.to(
   {
     p: 1,
     duration: FOLLOW_DUR,
-    ease: "power2.inOut",
+    ease: 'power2.inOut',
     onUpdate: () => {
       const rect = focusEl.getBoundingClientRect();
       const focusWorldX = rect.left + rect.width / 2;
@@ -220,12 +224,20 @@ function applyCompositeCamera() {
 }
 tl.to(
   scaleUp,
-  { v: SCALE_UP_TARGET, duration: SCALE_UP_DUR, onUpdate: applyCompositeCamera },
+  {
+    v: SCALE_UP_TARGET,
+    duration: SCALE_UP_DUR,
+    onUpdate: applyCompositeCamera,
+  },
   SCALE_UP_START,
 );
 tl.to(
   scaleDown,
-  { v: SCALE_DOWN_TARGET, duration: SCALE_DOWN_DUR, onUpdate: applyCompositeCamera },
+  {
+    v: SCALE_DOWN_TARGET,
+    duration: SCALE_DOWN_DUR,
+    onUpdate: applyCompositeCamera,
+  },
   SCALE_DOWN_START,
 );
 ```

@@ -31,10 +31,18 @@ When `progress = 0` all elements overlap at the center; when `progress = 1` they
   data-track-index="0"
 >
   <div class="burst-wrap">
-    <div class="burst-item" data-target-x="-360" data-target-y="-180">{itemA}</div>
-    <div class="burst-item" data-target-x="360" data-target-y="-180">{itemB}</div>
-    <div class="burst-item" data-target-x="-360" data-target-y="180">{itemC}</div>
-    <div class="burst-item" data-target-x="360" data-target-y="180">{itemD}</div>
+    <div class="burst-item" data-target-x="-360" data-target-y="-180">
+      {itemA}
+    </div>
+    <div class="burst-item" data-target-x="360" data-target-y="-180">
+      {itemB}
+    </div>
+    <div class="burst-item" data-target-x="-360" data-target-y="180">
+      {itemC}
+    </div>
+    <div class="burst-item" data-target-x="360" data-target-y="180">
+      {itemD}
+    </div>
     <div class="burst-item" data-target-x="0" data-target-y="-360">{itemE}</div>
     <div class="burst-item" data-target-x="0" data-target-y="360">{itemF}</div>
   </div>
@@ -89,7 +97,7 @@ When `progress = 0` all elements overlap at the center; when `progress = 1` they
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const items = document.querySelectorAll(".burst-item");
+  const items = document.querySelectorAll('.burst-item');
 
   // Each element gets its own from→to that lerps center (translate(-50%, -50%))
   // → target offset. xPercent/yPercent bakes the self-centering; x/y animates
@@ -112,7 +120,7 @@ When `progress = 0` all elements overlap at the center; when `progress = 1` they
     );
   });
 
-  window.__timelines["burst-scene"] = tl;
+  window.__timelines['burst-scene'] = tl;
 </script>
 ```
 
@@ -164,7 +172,8 @@ tl.to(
     value: COUNT_TARGET,
     duration: COUNT_DUR,
     ease: COUNT_EASE,
-    onUpdate: () => (counterEl.textContent = Math.round(counterState.value).toLocaleString()),
+    onUpdate: () =>
+      (counterEl.textContent = Math.round(counterState.value).toLocaleString()),
   },
   0,
 );

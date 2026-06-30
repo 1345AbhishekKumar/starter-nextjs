@@ -52,7 +52,7 @@
         overflow: hidden;
         background: var(--bg);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -120,7 +120,11 @@
         top: 0;
         width: 100%;
         color: var(--text-highlight);
-        background: linear-gradient(135deg, var(--text-highlight) 0%, var(--text-highlight-2) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--text-highlight) 0%,
+          var(--text-highlight-2) 100%
+        );
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -223,7 +227,8 @@
             data-track-index="2"
           >
             <div class="shot2-bar">
-              <span class="search-text"></span><span class="search-cursor">_</span>
+              <span class="search-text"></span
+              ><span class="search-cursor">_</span>
             </div>
           </div>
         </div>
@@ -258,7 +263,7 @@
         charRate: 0.083, // seconds per character (~2.5 frames at 30fps)
       };
 
-      const FULL_TEXT = "HTML, CSS and JS become MP4";
+      const FULL_TEXT = 'HTML, CSS and JS become MP4';
       const FONT_SIZE = 120;
       const PADDING_LEFT = 120;
       const PADDING_RIGHT = 180;
@@ -271,21 +276,21 @@
          BUILD DOM — flip glyphs (Shot 1) generated synchronously.
          The accent text is "video" → 5 glyphs.
          ================================================================ */
-      const accentEl = document.querySelector(".shot1-accent");
-      const ACCENT_WORD = "video";
-      ACCENT_WORD.split("").forEach((char, index) => {
-        const span = document.createElement("span");
-        span.className = "flip-glyph" + (char === " " ? " space" : "");
+      const accentEl = document.querySelector('.shot1-accent');
+      const ACCENT_WORD = 'video';
+      ACCENT_WORD.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.className = 'flip-glyph' + (char === ' ' ? ' space' : '');
         span.dataset.char = char;
         span.dataset.index = String(index);
         // Each glyph needs its own font-size to match the surrounding row.
-        span.style.fontSize = "130px";
-        const ghost = document.createElement("span");
-        ghost.className = "ghost";
-        ghost.textContent = char === " " ? " " : char;
-        const anim = document.createElement("span");
-        anim.className = "anim";
-        anim.textContent = char === " " ? " " : char;
+        span.style.fontSize = '130px';
+        const ghost = document.createElement('span');
+        ghost.className = 'ghost';
+        ghost.textContent = char === ' ' ? ' ' : char;
+        const anim = document.createElement('span');
+        anim.className = 'anim';
+        anim.textContent = char === ' ' ? ' ' : char;
         span.append(ghost, anim);
         accentEl.appendChild(span);
       });
@@ -296,10 +301,10 @@
          Must run AFTER document.fonts.ready.
          ================================================================ */
       function measureNodeWidth(text, font) {
-        const probe = document.createElement("span");
-        probe.className = "measure-probe";
+        const probe = document.createElement('span');
+        probe.className = 'measure-probe';
         probe.style.font = font;
-        probe.style.whiteSpace = "pre";
+        probe.style.whiteSpace = 'pre';
         probe.textContent = text;
         document.body.appendChild(probe);
         const width = probe.getBoundingClientRect().width;
@@ -315,33 +320,34 @@
       const tl = gsap.timeline({ paused: true });
 
       // Register early so HF can find it; tweens are added below.
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       document.fonts.ready.then(() => {
         const searchFont = `400 ${FONT_SIZE}px Inter, system-ui, sans-serif`;
         const fullTextWidth = measureNodeWidth(FULL_TEXT, searchFont);
-        const barWidth = PADDING_LEFT + fullTextWidth + CURSOR_VIS_W + PADDING_RIGHT;
+        const barWidth =
+          PADDING_LEFT + fullTextWidth + CURSOR_VIS_W + PADDING_RIGHT;
 
         // Pre-allocate the bar's final width — no width tweens ever.
-        const barEl = document.querySelector(".shot2-bar");
-        barEl.style.width = barWidth + "px";
+        const barEl = document.querySelector('.shot2-bar');
+        barEl.style.width = barWidth + 'px';
 
         // Initial bar position in Shot 2's local space.
         // We position it at LEFT_MARGIN from the shot's left edge.
-        barEl.style.left = BAR_LEFT_MARGIN + "px";
-        barEl.style.transform = "translateY(-50%)"; // vertical center
+        barEl.style.left = BAR_LEFT_MARGIN + 'px';
+        barEl.style.transform = 'translateY(-50%)'; // vertical center
 
         // ============================================================
         // PHASE 1: Shot 1 text fade in + rise
         // ============================================================
         tl.fromTo(
-          ".shot1-content",
+          '.shot1-content',
           { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
             duration: TIMING.shot1EntryDur,
-            ease: "power2.out",
+            ease: 'power2.out',
           },
           TIMING.shot1EntryStart,
         );
@@ -349,7 +355,7 @@
         // ============================================================
         // PHASE 2: Hacker-flip "video"
         // ============================================================
-        const CHAR_POOL = "abcdefghijklmnopqrstuvwxyz";
+        const CHAR_POOL = 'abcdefghijklmnopqrstuvwxyz';
         const FLICKER = 3;
         const REVEAL_AT = 0.6;
 
@@ -358,23 +364,23 @@
           return ((i * 374761393 + t * 668265263) >>> 0) % CHAR_POOL.length;
         }
 
-        document.querySelectorAll(".flip-glyph").forEach((glyph) => {
+        document.querySelectorAll('.flip-glyph').forEach((glyph) => {
           const index = Number(glyph.dataset.index);
-          const real = glyph.dataset.char === " " ? " " : glyph.dataset.char;
-          const anim = glyph.querySelector(".anim");
+          const real = glyph.dataset.char === ' ' ? ' ' : glyph.dataset.char;
+          const anim = glyph.querySelector('.anim');
           const start = TIMING.flipStart + index * TIMING.flipStagger;
 
           tl.fromTo(
             anim,
-            { rotationX: 90, opacity: 0, "--p": 0 },
+            { rotationX: 90, opacity: 0, '--p': 0 },
             {
               rotationX: 0,
               opacity: 1,
-              "--p": 1,
+              '--p': 1,
               duration: TIMING.flipDuration,
-              ease: "back.out(1.6)", // spring(stiffness:150, damping:14)
+              ease: 'back.out(1.6)', // spring(stiffness:150, damping:14)
               onUpdate: function () {
-                const p = Number(gsap.getProperty(anim, "--p"));
+                const p = Number(gsap.getProperty(anim, '--p'));
                 if (p >= REVEAL_AT) {
                   if (anim.textContent !== real) anim.textContent = real;
                 } else {
@@ -394,46 +400,46 @@
         // ============================================================
         // (a) Camera pan — strip slides one full viewport left.
         tl.to(
-          ".strip",
+          '.strip',
           {
             x: -W,
             duration: TIMING.panDuration,
-            ease: "power3.inOut", // cinematic slow-in-slow-out
+            ease: 'power3.inOut', // cinematic slow-in-slow-out
           },
           TIMING.panStart,
         );
 
         // (b) Shot 1 parallax exit — content moves EXTRA -PARALLAX_DIST.
         tl.to(
-          ".shot1-content",
+          '.shot1-content',
           {
             x: -PARALLAX_DIST,
             duration: TIMING.panDuration,
-            ease: "power3.inOut",
+            ease: 'power3.inOut',
           },
           TIMING.panStart,
         );
 
         // Shot 1 fades out partway through the pan so the eye lands on Shot 2.
         tl.to(
-          ".shot1-content",
+          '.shot1-content',
           {
             opacity: 0,
             duration: TIMING.panDuration * 0.4,
-            ease: "power2.out",
+            ease: 'power2.out',
           },
           TIMING.panStart,
         );
 
         // (c) Shot 2 bar entry — fade + scale with mild overshoot ("landing").
         tl.fromTo(
-          ".shot2-bar",
+          '.shot2-bar',
           { opacity: 0, scale: 0.8 },
           {
             opacity: 1,
             scale: 1,
             duration: TIMING.panDuration,
-            ease: "back.out(1.2)",
+            ease: 'back.out(1.2)',
           },
           TIMING.panStart,
         );
@@ -446,8 +452,8 @@
         // amount: hold initial offset while the empty bar's cursor is left
         // of CURSOR_TARGET, then follow once typing pushes it past.
         // ============================================================
-        const searchTextEl = document.querySelector(".search-text");
-        const stripEl = document.querySelector(".strip");
+        const searchTextEl = document.querySelector('.search-text');
+        const stripEl = document.querySelector('.strip');
 
         const CURSOR_WIDTH_HALF = CURSOR_VIS_W / 2;
         const STRIP_BASE_X = -W; // strip's x at the end of Phase 3
@@ -467,9 +473,12 @@
           {
             progress: FULL_TEXT.length,
             duration: typingDur,
-            ease: "none",
+            ease: 'none',
             onUpdate: function () {
-              const charsTyped = Math.min(FULL_TEXT.length, Math.floor(typingProxy.progress));
+              const charsTyped = Math.min(
+                FULL_TEXT.length,
+                Math.floor(typingProxy.progress),
+              );
               const visibleText = FULL_TEXT.slice(0, charsTyped);
               if (searchTextEl.textContent !== visibleText) {
                 searchTextEl.textContent = visibleText;
@@ -478,12 +487,15 @@
               // Measure current visible width to compute cursor screen position.
               // Cheap because Inter's metrics are cached after the first call.
               const visibleW =
-                visibleText.length === 0 ? 0 : measureNodeWidth(visibleText, searchFont);
+                visibleText.length === 0
+                  ? 0
+                  : measureNodeWidth(visibleText, searchFont);
 
               // Cursor X in *Shot 2's* coordinate system:
               //   shot left edge → bar left edge (BAR_LEFT_MARGIN)
               //                  → cursor within bar (PADDING_LEFT + visibleW + CURSOR_WIDTH_HALF)
-              const cursorXInShot2 = BAR_LEFT_MARGIN + PADDING_LEFT + visibleW + CURSOR_WIDTH_HALF;
+              const cursorXInShot2 =
+                BAR_LEFT_MARGIN + PADDING_LEFT + visibleW + CURSOR_WIDTH_HALF;
 
               // For the cursor to land at CURSOR_TARGET on the *screen*, the
               // strip must be shifted by:
@@ -493,7 +505,10 @@
 
               // Piecewise: hold STRIP_BASE_X + INITIAL_OFFSET until tracking
               // would pan FURTHER LEFT than the base, then follow.
-              const finalStripX = Math.min(STRIP_BASE_X + INITIAL_OFFSET, trackingStripX);
+              const finalStripX = Math.min(
+                STRIP_BASE_X + INITIAL_OFFSET,
+                trackingStripX,
+              );
 
               gsap.set(stripEl, { x: finalStripX });
             },
@@ -503,13 +518,13 @@
 
         if (postTypingHold > 0) {
           tl.to(
-            ".search-cursor",
+            '.search-cursor',
             {
               opacity: 0.22,
               duration: postTypingHold / 2,
               repeat: 1,
               yoyo: true,
-              ease: "none",
+              ease: 'none',
             },
             typingEnd,
           );

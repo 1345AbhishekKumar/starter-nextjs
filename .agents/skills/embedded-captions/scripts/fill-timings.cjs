@@ -13,13 +13,13 @@
  * A group word that can't be matched keeps whatever time it had + is reported (so a typo
  * or an added word degrades gracefully instead of silently mis-timing).
  */
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
 const norm = (s) =>
-  String(s == null ? "" : s)
+  String(s == null ? '' : s)
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, "");
+    .replace(/[^a-z0-9]/g, '');
 const LOOKAHEAD = 40; // how far past the pointer to search for a group word (skips dropped fillers)
 
 function fillGroup(g, tw, state) {
@@ -61,27 +61,27 @@ function fillGroup(g, tw, state) {
 }
 
 function main() {
-  const project = path.resolve(process.argv[2] || "");
+  const project = path.resolve(process.argv[2] || '');
   if (!process.argv[2]) {
-    console.error("usage: fill-timings.cjs <project-dir>");
+    console.error('usage: fill-timings.cjs <project-dir>');
     process.exit(1);
   }
-  const planPath = path.join(project, "plan.json");
-  const trPath = path.join(project, "transcript.json");
+  const planPath = path.join(project, 'plan.json');
+  const trPath = path.join(project, 'transcript.json');
   let plan, trWordsRaw;
   try {
-    plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+    plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
   } catch {
     console.error(`[fill-timings] no plan.json (Cinematic only) — skipping`);
     process.exit(0);
   }
   try {
-    trWordsRaw = JSON.parse(fs.readFileSync(trPath, "utf8")).words || [];
+    trWordsRaw = JSON.parse(fs.readFileSync(trPath, 'utf8')).words || [];
   } catch {
     console.error(`[fill-timings] no transcript.json — skipping`);
     process.exit(0);
   }
-  const tw = trWordsRaw.filter((w) => w && "start" in w && "end" in w);
+  const tw = trWordsRaw.filter((w) => w && 'start' in w && 'end' in w);
   if (!tw.length) {
     console.error(`[fill-timings] transcript has no word timings — skipping`);
     process.exit(0);
@@ -99,7 +99,7 @@ function main() {
     totalUnmatched += r.unmatched.length;
     if (r.unmatched.length)
       console.error(
-        `[fill-timings] ⚠ ${g.id || "(group)"}: ${r.unmatched.length} word(s) not found in transcript from here: ${r.unmatched.join(" ")}`,
+        `[fill-timings] ⚠ ${g.id || '(group)'}: ${r.unmatched.length} word(s) not found in transcript from here: ${r.unmatched.join(' ')}`,
       );
   }
   if (plan.crown_group) {
@@ -107,7 +107,9 @@ function main() {
     totalMatched += r.matched;
     totalUnmatched += r.unmatched.length;
     if (r.unmatched.length)
-      console.error(`[fill-timings] ⚠ crown_group: ${r.unmatched.join(" ")} not found`);
+      console.error(
+        `[fill-timings] ⚠ crown_group: ${r.unmatched.join(' ')} not found`,
+      );
   }
 
   fs.writeFileSync(planPath, JSON.stringify(plan, null, 2));
@@ -118,7 +120,7 @@ function main() {
         : `; all matched ✓`),
   );
   console.log(
-    `[fill-timings] group windows now: ${ordered.map((g) => `${g.id || "?"}[${g.in}-${g.out}]`).join(" ")}`,
+    `[fill-timings] group windows now: ${ordered.map((g) => `${g.id || '?'}[${g.in}-${g.out}]`).join(' ')}`,
   );
 }
 main();

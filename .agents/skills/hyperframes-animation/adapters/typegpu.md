@@ -31,12 +31,12 @@ The adapter sets `window.__hfTypegpuTime` and dispatches `new CustomEvent("hf-se
     const adapter = await navigator.gpu.requestAdapter();
     if (!adapter) return;
     const device = await adapter.requestDevice();
-    const canvas = document.getElementById("gpu-layer");
+    const canvas = document.getElementById('gpu-layer');
     canvas.width = 1920;
     canvas.height = 1080;
-    const ctx = canvas.getContext("webgpu");
+    const ctx = canvas.getContext('webgpu');
     const fmt = navigator.gpu.getPreferredCanvasFormat();
-    ctx.configure({ device, format: fmt, alphaMode: "opaque" });
+    ctx.configure({ device, format: fmt, alphaMode: 'opaque' });
 
     // Build your pipeline, buffers, bind groups...
     const timeUniform = new Float32Array([0]);
@@ -53,9 +53,9 @@ The adapter sets `window.__hfTypegpuTime` and dispatches `new CustomEvent("hf-se
         colorAttachments: [
           {
             view: ctx.getCurrentTexture().createView(),
-            loadOp: "clear",
+            loadOp: 'clear',
             clearValue: { r: 0, g: 0, b: 0, a: 1 },
-            storeOp: "store",
+            storeOp: 'store',
           },
         ],
       });
@@ -67,7 +67,7 @@ The adapter sets `window.__hfTypegpuTime` and dispatches `new CustomEvent("hf-se
     }
 
     render(0);
-    window.addEventListener("hf-seek", (e) => render(e.detail.time));
+    window.addEventListener('hf-seek', (e) => render(e.detail.time));
   })();
 </script>
 ```
@@ -80,11 +80,11 @@ GSAP tweens that drive text, captions, or HTML elements must be registered **syn
 const tl = gsap.timeline({ paused: true });
 
 // Caption tweens: synchronous, added before WebGPU init
-gsap.set(".cap", { opacity: 0 });
-tl.to("#cap-1", { opacity: 1, duration: 0.3 }, 1.0);
-tl.to("#cap-1", { opacity: 0, duration: 0.2 }, 3.5);
+gsap.set('.cap', { opacity: 0 });
+tl.to('#cap-1', { opacity: 1, duration: 0.3 }, 1.0);
+tl.to('#cap-1', { opacity: 0, duration: 0.2 }, 3.5);
 
-window.__timelines["my-comp"] = tl;
+window.__timelines['my-comp'] = tl;
 
 // GPU-dependent tweens can go inside the async IIFE
 (async () => {
@@ -99,12 +99,12 @@ window.__timelines["my-comp"] = tl;
 To use a `<video>` as the GPU input texture:
 
 ```js
-const videoEl = document.getElementById("aroll");
+const videoEl = document.getElementById('aroll');
 
 // Wait for video metadata before creating the texture
 await new Promise((r) => {
   if (videoEl.readyState >= 1) r();
-  else videoEl.addEventListener("loadedmetadata", r, { once: true });
+  else videoEl.addEventListener('loadedmetadata', r, { once: true });
 });
 
 // Create texture at the video's NATIVE resolution
@@ -112,14 +112,20 @@ const vw = videoEl.videoWidth,
   vh = videoEl.videoHeight;
 const bgTex = device.createTexture({
   size: [vw, vh],
-  format: "rgba8unorm",
+  format: 'rgba8unorm',
   usage:
-    GPUTextureUsage.COPY_DST | GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT,
+    GPUTextureUsage.COPY_DST |
+    GPUTextureUsage.TEXTURE_BINDING |
+    GPUTextureUsage.RENDER_ATTACHMENT,
 });
 
 function render(t) {
   try {
-    device.queue.copyExternalImageToTexture({ source: videoEl }, { texture: bgTex }, [vw, vh]);
+    device.queue.copyExternalImageToTexture(
+      { source: videoEl },
+      { texture: bgTex },
+      [vw, vh],
+    );
   } catch (_) {
     /* frame not decoded yet */
   }

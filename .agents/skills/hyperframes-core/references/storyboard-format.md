@@ -60,7 +60,7 @@ Optional, free-form, **not parsed into the manifest** — the locked-narration f
 ```markdown
 ---
 format: 1920x1080
-message: "Ship a launch video in an afternoon"
+message: 'Ship a launch video in an afternoon'
 arc: Hook → Problem → Solution → Proof → CTA
 audience: indie devs on X
 ---

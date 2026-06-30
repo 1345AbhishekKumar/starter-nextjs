@@ -119,38 +119,68 @@ Two cards positioned side-by-side, each rotated in opposite Y directions. Create
 
   // Phase 1 — entry from outside
   tl.fromTo(
-    ".card-left",
+    '.card-left',
     { x: -ENTRY_SLIDE_DIST, rotateY: TILT + TILT_OVERSHOOT, opacity: 0 },
-    { x: 0, rotateY: TILT, opacity: 1, duration: ENTRY_DUR, ease: "power3.out" },
+    {
+      x: 0,
+      rotateY: TILT,
+      opacity: 1,
+      duration: ENTRY_DUR,
+      ease: 'power3.out',
+    },
     LEFT_AT,
   );
   tl.fromTo(
-    ".card-right",
+    '.card-right',
     { x: ENTRY_SLIDE_DIST, rotateY: -TILT - TILT_OVERSHOOT, opacity: 0 },
-    { x: 0, rotateY: -TILT, opacity: 1, duration: ENTRY_DUR, ease: "power3.out" },
+    {
+      x: 0,
+      rotateY: -TILT,
+      opacity: 1,
+      duration: ENTRY_DUR,
+      ease: 'power3.out',
+    },
     RIGHT_AT,
   );
 
   // Phase 2 — counter-phase idle bob (cards move in opposition for dynamism)
   tl.to(
-    ".card-left",
-    { y: -FLOAT_AMP, duration: FLOAT_DURATION / 2, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    '.card-left',
+    {
+      y: -FLOAT_AMP,
+      duration: FLOAT_DURATION / 2,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: 1,
+    },
     IDLE_START,
   );
   tl.to(
-    ".card-right",
-    { y: FLOAT_AMP, duration: FLOAT_DURATION / 2, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    '.card-right',
+    {
+      y: FLOAT_AMP,
+      duration: FLOAT_DURATION / 2,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: 1,
+    },
     IDLE_START,
   );
 
   // Phase 3 — gentle copy reveal (body slides up + fades after cards arrive)
   tl.from(
-    ".card-eyebrow, .card-headline, .card-body",
-    { opacity: 0, y: COPY_RISE, stagger: COPY_STAGGER, duration: COPY_DUR, ease: "power2.out" },
+    '.card-eyebrow, .card-headline, .card-body',
+    {
+      opacity: 0,
+      y: COPY_RISE,
+      stagger: COPY_STAGGER,
+      duration: COPY_DUR,
+      ease: 'power2.out',
+    },
     COPY_REVEAL_AT,
   );
 
-  window.__timelines["split-scene"] = tl;
+  window.__timelines['split-scene'] = tl;
 </script>
 ```
 

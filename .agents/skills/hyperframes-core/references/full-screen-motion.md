@@ -9,7 +9,13 @@ Stacking opaque scene divs means every scene change has to repaint the entire fr
 ## Pattern
 
 ```html
-<div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-duration="20">
+<div
+  id="root"
+  data-composition-id="main"
+  data-width="1920"
+  data-height="1080"
+  data-duration="20"
+>
   <!-- Shared background — NOT a clip. Always visible. Driven by the timeline. -->
   <div id="bg" class="full-bleed"></div>
 
@@ -39,13 +45,21 @@ Stacking opaque scene divs means every scene change has to repaint the entire fr
   const tl = gsap.timeline({ paused: true });
 
   // Drive the shared background from the seekable timeline.
-  tl.to("#bg", { backgroundColor: "#0a1530", duration: 6, ease: "sine.inOut" }, 0);
-  tl.to("#bg", { backgroundColor: "#1a0a30", duration: 14, ease: "sine.inOut" }, 6);
+  tl.to(
+    '#bg',
+    { backgroundColor: '#0a1530', duration: 6, ease: 'sine.inOut' },
+    0,
+  );
+  tl.to(
+    '#bg',
+    { backgroundColor: '#1a0a30', duration: 14, ease: 'sine.inOut' },
+    6,
+  );
 
   // Scene-local animations stay transparent on top.
-  tl.from("#scene1 h1", { y: 48, opacity: 0, duration: 0.6 }, 0.2);
+  tl.from('#scene1 h1', { y: 48, opacity: 0, duration: 0.6 }, 0.2);
 
-  window.__timelines["main"] = tl;
+  window.__timelines['main'] = tl;
 </script>
 ```
 

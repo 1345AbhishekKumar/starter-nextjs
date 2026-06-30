@@ -87,29 +87,29 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
 <script>
   window.__timelines = window.__timelines || {};
 
-  const wrap = document.getElementById("hacker-text");
+  const wrap = document.getElementById('hacker-text');
   const targetWord = wrap.dataset.target;
-  const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
+  const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*';
 
   // Build live chars + ghost placeholders (ghost keeps layout width stable)
-  wrap.innerHTML = "";
-  const ghostRow = document.createElement("div");
-  ghostRow.className = "hacker-ghost";
-  ghostRow.style.display = "inline-flex";
-  ghostRow.style.position = "absolute";
-  ghostRow.style.left = "0";
-  ghostRow.style.top = "0";
+  wrap.innerHTML = '';
+  const ghostRow = document.createElement('div');
+  ghostRow.className = 'hacker-ghost';
+  ghostRow.style.display = 'inline-flex';
+  ghostRow.style.position = 'absolute';
+  ghostRow.style.left = '0';
+  ghostRow.style.top = '0';
   ghostRow.textContent = targetWord;
   wrap.appendChild(ghostRow);
 
   const charEls = [];
-  const liveRow = document.createElement("div");
-  liveRow.style.display = "inline-flex";
-  liveRow.style.position = "relative";
+  const liveRow = document.createElement('div');
+  liveRow.style.display = 'inline-flex';
+  liveRow.style.position = 'relative';
   for (const ch of targetWord) {
-    const span = document.createElement("span");
-    span.className = "hacker-char";
-    span.textContent = ch === " " ? " " : ch;
+    const span = document.createElement('span');
+    span.className = 'hacker-char';
+    span.textContent = ch === ' ' ? ' ' : ch;
     span.dataset.target = ch;
     liveRow.appendChild(span);
     charEls.push(span);
@@ -133,7 +133,7 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
       {
         p: 1,
         duration: FLIP_DURATION,
-        ease: "power3.out",
+        ease: 'power3.out',
         onUpdate: () => {
           // Phase A: random glyph flickering. Phase B: real character.
           const progress = state.p;
@@ -142,7 +142,8 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
             const flickerSeed = i * 1000 + Math.floor(progress * 100);
             el.textContent = pseudoGlyph(flickerSeed);
           } else {
-            el.textContent = el.dataset.target === " " ? " " : el.dataset.target;
+            el.textContent =
+              el.dataset.target === ' ' ? ' ' : el.dataset.target;
           }
           // Flip rotateX from 90 (down) to 0 (upright)
           const rotateX = 90 - progress * 90;
@@ -155,7 +156,7 @@ The `REVEAL_THRESHOLD` separates "scrambled" from "revealed" — by the time the
     );
   });
 
-  window.__timelines["hacker-flip-scene"] = tl;
+  window.__timelines['hacker-flip-scene'] = tl;
 </script>
 ```
 

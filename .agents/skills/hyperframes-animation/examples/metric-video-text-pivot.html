@@ -57,7 +57,7 @@
         overflow: hidden;
         background: var(--bg-dark);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -77,7 +77,11 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 50% 50%, rgba(40, 30, 80, 0.5), transparent 65%),
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(40, 30, 80, 0.5),
+            transparent 65%
+          ),
           linear-gradient(135deg, #0a0a18 0%, #160a1f 100%);
       }
       .ambient-glow {
@@ -119,7 +123,11 @@
       }
       .badge .accent {
         color: var(--brand-purple-soft);
-        background: linear-gradient(135deg, var(--brand-purple-soft) 0%, var(--brand-purple) 72%);
+        background: linear-gradient(
+          135deg,
+          var(--brand-purple-soft) 0%,
+          var(--brand-purple) 72%
+        );
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -166,11 +174,15 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(circle at 30% 30%, rgba(255, 200, 100, 0.4), transparent 50%),
+          radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 200, 100, 0.4),
+            transparent 50%
+          ),
           linear-gradient(135deg, #1a3a5f 0%, #2a4570 50%, #3a2a5a 100%);
       }
       .video-scene::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 35%;
         left: 40%;
@@ -203,7 +215,11 @@
         left: 0;
         right: 0;
         height: 40%;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          transparent 100%
+        );
         pointer-events: none;
       }
 
@@ -309,7 +325,11 @@
         width: calc(100% + 80px);
         height: calc(100% + 40px);
         border-radius: 80px;
-        background: linear-gradient(90deg, var(--brand-purple) 0%, var(--brand-green) 100%);
+        background: linear-gradient(
+          90deg,
+          var(--brand-purple) 0%,
+          var(--brand-green) 100%
+        );
         opacity: 0;
         z-index: -1;
         will-change: transform, opacity;
@@ -350,7 +370,11 @@
       .vignette {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+        background: radial-gradient(
+          ellipse at center,
+          transparent 50%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
         pointer-events: none;
         z-index: 400;
       }
@@ -375,7 +399,9 @@
         <div class="bg"></div>
         <div class="ambient-glow"></div>
 
-        <div class="badge" id="badge">Hyper<span class="accent">Frames</span></div>
+        <div class="badge" id="badge">
+          Hyper<span class="accent">Frames</span>
+        </div>
 
         <!-- Video card -->
         <div class="video-pos" id="video-pos" data-layout-allow-overflow>
@@ -401,7 +427,11 @@
         <div class="stat-pos" id="stat-pos" data-layout-allow-overflow>
           <div class="stat-breath" id="stat-breath">
             <div class="stat-tilt">
-              <div class="depth-stack" id="depth-stack-97" data-text="MP4"></div>
+              <div
+                class="depth-stack"
+                id="depth-stack-97"
+                data-text="MP4"
+              ></div>
             </div>
           </div>
         </div>
@@ -410,8 +440,10 @@
         <div class="typing-stage" id="typing-stage">
           <div class="typing-tilt">
             <div class="line1">
-              <span class="seg main">HTML </span><span class="seg accent">pages</span
-              ><span class="seg suffix"> become </span><span class="seg accent2">video</span
+              <span class="seg main">HTML </span
+              ><span class="seg accent">pages</span
+              ><span class="seg suffix"> become </span
+              ><span class="seg accent2">video</span
               ><span class="cursor cursor1" id="cursor1"></span>
             </div>
             <div class="line2-wrap">
@@ -475,17 +507,21 @@
 
       /* Text segments and boundaries */
       const SEG = {
-        main: "HTML ",
-        accent: "pages",
-        suffix: " become ",
-        accent2: "video",
-        line2: "frame by frame.",
+        main: 'HTML ',
+        accent: 'pages',
+        suffix: ' become ',
+        accent2: 'video',
+        line2: 'frame by frame.',
       };
       const BOUNDS = {
         mainEnd: SEG.main.length, // 5
         accentEnd: SEG.main.length + SEG.accent.length, // 10
         suffixEnd: SEG.main.length + SEG.accent.length + SEG.suffix.length, // 18
-        accent2End: SEG.main.length + SEG.accent.length + SEG.suffix.length + SEG.accent2.length, // 23
+        accent2End:
+          SEG.main.length +
+          SEG.accent.length +
+          SEG.suffix.length +
+          SEG.accent2.length, // 23
         line2End:
           SEG.main.length +
           SEG.accent.length +
@@ -501,18 +537,19 @@
       const LAYER_COUNT = 5;
       const OFFSET_X = 1;
       const OFFSET_Y = 2;
-      const depthStack = document.getElementById("depth-stack-97");
+      const depthStack = document.getElementById('depth-stack-97');
       const depthText = depthStack.dataset.text;
       for (let i = 0; i < LAYER_COUNT; i++) {
-        const layer = document.createElement("div");
-        layer.className = "depth-layer " + (i === LAYER_COUNT - 1 ? "front" : "back");
+        const layer = document.createElement('div');
+        layer.className =
+          'depth-layer ' + (i === LAYER_COUNT - 1 ? 'front' : 'back');
         layer.textContent = depthText;
         if (i < LAYER_COUNT - 1) {
-          layer.setAttribute("aria-hidden", "true");
+          layer.setAttribute('aria-hidden', 'true');
           const alpha = 0.62 + 0.08 * (LAYER_COUNT - 2 - i);
-          layer.style.setProperty("--alpha", alpha);
-          layer.style.setProperty("--top", i * OFFSET_Y + "px");
-          layer.style.setProperty("--left", -i * OFFSET_X + "px");
+          layer.style.setProperty('--alpha', alpha);
+          layer.style.setProperty('--top', i * OFFSET_Y + 'px');
+          layer.style.setProperty('--left', -i * OFFSET_X + 'px');
         }
         depthStack.appendChild(layer);
       }
@@ -520,44 +557,49 @@
       /* ================================================================
          INITIAL STATES (via gsap.set, before the timeline runs)
          ================================================================ */
-      gsap.set("#badge", { opacity: 0, scale: 0.9 });
+      gsap.set('#badge', { opacity: 0, scale: 0.9 });
 
       // Video starts centered (x = W/2, y = H/2 via the .video-pos margin trick)
-      gsap.set("#video-pos", { x: W / 2, y: H / 2, scale: 0.6, opacity: 0 });
+      gsap.set('#video-pos', { x: W / 2, y: H / 2, scale: 0.6, opacity: 0 });
 
       // Stat starts off-right + below + small + invisible
-      gsap.set("#stat-pos", { x: TIMING.statEntryX, y: H * 0.42 + 60, scale: 0.3, opacity: 0 });
+      gsap.set('#stat-pos', {
+        x: TIMING.statEntryX,
+        y: H * 0.42 + 60,
+        scale: 0.3,
+        opacity: 0,
+      });
 
-      gsap.set("#typing-stage", { scale: 0.9, opacity: 0 });
+      gsap.set('#typing-stage', { scale: 0.9, opacity: 0 });
 
       /* ================================================================
          TIMELINE
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       /* ----------------------------------------------------------------
          PHASE 1: Badge + Video entry
          ---------------------------------------------------------------- */
       tl.to(
-        "#badge",
+        '#badge',
         {
           opacity: 1,
           scale: 1,
           duration: TIMING.badgeDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.badgeAt,
       );
 
       tl.to(
-        "#video-pos",
+        '#video-pos',
         {
           scale: 1,
           opacity: 1,
           duration: TIMING.videoEntryDur,
-          ease: "power3.out", // spring(stiffness:80, damping:15)
+          ease: 'power3.out', // spring(stiffness:80, damping:15)
         },
         TIMING.videoEntryAt,
       );
@@ -566,24 +608,24 @@
          PHASE 2: Video slides left, MP4 appears on right
          ---------------------------------------------------------------- */
       tl.to(
-        "#video-pos",
+        '#video-pos',
         {
           x: TIMING.videoSlideX,
           scale: TIMING.videoSlideScale,
           duration: TIMING.videoSlideDur,
-          ease: "power3.out", // spring(stiffness:100, damping:18)
+          ease: 'power3.out', // spring(stiffness:100, damping:18)
         },
         TIMING.slideAt,
       );
 
       tl.to(
-        "#stat-pos",
+        '#stat-pos',
         {
           y: H * 0.42, // rises to final y
           scale: 1,
           opacity: 1,
           duration: TIMING.statEntryDur,
-          ease: "back.out(1.6)", // spring(stiffness:150, damping:12)
+          ease: 'back.out(1.6)', // spring(stiffness:150, damping:12)
         },
         TIMING.slideAt,
       );
@@ -592,36 +634,36 @@
          PHASE 3: Pivot — video + stat exit; typing fades in
          ---------------------------------------------------------------- */
       tl.to(
-        "#video-pos",
+        '#video-pos',
         {
           x: TIMING.videoExitX,
           scale: 0.8,
           opacity: 0,
           duration: TIMING.exitDur,
-          ease: "power3.out", // spring(stiffness:120, damping:20)
+          ease: 'power3.out', // spring(stiffness:120, damping:20)
         },
         TIMING.pivotAt,
       );
 
       tl.to(
-        "#stat-pos",
+        '#stat-pos',
         {
           x: TIMING.statExitX,
           scale: 0.8,
           opacity: 0,
           duration: TIMING.exitDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.pivotAt,
       );
 
       tl.to(
-        "#typing-stage",
+        '#typing-stage',
         {
           scale: 1,
           opacity: 1,
           duration: TIMING.typingStageDur,
-          ease: "power3.out", // spring(stiffness:100, damping:15)
+          ease: 'power3.out', // spring(stiffness:100, damping:15)
         },
         TIMING.pivotAt,
       );
@@ -629,21 +671,27 @@
       /* ----------------------------------------------------------------
          PHASE 3 (continued): Character-by-character typing
          ---------------------------------------------------------------- */
-      const segMain = document.querySelector(".seg.main");
-      const segAccent = document.querySelector(".seg.accent");
-      const segSuffix = document.querySelector(".seg.suffix");
-      const segAccent2 = document.querySelector(".seg.accent2");
-      const segLine2 = document.querySelector(".seg.line2");
+      const segMain = document.querySelector('.seg.main');
+      const segAccent = document.querySelector('.seg.accent');
+      const segSuffix = document.querySelector('.seg.suffix');
+      const segAccent2 = document.querySelector('.seg.accent2');
+      const segLine2 = document.querySelector('.seg.line2');
 
       const typeProxy = { idx: 0 };
       function typedIndexAt(t) {
         if (t < TIMING.typingStartAt) return 0;
-        return Math.min(BOUNDS.line2End, Math.floor((t - TIMING.typingStartAt) * TIMING.typeRate));
+        return Math.min(
+          BOUNDS.line2End,
+          Math.floor((t - TIMING.typingStartAt) * TIMING.typeRate),
+        );
       }
 
       function renderTypedText(i) {
         const m = SEG.main.slice(0, Math.min(i, BOUNDS.mainEnd));
-        const a = SEG.accent.slice(0, Math.max(0, Math.min(i - BOUNDS.mainEnd, SEG.accent.length)));
+        const a = SEG.accent.slice(
+          0,
+          Math.max(0, Math.min(i - BOUNDS.mainEnd, SEG.accent.length)),
+        );
         const s = SEG.suffix.slice(
           0,
           Math.max(0, Math.min(i - BOUNDS.accentEnd, SEG.suffix.length)),
@@ -668,7 +716,7 @@
         {
           idx: BOUNDS.line2End,
           duration: TYPING_DUR,
-          ease: "none",
+          ease: 'none',
           onUpdate: function () {
             renderTypedText(Math.floor(typeProxy.idx));
           },
@@ -679,37 +727,37 @@
       /* ----------------------------------------------------------------
          PHASE 4: Gradient pill behind line 2
          ---------------------------------------------------------------- */
-      gsap.set("#pill-bg", { scaleX: 0, scaleY: 0.5, opacity: 0 });
-      gsap.set("#pill-glow", { opacity: 0 });
+      gsap.set('#pill-bg', { scaleX: 0, scaleY: 0.5, opacity: 0 });
+      gsap.set('#pill-glow', { opacity: 0 });
 
       tl.to(
-        "#pill-bg",
+        '#pill-bg',
         {
           scaleX: 1,
           scaleY: 1,
           opacity: 0.9,
           duration: TIMING.pillDur,
-          ease: "power3.out", // spring(stiffness:80, damping:15)
+          ease: 'power3.out', // spring(stiffness:80, damping:15)
         },
         TIMING.pillAt,
       );
 
       tl.to(
-        "#pill-glow",
+        '#pill-glow',
         {
           opacity: 0.5,
           duration: TIMING.pillGlowDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.pillAt,
       );
 
       tl.to(
-        ".line2-content",
+        '.line2-content',
         {
           opacity: 1,
           duration: 0.18,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.pillAt + 0.3,
       );
@@ -718,17 +766,17 @@
          CONTINUOUS SCENE-TICKER — float, breath, cursor blink
          All gated by time windows so they only fire when visible.
          ---------------------------------------------------------------- */
-      const videoFloat = document.getElementById("video-float");
-      const statBreathEl = document.getElementById("stat-breath");
-      const cursor1El = document.getElementById("cursor1");
-      const cursor2El = document.getElementById("cursor2");
+      const videoFloat = document.getElementById('video-float');
+      const statBreathEl = document.getElementById('stat-breath');
+      const cursor1El = document.getElementById('cursor1');
+      const cursor2El = document.getElementById('cursor2');
 
       tl.to(
         { tick: 0 },
         {
           tick: 1,
           duration: TOTAL_DUR,
-          ease: "none",
+          ease: 'none',
           onUpdate: function () {
             const t = tl.time();
             const idx = typedIndexAt(t);
@@ -742,7 +790,8 @@
 
             // Stat breath — only while MP4 is settled and not yet exiting
             if (t > TIMING.statBreathAt && t < TIMING.pivotAt) {
-              const breath = 1 + Math.sin((t - TIMING.statBreathAt) * 1.2) * 0.02;
+              const breath =
+                1 + Math.sin((t - TIMING.statBreathAt) * 1.2) * 0.02;
               gsap.set(statBreathEl, { scale: breath });
             }
 
@@ -753,11 +802,12 @@
             // Determine cursor color: green when typing accent segments, white otherwise.
             if (t >= TIMING.typingStartAt && idx < BOUNDS.accent2End) {
               const inAccent = idx >= BOUNDS.mainEnd && idx < BOUNDS.accentEnd;
-              const inAccent2 = idx >= BOUNDS.suffixEnd && idx < BOUNDS.accent2End;
+              const inAccent2 =
+                idx >= BOUNDS.suffixEnd && idx < BOUNDS.accent2End;
               const isGreen = inAccent || inAccent2;
               cursor1El.style.opacity = blink;
               if (cursor1El._lastGreen !== isGreen) {
-                cursor1El.classList.toggle("green", isGreen);
+                cursor1El.classList.toggle('green', isGreen);
                 cursor1El._lastGreen = isGreen;
               }
             } else {

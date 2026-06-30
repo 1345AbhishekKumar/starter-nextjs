@@ -26,13 +26,22 @@ These are non-negotiable for every multi-scene composition:
 ```js
 // ❌ BANNED — fading the outgoing scene out, then the next scene just runs its entrance.
 //    This is a jump cut with a dip, not a transition.
-tl.to("#s1", { opacity: 0, duration: 0.4 }, 4.0);
-tl.from("#s2 .headline", { y: 40, opacity: 0 }, 4.4);
+tl.to('#s1', { opacity: 0, duration: 0.4 }, 4.0);
+tl.from('#s2 .headline', { y: 40, opacity: 0 }, 4.4);
 
 // ✅ CORRECT — outgoing and incoming animate AT THE SAME TIME T; the motion IS the handoff.
 const T = 4.0;
-tl.to("#s1", { yPercent: -100, filter: "blur(8px)", duration: 0.5, ease: "power3.in" }, T);
-tl.fromTo("#s2", { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: "power3.out" }, T);
+tl.to(
+  '#s1',
+  { yPercent: -100, filter: 'blur(8px)', duration: 0.5, ease: 'power3.in' },
+  T,
+);
+tl.fromTo(
+  '#s2',
+  { yPercent: 100 },
+  { yPercent: 0, duration: 0.5, ease: 'power3.out' },
+  T,
+);
 ```
 
 > **You are NOT done after this file.** This overview gives you _which_ transition and _when_. Before writing any transition you MUST open **`catalog.md`** in this directory for the GSAP code and the hard rule every transition follows — _position new scene → animate outgoing → swap → animate incoming → clean up overlays_ — plus the per-category `css-*.md` files for specifics. Authoring transitions from this overview alone is how you end up shipping the ❌ pattern above.
@@ -122,13 +131,13 @@ CSS transitions animate scene containers with opacity, transforms, clip-path, an
 
 ```js
 var tl = HyperShader.init({
-  bgColor: "#000",
-  accentColor: "#6366f1",
-  scenes: ["s1", "s2", "s3", "s4"],
+  bgColor: '#000',
+  accentColor: '#6366f1',
+  scenes: ['s1', 's2', 's3', 's4'],
   transitions: [
-    { time: 4.0, shader: "sdf-iris", duration: 0.7 }, // WebGL shader
+    { time: 4.0, shader: 'sdf-iris', duration: 0.7 }, // WebGL shader
     { time: 8.5, duration: 0.8 }, // no shader → CSS crossfade
-    { time: 13.0, shader: "domain-warp", duration: 0.6 }, // WebGL shader
+    { time: 13.0, shader: 'domain-warp', duration: 0.6 }, // WebGL shader
   ],
 });
 ```

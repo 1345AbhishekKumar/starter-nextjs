@@ -2,18 +2,18 @@
 /* check-timing.cjs — verify plan.json word timings vs transcript.json (1:1 port of check-timing.py).
  *   node check-timing.cjs <project-dir> [--strict]
  */
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
 const DRIFT_TOL = 0.08;
 const CREATIVE_SUBS = {
-  "15%": ["fifteen", "percent"],
-  "1/3": ["one", "third"],
-  "2x": ["two", "times"],
+  '15%': ['fifteen', 'percent'],
+  '1/3': ['one', 'third'],
+  '2x': ['two', 'times'],
 };
 const norm = (s) =>
   String(s)
-    .replace(/^[ .,?!"']+|[ .,?!"']+$/g, "")
+    .replace(/^[ .,?!"']+|[ .,?!"']+$/g, '')
     .toLowerCase();
 const splitPacked = (t) =>
   String(t)
@@ -24,7 +24,9 @@ function estimateVerticalBand(css, words, fw, fh) {
   const top = css.match(/top:\s*(-?[\d.]+)%/);
   if (!top) return null;
   const topPct = parseFloat(top[1]);
-  const sizeM = css.match(/font-size:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--h\)\s*\)/);
+  const sizeM = css.match(
+    /font-size:\s*calc\(\s*([\d.]+)\s*\*\s*var\(--h\)\s*\)/,
+  );
   const fontPx = sizeM ? parseFloat(sizeM[1]) * fh : 0.05 * fh;
   const lhM = css.match(/line-height:\s*([\d.]+)/);
   const lh = lhM ? parseFloat(lhM[1]) : 1.1;
@@ -52,10 +54,14 @@ function estimateVerticalBand(css, words, fw, fh) {
 }
 
 function check(project, strict) {
-  const plan = JSON.parse(fs.readFileSync(path.join(project, "plan.json"), "utf8"));
-  const t = JSON.parse(fs.readFileSync(path.join(project, "transcript.json"), "utf8"));
+  const plan = JSON.parse(
+    fs.readFileSync(path.join(project, 'plan.json'), 'utf8'),
+  );
+  const t = JSON.parse(
+    fs.readFileSync(path.join(project, 'transcript.json'), 'utf8'),
+  );
   const seq = (t.words || [])
-    .filter((w) => w.type === "word")
+    .filter((w) => w.type === 'word')
     .map((w) => [norm(w.text), w.start, w.end]);
   const issues = [];
   const fw = plan.width || 720,
@@ -63,12 +69,12 @@ function check(project, strict) {
   const groups = plan.groups || [];
   const bands = groups.map((g) =>
     g.plane
-      ? [g.id || "?", g.in, g.out, null, true]
+      ? [g.id || '?', g.in, g.out, null, true]
       : [
-          g.id || "?",
+          g.id || '?',
           g.in,
           g.out,
-          estimateVerticalBand(g.css || "", g.words || [], fw, fh),
+          estimateVerticalBand(g.css || '', g.words || [], fw, fh),
           g.allow_overlap || false,
         ],
   );
@@ -87,7 +93,7 @@ function check(project, strict) {
   }
   let ti = 0;
   for (const g of groups) {
-    const gid = g.id || "?",
+    const gid = g.id || '?',
       gin = g.in,
       gout = g.out;
     const ws = (g.words || []).map((w) => w.start),
@@ -96,7 +102,7 @@ function check(project, strict) {
       const e = Math.min(...ws);
       if (e < gin - 0.01)
         issues.push(
-          `[${gid}] group.in=${gin.toFixed(2)} but earliest word starts at ${e.toFixed(2)} — word delayed by ${(gin - e >= 0 ? "+" : "") + (gin - e).toFixed(2)}s. Lower group.in.`,
+          `[${gid}] group.in=${gin.toFixed(2)} but earliest word starts at ${e.toFixed(2)} — word delayed by ${(gin - e >= 0 ? '+' : '') + (gin - e).toFixed(2)}s. Lower group.in.`,
         );
     }
     if (we.length && gout != null) {
@@ -114,12 +120,12 @@ function check(project, strict) {
       if (
         Number.isInteger(w.ti) &&
         seq[w.ti] &&
-        seq[w.ti][0] === norm(splitPacked(w.text)[0] || "")
+        seq[w.ti][0] === norm(splitPacked(w.text)[0] || '')
       ) {
         const drift = w.start - seq[w.ti][1];
         if (Math.abs(drift) > DRIFT_TOL)
           issues.push(
-            `[${gid}] '${norm(w.text)}': plan=${w.start.toFixed(3)} transcript=${seq[w.ti][1].toFixed(3)} drift ${(drift >= 0 ? "+" : "") + drift.toFixed(3)}s`,
+            `[${gid}] '${norm(w.text)}': plan=${w.start.toFixed(3)} transcript=${seq[w.ti][1].toFixed(3)} drift ${(drift >= 0 ? '+' : '') + drift.toFixed(3)}s`,
           );
         ti = w.ti + 1;
         continue;
@@ -137,7 +143,9 @@ function check(project, strict) {
         let found = seq.findIndex((s, k) => k >= ti && s[0] === part);
         if (found < 0) found = seq.findIndex((s) => s[0] === part);
         if (found < 0) {
-          issues.push(`[${gid}] '${part}': NOT IN TRANSCRIPT (plan start=${w.start.toFixed(3)})`);
+          issues.push(
+            `[${gid}] '${part}': NOT IN TRANSCRIPT (plan start=${w.start.toFixed(3)})`,
+          );
           return;
         }
         const ts = seq[found][1];
@@ -146,7 +154,7 @@ function check(project, strict) {
           const drift = w.start - ts;
           if (Math.abs(drift) > DRIFT_TOL)
             issues.push(
-              `[${gid}] '${part}': plan=${w.start.toFixed(3)} transcript=${ts.toFixed(3)} drift ${(drift >= 0 ? "+" : "") + drift.toFixed(3)}s`,
+              `[${gid}] '${part}': plan=${w.start.toFixed(3)} transcript=${ts.toFixed(3)} drift ${(drift >= 0 ? '+' : '') + drift.toFixed(3)}s`,
             );
         } else
           issues.push(
@@ -165,9 +173,9 @@ function check(project, strict) {
   return strict ? 1 : 0;
 }
 
-const args = process.argv.slice(2).filter((a) => a !== "--strict");
+const args = process.argv.slice(2).filter((a) => a !== '--strict');
 if (!args.length) {
-  console.error("usage: check-timing.cjs <project-dir> [--strict]");
+  console.error('usage: check-timing.cjs <project-dir> [--strict]');
   process.exit(2);
 }
-process.exit(check(path.resolve(args[0]), process.argv.includes("--strict")));
+process.exit(check(path.resolve(args[0]), process.argv.includes('--strict')));

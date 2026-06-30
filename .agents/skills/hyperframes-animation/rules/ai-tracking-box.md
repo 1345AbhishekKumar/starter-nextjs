@@ -139,9 +139,9 @@ All driven by GSAP timeline so HF seeks deterministically.
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const box = document.getElementById("track-box");
-  const mascot = document.getElementById("mascot");
-  const label = document.getElementById("label");
+  const box = document.getElementById('track-box');
+  const mascot = document.getElementById('mascot');
+  const label = document.getElementById('label');
 
   // Initial state — box invisible, will fade in
   gsap.set(box, { opacity: 0, scale: ENTRY_SCALE });
@@ -175,18 +175,20 @@ All driven by GSAP timeline so HF seeks deterministically.
     {
       p: Math.PI * 2 * CYCLES,
       duration: TRACK_DUR,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         // Target position (the mascot moves on a wider arc)
         const mx = SCREEN_CENTER.x + Math.cos(tracking.p) * DRIFT_X;
         const my = SCREEN_CENTER.y + Math.sin(tracking.p) * DRIFT_Y;
-        mascot.style.position = "absolute";
+        mascot.style.position = 'absolute';
         mascot.style.left = `${mx - MASCOT_SIZE / 2}px`;
         mascot.style.top = `${my - MASCOT_SIZE / 2}px`;
 
         // Box size oscillates slightly (size confidence variation)
         const w = SIZE_BASE + Math.sin(tracking.p * SIZE_FREQ_MULT) * SIZE_VAR;
-        const h = SIZE_BASE + Math.sin(tracking.p * SIZE_FREQ_MULT + Math.PI / 2) * SIZE_VAR;
+        const h =
+          SIZE_BASE +
+          Math.sin(tracking.p * SIZE_FREQ_MULT + Math.PI / 2) * SIZE_VAR;
 
         // Box position centers on mascot
         box.style.width = `${w}px`;
@@ -196,7 +198,8 @@ All driven by GSAP timeline so HF seeks deterministically.
 
         // Confidence label fluctuates inside [CONFIDENCE_MEAN ± CONFIDENCE_VAR]
         const confidence = Math.round(
-          CONFIDENCE_MEAN + Math.sin(tracking.p * CONFIDENCE_FREQ_MULT) * CONFIDENCE_VAR,
+          CONFIDENCE_MEAN +
+            Math.sin(tracking.p * CONFIDENCE_FREQ_MULT) * CONFIDENCE_VAR,
         );
         label.textContent = `${TARGET_GLYPH} ${LABEL_TEXT} · ${confidence}%`;
       },
@@ -204,7 +207,7 @@ All driven by GSAP timeline so HF seeks deterministically.
     TRACK_START,
   );
 
-  window.__timelines["track-scene"] = tl;
+  window.__timelines['track-scene'] = tl;
 </script>
 ```
 
@@ -339,10 +342,14 @@ The box fades to {LOST_OPACITY} (~{LOST_DUR}) then re-snaps to a new position wi
 tl.to(box, { opacity: LOST_OPACITY, duration: LOST_DUR }, LOST_START);
 tl.to(
   box,
-  { opacity: 1.0, duration: REACQUIRE_DUR, ease: `back.out(${REACQUIRE_BOUNCE})` },
+  {
+    opacity: 1.0,
+    duration: REACQUIRE_DUR,
+    ease: `back.out(${REACQUIRE_BOUNCE})`,
+  },
   REACQUIRE_START,
 );
-tl.to(label, { textContent: "REACQUIRED · 99%", duration: 0 }, REACQUIRE_START);
+tl.to(label, { textContent: 'REACQUIRED · 99%', duration: 0 }, REACQUIRE_START);
 ```
 
 (LOST_OPACITY ≈ 0.2-0.4; REACQUIRE_BOUNCE ≈ 1.8-2.5 for a snappier re-lock than the initial entry.)

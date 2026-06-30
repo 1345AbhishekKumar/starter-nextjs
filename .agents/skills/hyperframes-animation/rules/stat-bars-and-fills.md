@@ -40,7 +40,11 @@ Bars grow from the baseline with a stagger; the last bar is the accent.
 
 ```js
 // Heights are authored in CSS (e.g. inline height per bar); GSAP only reveals scaleY 0→1.
-tl.to(".bar", { scaleY: 1, duration: 0.7, ease: "power3.out", stagger: 0.08 }, 0.3);
+tl.to(
+  '.bar',
+  { scaleY: 1, duration: 0.7, ease: 'power3.out', stagger: 0.08 },
+  0.3,
+);
 ```
 
 > Use `scaleY` (a transform), never animate `height` — height tweens are forbidden by the runtime. Set each bar's final height in CSS, scale from 0.
@@ -70,18 +74,22 @@ tl.to(".bar", { scaleY: 1, duration: 0.7, ease: "power3.out", stagger: 0.08 }, 0
 
 ```js
 const PCT = 0.92; // 92%
-tl.to(".fill", { scaleX: PCT, duration: 1.0, ease: "power2.out" }, 0.3);
+tl.to('.fill', { scaleX: PCT, duration: 1.0, ease: 'power2.out' }, 0.3);
 ```
 
 **Ring form** — measured stroke draw (delegates to [svg-path-draw.md](svg-path-draw.md)):
 
 ```js
-const ring = document.querySelector("#ring");
+const ring = document.querySelector('#ring');
 const LEN = ring.getTotalLength(); // measure, don't hard-code the circumference
 ring.style.strokeDasharray = LEN;
 ring.style.strokeDashoffset = LEN; // empty
 // rotate the <circle> -90deg in CSS so the fill starts at 12 o'clock
-tl.to(ring, { strokeDashoffset: LEN * (1 - 0.92), duration: 1.1, ease: "power2.out" }, 0.3);
+tl.to(
+  ring,
+  { strokeDashoffset: LEN * (1 - 0.92), duration: 1.1, ease: 'power2.out' },
+  0.3,
+);
 ```
 
 ## 3 — Star-Rating Fill (fractional)
@@ -117,8 +125,12 @@ A gold star row revealed left-to-right to a fractional value (e.g. 4.6 / 5) via 
 const RATING = 4.6,
   MAX = 5;
 tl.to(
-  "#goldStars",
-  { clipPath: `inset(0 ${100 - (RATING / MAX) * 100}% 0 0)`, duration: 1.0, ease: "power2.out" },
+  '#goldStars',
+  {
+    clipPath: `inset(0 ${100 - (RATING / MAX) * 100}% 0 0)`,
+    duration: 1.0,
+    ease: 'power2.out',
+  },
   0.3,
 );
 ```

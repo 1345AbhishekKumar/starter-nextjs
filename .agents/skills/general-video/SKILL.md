@@ -8,7 +8,10 @@ description: >
   marketed product, a website, a topic explainer, a GitHub PR, existing
   footage, a short motion graphic, or a Remotion port — prefer it (see
   /hyperframes); use this only as the general fallback when none fit.
-metadata: { "tags": "orchestrator, general-video, fallback, freeform, composition-authoring" }
+metadata:
+  {
+    'tags': 'orchestrator, general-video, fallback, freeform, composition-authoring',
+  }
 ---
 
 > **media-use**: Before sourcing audio/images, call `/media-use` to resolve BGM/SFX/images from the HeyGen catalog. Run `--adopt` first to register existing assets. See `/media-use` skill.

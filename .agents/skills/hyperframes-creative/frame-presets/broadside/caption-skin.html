@@ -79,7 +79,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.04em 0.3em;
-    font-family: var(--font-display, "Barlow"), system-ui, sans-serif;
+    font-family: var(--font-display, 'Barlow'), system-ui, sans-serif;
     font-weight: 900;
     font-size: clamp(38px, 4.2vw, 56px);
     line-height: 1.02;
@@ -91,7 +91,11 @@
   .caption-word {
     display: inline-block;
     padding: 0 0.08em;
-    color: color-mix(in srgb, var(--cap-canvas, #f0ece5) 42%, var(--cap-ink, #111111));
+    color: color-mix(
+      in srgb,
+      var(--cap-canvas, #f0ece5) 42%,
+      var(--cap-ink, #111111)
+    );
   }
   /* current word — THE register flip: a hard flat fire-orange block (box-shadow spread =
      a sharp rectangle w/o layout shift; no blur), ink reading on top — the lone accent */
@@ -114,11 +118,15 @@
   }
   /* numerals / data — the IBM Plex Mono chrome voice, uppercase + tracked, recessed */
   .caption-word.cap-num {
-    font-family: var(--font-body, "IBM Plex Mono"), ui-monospace, monospace;
+    font-family: var(--font-body, 'IBM Plex Mono'), ui-monospace, monospace;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: color-mix(in srgb, var(--cap-canvas, #f0ece5) 72%, var(--cap-ink, #111111));
+    color: color-mix(
+      in srgb,
+      var(--cap-canvas, #f0ece5) 72%,
+      var(--cap-ink, #111111)
+    );
   }
   /* emphasis — a fire-orange hairline underline (no second hue; the lone accent again) */
   .caption-word.cap-cta {
@@ -159,21 +167,21 @@
   var DURATION = 0;
 
   (function () {
-    var stage = document.getElementById("caption-stage");
+    var stage = document.getElementById('caption-stage');
 
     // build DOM: one .caption-group per group, .caption-word per word
     GROUPS.forEach(function (group, g) {
-      var groupEl = document.createElement("div");
-      groupEl.className = "caption-group";
-      groupEl.id = "caption-group-" + g;
-      var pill = document.createElement("div");
-      pill.className = "caption-pill";
-      var line = document.createElement("div");
-      line.className = "caption-line";
+      var groupEl = document.createElement('div');
+      groupEl.className = 'caption-group';
+      groupEl.id = 'caption-group-' + g;
+      var pill = document.createElement('div');
+      pill.className = 'caption-pill';
+      var line = document.createElement('div');
+      line.className = 'caption-line';
       (group.words || []).forEach(function (w, i) {
-        var span = document.createElement("span");
-        span.className = "caption-word";
-        span.id = "caption-word-" + g + "-" + i;
+        var span = document.createElement('span');
+        span.className = 'caption-word';
+        span.id = 'caption-word-' + g + '-' + i;
         span.textContent = String(w.text);
         line.appendChild(span);
       });
@@ -186,12 +194,14 @@
     var tl = gsap.timeline({ paused: true });
 
     GROUPS.forEach(function (group, g) {
-      var groupEl = document.getElementById("caption-group-" + g);
+      var groupEl = document.getElementById('caption-group-' + g);
       var words = group.words || [];
       var next = GROUPS[g + 1];
       var isLast = g === GROUPS.length - 1;
       var start = Math.max(0, Number(group.start));
-      var end = isLast ? DURATION : Math.min(Number(next.start), Number(group.end) + 0.3);
+      var end = isLast
+        ? DURATION
+        : Math.min(Number(next.start), Number(group.end) + 0.3);
       if (end <= start) end = start + 0.01;
 
       // group on/off — exactly one group visible at a time
@@ -201,25 +211,35 @@
       // 3-state karaoke via className SETS — seek-safe (gsap.set applies on the
       // engine's frame-by-frame seek; .call callbacks would NOT fire).
       words.forEach(function (w, i) {
-        var el = document.getElementById("caption-word-" + g + "-" + i);
+        var el = document.getElementById('caption-word-' + g + '-' + i);
         var at = Math.max(start, Number(w.start));
-        tl.set(el, { className: "caption-word" }, start); // upcoming (also resets on reverse-seek)
-        tl.set(el, { className: "caption-word is-active" }, at); // current
-        tl.fromTo(el, { scale: 0.92 }, { scale: 1, duration: 0.1, ease: "power3.out" }, at);
+        tl.set(el, { className: 'caption-word' }, start); // upcoming (also resets on reverse-seek)
+        tl.set(el, { className: 'caption-word is-active' }, at); // current
+        tl.fromTo(
+          el,
+          { scale: 0.92 },
+          { scale: 1, duration: 0.1, ease: 'power3.out' },
+          at,
+        );
         if (i + 1 < words.length) {
           var nextAt = Math.max(start, Number(words[i + 1].start));
-          tl.set(el, { className: "caption-word is-spoken" }, nextAt); // demote when next activates
+          tl.set(el, { className: 'caption-word is-spoken' }, nextAt); // demote when next activates
         }
       });
       if (words.length) {
-        var lastEl = document.getElementById("caption-word-" + g + "-" + (words.length - 1));
-        var lastSpoken = Math.min(end, Number(words[words.length - 1].end) + 0.1);
-        tl.set(lastEl, { className: "caption-word is-spoken" }, lastSpoken);
+        var lastEl = document.getElementById(
+          'caption-word-' + g + '-' + (words.length - 1),
+        );
+        var lastSpoken = Math.min(
+          end,
+          Number(words[words.length - 1].end) + 0.1,
+        );
+        tl.set(lastEl, { className: 'caption-word is-spoken' }, lastSpoken);
       }
     });
 
     // full-span anchor so the sub-comp timeline spans the whole video
     tl.to({}, { duration: DURATION }, 0);
-    window.__timelines["captions"] = tl;
+    window.__timelines['captions'] = tl;
   })();
 </script>

@@ -91,11 +91,11 @@ For continuous per-char typewriter (no pauses, no edits), use the **smooth-slice
   //   [warm-up keystrokes] → [typo] → [backspaces back to fork] →
   //   [bulk-paste of the corrected continuation] → [completion mark]
   const SEQUENCE = [
-    { t: 0.0, text: "" },
-    { t: T_K1, text: "{p1}" }, // first keystrokes (~3-5 chars, 0.1-0.2s apart)
+    { t: 0.0, text: '' },
+    { t: T_K1, text: '{p1}' }, // first keystrokes (~3-5 chars, 0.1-0.2s apart)
     { t: T_K2, text: "{p1 + ' ' + p2_typo}" }, // continuation containing a typo
     { t: T_BS, text: "{p1 + ' ' + p2_partial}" }, // backspace(s) — peel back to the fork
-    { t: T_BULK, text: "{fullCorrectedText}" }, // bulk paste — replaces several chars at once
+    { t: T_BULK, text: '{fullCorrectedText}' }, // bulk paste — replaces several chars at once
     { t: T_DONE, text: "{fullCorrectedText + ' ✓'}" }, // completion marker
   ];
 
@@ -104,11 +104,11 @@ For continuous per-char typewriter (no pauses, no edits), use the **smooth-slice
     for (let i = SEQUENCE.length - 1; i >= 0; i--) {
       if (time >= SEQUENCE[i].t) return SEQUENCE[i].text;
     }
-    return "";
+    return '';
   }
 
-  const textEl = document.getElementById("text");
-  const cursorEl = document.getElementById("cursor");
+  const textEl = document.getElementById('text');
+  const cursorEl = document.getElementById('cursor');
   const tl = gsap.timeline({ paused: true });
 
   // Drive the discrete display via a 0→TOTAL_DURATION tween's onUpdate
@@ -118,7 +118,7 @@ For continuous per-char typewriter (no pauses, no edits), use the **smooth-slice
     {
       t: TOTAL_DURATION,
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         textEl.textContent = textAt(driver.t);
       },
@@ -133,15 +133,15 @@ For continuous per-char typewriter (no pauses, no edits), use the **smooth-slice
     {
       p: Math.PI * 2 * BLINK_CYCLES, // BLINK_CYCLES = blinks across composition
       duration: TOTAL_DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
-        cursorEl.style.opacity = Math.sin(blinkDriver.p) > 0 ? "1" : "0";
+        cursorEl.style.opacity = Math.sin(blinkDriver.p) > 0 ? '1' : '0';
       },
     },
     0,
   );
 
-  window.__timelines["seq-scene"] = tl;
+  window.__timelines['seq-scene'] = tl;
 </script>
 ```
 
@@ -152,14 +152,14 @@ For continuous per-char typewriter (no pauses, no edits), use the **smooth-slice
 For straight-forward typewriter without the non-linear chaos:
 
 ```js
-const fullText = "{fullPhrase}";
+const fullText = '{fullPhrase}';
 const len = { v: 0 };
 tl.to(
   len,
   {
     v: fullText.length,
     duration: TYPE_DUR,
-    ease: "power1.inOut",
+    ease: 'power1.inOut',
     onUpdate: () => {
       textEl.textContent = fullText.substring(0, Math.floor(len.v));
     },
@@ -186,8 +186,13 @@ When the final state lands (e.g. "✓"), pulse-scale the line briefly for emphas
 
 ```js
 tl.to(
-  ".text",
-  { scale: COMPLETION_PULSE_SCALE, duration: COMPLETION_PULSE_DUR, yoyo: true, repeat: 1 },
+  '.text',
+  {
+    scale: COMPLETION_PULSE_SCALE,
+    duration: COMPLETION_PULSE_DUR,
+    yoyo: true,
+    repeat: 1,
+  },
   T_DONE,
 );
 ```
@@ -198,10 +203,10 @@ Color-code states by phase (e.g. dim during edit, success color after the comple
 
 ```js
 // In onUpdate after setting textContent:
-if (driver.t > T_DONE) textEl.style.color = "{successColor}";
+if (driver.t > T_DONE) textEl.style.color = '{successColor}';
 else if (driver.t < T_K2)
-  textEl.style.color = "{textColor}"; // normal typing
-else textEl.style.color = "{mutedColor}"; // mid-edit dim
+  textEl.style.color = '{textColor}'; // normal typing
+else textEl.style.color = '{mutedColor}'; // mid-edit dim
 ```
 
 ## How to Choose Values

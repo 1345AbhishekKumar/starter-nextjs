@@ -24,7 +24,7 @@ Tailwind v4 is CSS-first:
 <style type="text/tailwindcss">
   @theme {
     --color-brand: oklch(0.68 0.2 252);
-    --font-display: "Inter", sans-serif;
+    --font-display: 'Inter', sans-serif;
   }
 
   @utility headline-balance {
@@ -59,7 +59,9 @@ Use Tailwind for static layout and style. Keep render-critical timing in GSAP or
   data-track-index="1"
 >
   <div class="w-[1280px] max-w-[82vw] text-center">
-    <h1 class="text-7xl font-black leading-none text-balance">Render-ready Tailwind</h1>
+    <h1 class="text-7xl leading-none font-black text-balance">
+      Render-ready Tailwind
+    </h1>
   </div>
 </section>
 ```

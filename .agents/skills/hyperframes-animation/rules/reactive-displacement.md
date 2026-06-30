@@ -112,8 +112,12 @@ The fact that the victim's exit finishes BEFORE the intruder's entry creates the
   const VICTIM_END_X = -STAGE_W; // off-stage left, opposite direction
 
   // Initial state — victim centered, intruder off-stage right
-  gsap.set("#victim", { x: 0, opacity: 1, rotation: 0 });
-  gsap.set("#intruder", { x: INTRUDER_START_X, opacity: 0, rotation: -INTRUDER_TILT });
+  gsap.set('#victim', { x: 0, opacity: 1, rotation: 0 });
+  gsap.set('#intruder', {
+    x: INTRUDER_START_X,
+    opacity: 0,
+    rotation: -INTRUDER_TILT,
+  });
 
   // Single driver — the entry spring — runs 0→1 over the impact arc
   const driver = { p: 0 };
@@ -128,7 +132,7 @@ The fact that the victim's exit finishes BEFORE the intruder's entry creates the
         const intruderX = INTRUDER_START_X * (1 - driver.p);
         const intruderOpacity = Math.min(1, driver.p * FADE_IN_SHARPNESS);
         const intruderRot = -INTRUDER_TILT * (1 - driver.p); // settle to 0°
-        const intruder = document.getElementById("intruder");
+        const intruder = document.getElementById('intruder');
         intruder.style.transform = `translate(-50%, -50%) translateX(${intruderX}px) rotate(${intruderRot}deg)`;
         intruder.style.opacity = String(intruderOpacity);
 
@@ -138,7 +142,7 @@ The fact that the victim's exit finishes BEFORE the intruder's entry creates the
         const victimP = Math.min(1, driver.p / VICTIM_FRACTION);
         const victimX = VICTIM_END_X * victimP;
         const victimOpacity = 1 - victimP;
-        const victim = document.getElementById("victim");
+        const victim = document.getElementById('victim');
         victim.style.transform = `translate(-50%, -50%) translateX(${victimX}px)`;
         victim.style.opacity = String(victimOpacity);
       },
@@ -149,7 +153,7 @@ The fact that the victim's exit finishes BEFORE the intruder's entry creates the
   // Climax dwell — intruder holds at center after settle (no additional motion;
   // composition continues with intruder centered for ≥ DWELL_MIN seconds).
 
-  window.__timelines["collide-scene"] = tl;
+  window.__timelines['collide-scene'] = tl;
 </script>
 ```
 
@@ -231,10 +235,12 @@ tl.to(
   {
     p: Math.PI * WOBBLE_CYCLES * 2,
     duration: WOBBLE_DUR,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       const rot =
-        Math.sin(wobble.p) * WOBBLE_AMP_DEG * (1 - wobble.p / (Math.PI * WOBBLE_CYCLES * 2)); // linear decay
+        Math.sin(wobble.p) *
+        WOBBLE_AMP_DEG *
+        (1 - wobble.p / (Math.PI * WOBBLE_CYCLES * 2)); // linear decay
       intruder.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
     },
   },

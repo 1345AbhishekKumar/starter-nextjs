@@ -99,7 +99,11 @@ Caption size is in **`cqh`** (% of frame height) via a size container, so it hon
   z-index: 5;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(130% 100% at 50% 26%, transparent 40%, rgba(0, 0, 0, 0.6));
+  background: radial-gradient(
+    130% 100% at 50% 26%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.6)
+  );
 }
 
 /* CLIMAX — big, behind person (z1), occluded. line-height ≥1.15 so clip-reveal
@@ -152,7 +156,7 @@ Caption size is in **`cqh`** (% of frame height) via a size container, so it hon
 
 /* tokens every template overrides: */
 .stage {
-  --ff: "Inter";
+  --ff: 'Inter';
   --cfill: #fff;
   --cacc: #10a37f;
 }
@@ -168,9 +172,9 @@ The gallery used a `setInterval` loop; HyperFrames needs the same beats as **abs
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
 <script>
   window.__timelines = window.__timelines || {};
-  const stage = document.getElementById("cap-{id}");
-  const flow = stage.querySelector(".flow");
-  const climax = stage.querySelector(".climax span");
+  const stage = document.getElementById('cap-{id}');
+  const flow = stage.querySelector('.flow');
+  const climax = stage.querySelector('.climax span');
   const tl = gsap.timeline({ paused: true });
 
   // --- FLOW: render words from transcript.json, reveal each at its start time ---
@@ -178,16 +182,16 @@ The gallery used a `setInterval` loop; HyperFrames needs the same beats as **abs
   function renderLine(line) {
     flow.innerHTML = line.words
       .map((w, i) => `<span class="w" data-i="${i}">${w.text}</span>`)
-      .join(" ");
-    return [...flow.querySelectorAll(".w")];
+      .join(' ');
+    return [...flow.querySelectorAll('.w')];
   }
   WORDS.forEach((line) => {
     const spans = renderLine(line); // (one renderLine per active line; see captions skill for multi-line groups)
     spans.forEach((el, i) => {
       const w = line.words[i];
       tl.add(FLOW_IN(el), w.start); // FLOW_IN  = the template's flow entrance (see _motion.md)
-      tl.set(spans, { className: "w" }, w.start); // active-word sweep: only the spoken word gets .act
-      tl.set(el, { className: "w act" }, w.start);
+      tl.set(spans, { className: 'w' }, w.start); // active-word sweep: only the spoken word gets .act
+      tl.set(el, { className: 'w act' }, w.start);
     });
     tl.add(FLOW_OUT(spans), line.end); // FLOW_OUT = flow exit
     tl.set(flow, { autoAlpha: 0 }, line.end + FOUT); // hard-hide the group so old text can't linger
@@ -199,7 +203,7 @@ The gallery used a `setInterval` loop; HyperFrames needs the same beats as **abs
   tl.add(CLIMAX_IN(climax), T); // e.g. SLAM / DEBLUR / INK-LOOM / CHROME-SWEEP …
   tl.add(CLIMAX_OUT(climax), T + CLIMAX_HOLD); // hold ≥1s, then exit. CLIMAX_OUT ends opacity:0 (hard exit)
 
-  window.__timelines["cap-{id}"] = tl;
+  window.__timelines['cap-{id}'] = tl;
 </script>
 ```
 

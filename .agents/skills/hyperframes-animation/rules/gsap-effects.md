@@ -26,11 +26,11 @@ Reveal text character by character using GSAP's TextPlugin.
 ### Basic Typewriter
 
 ```js
-const text = "Hello, world!";
+const text = 'Hello, world!';
 const cps = 10; // chars per second: 3-5 dramatic, 8-12 conversational, 15-20 energetic
 tl.to(
-  "#typed-text",
-  { text: { value: text }, duration: text.length / cps, ease: "none" },
+  '#typed-text',
+  { text: { value: text }, duration: text.length / cps, ease: 'none' },
   startTime,
 );
 ```
@@ -73,9 +73,21 @@ Three rules:
 Pattern: blink → solid (typing starts) → type → solid → blink (typing done).
 
 ```js
-tl.call(() => cursor.classList.replace("cursor-blink", "cursor-solid"), [], startTime);
-tl.to("#typed-text", { text: { value: text }, duration: dur, ease: "none" }, startTime);
-tl.call(() => cursor.classList.replace("cursor-solid", "cursor-blink"), [], startTime + dur);
+tl.call(
+  () => cursor.classList.replace('cursor-blink', 'cursor-solid'),
+  [],
+  startTime,
+);
+tl.to(
+  '#typed-text',
+  { text: { value: text }, duration: dur, ease: 'none' },
+  startTime,
+);
+tl.call(
+  () => cursor.classList.replace('cursor-solid', 'cursor-blink'),
+  [],
+  startTime + dur,
+);
 ```
 
 ### Backspacing
@@ -106,7 +118,9 @@ When a typewriter word sits next to static text, use `margin-left` on a wrapper 
 ```html
 <div style="display:flex; align-items:baseline;">
   <span style="font-size:40px; color:#555;">Ship something</span>
-  <span style="margin-left:14px;"><span id="word"></span><span id="cursor">|</span></span>
+  <span style="margin-left:14px;"
+    ><span id="word"></span><span id="cursor">|</span></span
+  >
 </div>
 ```
 
@@ -118,15 +132,35 @@ Type → hold → backspace → next word. Cursor blinks during every idle momen
 let offset = 0;
 words.forEach((word, i) => {
   const typeDur = word.length / 10;
-  tl.call(() => cursor.classList.replace("cursor-blink", "cursor-solid"), [], offset);
-  tl.to("#typed-text", { text: { value: word }, duration: typeDur, ease: "none" }, offset);
-  tl.call(() => cursor.classList.replace("cursor-solid", "cursor-blink"), [], offset + typeDur);
+  tl.call(
+    () => cursor.classList.replace('cursor-blink', 'cursor-solid'),
+    [],
+    offset,
+  );
+  tl.to(
+    '#typed-text',
+    { text: { value: word }, duration: typeDur, ease: 'none' },
+    offset,
+  );
+  tl.call(
+    () => cursor.classList.replace('cursor-solid', 'cursor-blink'),
+    [],
+    offset + typeDur,
+  );
   offset += typeDur + 1.5; // hold
 
   if (i < words.length - 1) {
-    tl.call(() => cursor.classList.replace("cursor-blink", "cursor-solid"), [], offset);
-    const clearDur = backspace(tl, "#typed-text", word, offset, 20);
-    tl.call(() => cursor.classList.replace("cursor-solid", "cursor-blink"), [], offset + clearDur);
+    tl.call(
+      () => cursor.classList.replace('cursor-blink', 'cursor-solid'),
+      [],
+      offset,
+    );
+    const clearDur = backspace(tl, '#typed-text', word, offset, 20);
+    tl.call(
+      () => cursor.classList.replace('cursor-solid', 'cursor-blink'),
+      [],
+      offset + clearDur,
+    );
     offset += clearDur + 0.3;
   }
 });
@@ -137,12 +171,16 @@ words.forEach((word, i) => {
 Build a sentence word-by-word into the same element:
 
 ```js
-let accumulated = "";
+let accumulated = '';
 let offset = 0;
 words.forEach((word) => {
-  const target = accumulated + (accumulated ? " " : "") + word;
+  const target = accumulated + (accumulated ? ' ' : '') + word;
   const newChars = target.length - accumulated.length;
-  tl.to("#typed-text", { text: { value: target }, duration: newChars / 10, ease: "none" }, offset);
+  tl.to(
+    '#typed-text',
+    { text: { value: target }, duration: newChars / 10, ease: 'none' },
+    offset,
+  );
   accumulated = target;
   offset += newChars / 10 + 0.3;
 });
@@ -155,17 +193,29 @@ Handing off between typewriter lines: hide previous → blink new → pause → 
 ```js
 tl.call(
   () => {
-    prevCursor.classList.replace("cursor-blink", "cursor-hide");
-    nextCursor.classList.replace("cursor-hide", "cursor-blink");
+    prevCursor.classList.replace('cursor-blink', 'cursor-hide');
+    nextCursor.classList.replace('cursor-hide', 'cursor-blink');
   },
   [],
   handoffTime,
 );
 
 const typeStart = handoffTime + 0.5; // brief blink pause
-tl.call(() => nextCursor.classList.replace("cursor-blink", "cursor-solid"), [], typeStart);
-tl.to("#next-text", { text: { value: text }, duration: dur, ease: "none" }, typeStart);
-tl.call(() => nextCursor.classList.replace("cursor-solid", "cursor-blink"), [], typeStart + dur);
+tl.call(
+  () => nextCursor.classList.replace('cursor-blink', 'cursor-solid'),
+  [],
+  typeStart,
+);
+tl.to(
+  '#next-text',
+  { text: { value: text }, duration: dur, ease: 'none' },
+  typeStart,
+);
+tl.call(
+  () => nextCursor.classList.replace('cursor-solid', 'cursor-blink'),
+  [],
+  typeStart + dur,
+);
 ```
 
 ### Timing Guide
@@ -209,13 +259,11 @@ python skills/hyperframes-creative/scripts/extract-audio-data.py video.mp4 --fps
 
 ```js
 // Option A — inline (small files, under ~500 KB)
-var AUDIO_DATA = {
-  /* paste audio-data.json contents */
-};
+var AUDIO_DATA = {/* paste audio-data.json contents */};
 
 // Option B — sync XHR (large files; must be synchronous for deterministic timeline construction)
 var xhr = new XMLHttpRequest();
-xhr.open("GET", "audio-data.json", false);
+xhr.open('GET', 'audio-data.json', false);
 xhr.send();
 var AUDIO_DATA = JSON.parse(xhr.responseText);
 ```
@@ -227,8 +275,8 @@ var AUDIO_DATA = JSON.parse(xhr.responseText);
 **Canvas 2D** — most common (bars, waveforms, circles, gradients):
 
 ```js
-const canvas = document.getElementById("viz");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('viz');
+const ctx = canvas.getContext('2d');
 
 for (let f = 0; f < AUDIO_DATA.totalFrames; f++) {
   tl.call(
@@ -260,7 +308,9 @@ function smooth(f) {
   }
   prev = {
     rms: prev.rms * smoothing + raw.rms * (1 - smoothing),
-    bands: raw.bands.map((b, i) => prev.bands[i] * smoothing + b * (1 - smoothing)),
+    bands: raw.bands.map(
+      (b, i) => prev.bands[i] * smoothing + b * (1 - smoothing),
+    ),
   };
   return prev;
 }
@@ -294,6 +344,12 @@ function smooth(f) {
 Layer multiple canvases with CSS `z-index` for depth — a background layer driven by bass/rms and a foreground layer driven by individual bands creates depth without per-element complexity.
 
 ```html
-<canvas id="bg-layer" style="position:absolute;top:0;left:0;z-index:1;"></canvas>
-<canvas id="main-layer" style="position:absolute;top:0;left:0;z-index:2;"></canvas>
+<canvas
+  id="bg-layer"
+  style="position:absolute;top:0;left:0;z-index:1;"
+></canvas>
+<canvas
+  id="main-layer"
+  style="position:absolute;top:0;left:0;z-index:2;"
+></canvas>
 ```

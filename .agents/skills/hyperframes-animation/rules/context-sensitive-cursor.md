@@ -27,7 +27,8 @@ The text is authored as a SEQUENCE of `{text, t, segment}` entries where `segmen
   <div class="terminal">
     <div class="prompt">$</div>
     <div class="text-wrap">
-      <span class="text" id="text"></span><span class="cursor" id="cursor">_</span>
+      <span class="text" id="text"></span
+      ><span class="cursor" id="cursor">_</span>
     </div>
   </div>
 </div>
@@ -94,13 +95,43 @@ Placeholders: `{monoFont}` is the project's monospace stack (proportional fonts 
   // Shape: a monotonic timeline of N entries where adjacent entries usually share text-prefix
   // but may differ in `segment` (which is what makes the cursor color shift mid-line).
   const SEQUENCE = [
-    { t: 0, text: "", segment: "main", color: "{mainColor}" },
-    { t: T_LEADIN_END, text: "{leadInChunk}", segment: "main", color: "{mainColor}" },
-    { t: T_BRAND_IN, text: "{leadInBrandPrefix}", segment: "brand", color: "{brandColor}" }, // brand segment starts
-    { t: T_BRAND_OUT, text: "{leadInBrandFull}", segment: "main", color: "{mainColor}" }, // back to main
-    { t: T_CMD_IN, text: "{leadInCmdPrefix}", segment: "cmd", color: "{cmdColor}" }, // command segment
-    { t: T_BRAND_2, text: "{leadInCmdBrand}", segment: "brand", color: "{brandColor}" }, // brand again (e.g. filename)
-    { t: T_SUCCESS, text: "{leadInDone}", segment: "success", color: "{successColor}" }, // completion mark
+    { t: 0, text: '', segment: 'main', color: '{mainColor}' },
+    {
+      t: T_LEADIN_END,
+      text: '{leadInChunk}',
+      segment: 'main',
+      color: '{mainColor}',
+    },
+    {
+      t: T_BRAND_IN,
+      text: '{leadInBrandPrefix}',
+      segment: 'brand',
+      color: '{brandColor}',
+    }, // brand segment starts
+    {
+      t: T_BRAND_OUT,
+      text: '{leadInBrandFull}',
+      segment: 'main',
+      color: '{mainColor}',
+    }, // back to main
+    {
+      t: T_CMD_IN,
+      text: '{leadInCmdPrefix}',
+      segment: 'cmd',
+      color: '{cmdColor}',
+    }, // command segment
+    {
+      t: T_BRAND_2,
+      text: '{leadInCmdBrand}',
+      segment: 'brand',
+      color: '{brandColor}',
+    }, // brand again (e.g. filename)
+    {
+      t: T_SUCCESS,
+      text: '{leadInDone}',
+      segment: 'success',
+      color: '{successColor}',
+    }, // completion mark
   ];
 
   function entryAt(time) {
@@ -110,8 +141,8 @@ Placeholders: `{monoFont}` is the project's monospace stack (proportional fonts 
     return SEQUENCE[0];
   }
 
-  const textEl = document.getElementById("text");
-  const cursorEl = document.getElementById("cursor");
+  const textEl = document.getElementById('text');
+  const cursorEl = document.getElementById('cursor');
 
   // Discrete state driver — writes text + cursor color
   const driver = { t: 0 };
@@ -120,7 +151,7 @@ Placeholders: `{monoFont}` is the project's monospace stack (proportional fonts 
     {
       t: DURATION,
       duration: DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         const entry = entryAt(driver.t);
         textEl.textContent = entry.text;
@@ -138,15 +169,15 @@ Placeholders: `{monoFont}` is the project's monospace stack (proportional fonts 
     {
       p: Math.PI * 2 * BLINK_CYCLES_PER_SCENE,
       duration: DURATION,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
-        cursorEl.style.opacity = Math.sin(blink.p) > 0 ? "1" : "0";
+        cursorEl.style.opacity = Math.sin(blink.p) > 0 ? '1' : '0';
       },
     },
     0,
   );
 
-  window.__timelines["cursor-scene"] = tl;
+  window.__timelines['cursor-scene'] = tl;
 </script>
 ```
 
@@ -158,14 +189,14 @@ When letters are being added (driver moved forward in the last `TYPING_GRACE` se
 
 ```js
 let lastChangeTime = 0,
-  lastText = "";
+  lastText = '';
 // In onUpdate:
 if (entry.text !== lastText) {
   lastChangeTime = driver.t;
   lastText = entry.text;
 }
 const isTyping = driver.t - lastChangeTime < TYPING_GRACE;
-cursorEl.style.opacity = isTyping ? "1" : Math.sin(blink.p) > 0 ? "1" : "0";
+cursorEl.style.opacity = isTyping ? '1' : Math.sin(blink.p) > 0 ? '1' : '0';
 ```
 
 ### Cursor HEIGHT shifts on segment
@@ -174,7 +205,7 @@ Larger cursor on brand segment for emphasis (`cursorHeightEmphasis > cursorHeigh
 
 ```js
 cursorEl.style.height =
-  entry.segment === "brand" ? `${cursorHeightEmphasis}px` : `${cursorHeight}px`;
+  entry.segment === 'brand' ? `${cursorHeightEmphasis}px` : `${cursorHeight}px`;
 ```
 
 ### Cursor reverses contrast on dark text

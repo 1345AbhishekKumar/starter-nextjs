@@ -17,10 +17,10 @@ Char-by-char reveal, 25–35ms/char, linear easing. Documentary / data-heavy / t
 ```js
 // GSAP
 words.forEach((w, i) => {
-  const chars = w.textContent.split("");
-  w.textContent = "";
+  const chars = w.textContent.split('');
+  w.textContent = '';
   chars.forEach((c, j) => {
-    const span = document.createElement("span");
+    const span = document.createElement('span');
     span.textContent = c;
     span.style.opacity = 0;
     w.appendChild(span);
@@ -37,7 +37,7 @@ Per-word, 80ms stagger, `opacity 0→1 + translateY 8→0`, `cubic-bezier(.2,.7,
 tl.fromTo(
   word,
   { opacity: 0, y: 8 },
-  { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" },
+  { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' },
   wordStart,
 );
 ```

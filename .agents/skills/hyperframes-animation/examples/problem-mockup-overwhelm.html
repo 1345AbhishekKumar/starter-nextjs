@@ -84,7 +84,7 @@
         overflow: hidden;
         background: var(--bg-base);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -106,7 +106,7 @@
         );
       }
       .bg::before {
-        content: "";
+        content: '';
         position: absolute;
         inset: 0;
         background: rgba(15, 15, 25, 0.4);
@@ -114,7 +114,7 @@
         -webkit-backdrop-filter: blur(80px) saturate(180%);
       }
       .bg::after {
-        content: "";
+        content: '';
         position: absolute;
         inset: 0;
         background:
@@ -125,7 +125,12 @@
             transparent 15%,
             transparent 100%
           ),
-          linear-gradient(0deg, rgba(139, 92, 246, 0.05) 0%, transparent 20%, transparent 100%);
+          linear-gradient(
+            0deg,
+            rgba(139, 92, 246, 0.05) 0%,
+            transparent 20%,
+            transparent 100%
+          );
       }
       .bg-frost {
         position: absolute;
@@ -364,7 +369,7 @@
         color: #606060;
       }
       .yt-task::before {
-        content: "";
+        content: '';
         width: 13px;
         height: 13px;
         border: 2px solid #909090;
@@ -538,7 +543,7 @@
         color: #666666;
       }
       .ig-task::before {
-        content: "";
+        content: '';
         width: 12px;
         height: 12px;
         border: 2px solid #c7c7c7;
@@ -686,8 +691,18 @@
         border-radius: 50%;
         border: 3px solid rgba(255, 255, 255, 0.25);
         background:
-          radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.2), transparent 50%),
-          conic-gradient(from 40deg, #14b8a6 0%, #06b6d4 35%, #0ea5e9 65%, #8b5cf6 100%);
+          radial-gradient(
+            circle at 40% 35%,
+            rgba(255, 255, 255, 0.2),
+            transparent 50%
+          ),
+          conic-gradient(
+            from 40deg,
+            #14b8a6 0%,
+            #06b6d4 35%,
+            #0ea5e9 65%,
+            #8b5cf6 100%
+          );
         overflow: hidden;
       }
       .orbit-dot {
@@ -756,9 +771,20 @@
               <div class="phone-screen">
                 <div class="mockup-content yt-content">
                   <div class="yt-header">
-                    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="22"
+                      height="22"
+                      aria-hidden="true"
+                    >
                       <defs>
-                        <linearGradient id="hf-mini-grad-left" x1="2" y1="4" x2="22" y2="20">
+                        <linearGradient
+                          id="hf-mini-grad-left"
+                          x1="2"
+                          y1="4"
+                          x2="22"
+                          y2="20"
+                        >
                           <stop offset="0%" stop-color="#ff0000" />
                           <stop offset="100%" stop-color="#cc0000" />
                         </linearGradient>
@@ -785,8 +811,12 @@
                       <div class="code-line"></div>
                       <div class="code-line"></div>
                     </div>
-                    <div class="yt-progress-row"><span>Lint + inspect</span><span>72%</span></div>
-                    <div class="yt-progress-track"><div class="yt-progress-fill"></div></div>
+                    <div class="yt-progress-row">
+                      <span>Lint + inspect</span><span>72%</span>
+                    </div>
+                    <div class="yt-progress-track">
+                      <div class="yt-progress-fill"></div>
+                    </div>
                     <div class="yt-task-label">Render-safe rules:</div>
                     <div class="yt-task">data-start / duration set</div>
                     <div class="yt-task">Timeline registered</div>
@@ -805,11 +835,15 @@
               <div class="phone-notch"></div>
               <div class="phone-screen">
                 <div class="mockup-content tt-content">
-                  <div class="tt-statusbar"><span>9:41</span><span>HF</span></div>
+                  <div class="tt-statusbar">
+                    <span>9:41</span><span>HF</span>
+                  </div>
                   <div class="tt-preview">
                     <div class="tt-overlay">
                       <div class="tt-overlay-title">Scene 05 · seekable</div>
-                      <div class="tt-overlay-sub">GSAP timeline + data clips</div>
+                      <div class="tt-overlay-sub">
+                        GSAP timeline + data clips
+                      </div>
                     </div>
                     <div class="tt-play">HF</div>
                     <div class="tt-side">
@@ -833,7 +867,8 @@
                     <div class="tt-note">0 errors · frame-safe render</div>
                   </div>
                   <div class="tt-tabs">
-                    <span>Clips</span><span>Tracks</span><span>Vars</span><span>Render</span>
+                    <span>Clips</span><span>Tracks</span><span>Vars</span
+                    ><span>Render</span>
                   </div>
                 </div>
               </div>
@@ -847,7 +882,12 @@
               <div class="phone-screen">
                 <div class="mockup-content ig-content">
                   <div class="ig-header">
-                    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="22"
+                      height="22"
+                      aria-hidden="true"
+                    >
                       <rect
                         x="3"
                         y="4"
@@ -859,7 +899,12 @@
                         stroke-width="2"
                       />
                       <path d="M9 9.2 15 12 9 14.8Z" fill="#fd1d1d" />
-                      <path d="M6 21h12" stroke="#fcaf45" stroke-width="2" stroke-linecap="round" />
+                      <path
+                        d="M6 21h12"
+                        stroke="#fcaf45"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
                     </svg>
                     Render Queue
                   </div>
@@ -867,7 +912,9 @@
                     <h3>Export HyperFrames scene</h3>
                     <div class="ig-warn">
                       <div class="ig-warn-title">Ready for MP4 render</div>
-                      <div class="ig-warn-sub">lint · validate · inspect passed</div>
+                      <div class="ig-warn-sub">
+                        lint · validate · inspect passed
+                      </div>
                     </div>
                     <div class="ig-task-label">Pipeline:</div>
                     <div class="ig-task">Preview locally</div>
@@ -889,7 +936,13 @@
           <div class="platform-icon pi-youtube">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <defs>
-                <linearGradient id="hf-orbit-grad" x1="2" y1="4" x2="22" y2="20">
+                <linearGradient
+                  id="hf-orbit-grad"
+                  x1="2"
+                  y1="4"
+                  x2="22"
+                  y2="20"
+                >
                   <stop offset="0%" stop-color="#14b8a6" />
                   <stop offset="100%" stop-color="#06b6d4" />
                 </linearGradient>
@@ -1019,14 +1072,14 @@
       };
 
       const BUBBLE_TASKS = [
-        { label: "Missing data-duration", angle: 270, dx: 14, dy: -8 }, // top
-        { label: "Timeline not registered", angle: 315, dx: 122, dy: 63 }, // top-right
-        { label: "Same-track overlaps", angle: 0, dx: 86, dy: 63 }, // right
-        { label: "Text overflow at 5s", angle: 45, dx: 79, dy: -9 }, // bottom-right
-        { label: "Asset path mismatch", angle: 90 }, // bottom
-        { label: "Non-deterministic motion", angle: 135, dx: -124, dy: -32 }, // bottom-left
-        { label: "Sub-comp wiring drift", angle: 180, dx: -79, dy: 1 }, // left
-        { label: "Render blocked by console", angle: 225, dx: -128, dy: 45 }, // top-left
+        { label: 'Missing data-duration', angle: 270, dx: 14, dy: -8 }, // top
+        { label: 'Timeline not registered', angle: 315, dx: 122, dy: 63 }, // top-right
+        { label: 'Same-track overlaps', angle: 0, dx: 86, dy: 63 }, // right
+        { label: 'Text overflow at 5s', angle: 45, dx: 79, dy: -9 }, // bottom-right
+        { label: 'Asset path mismatch', angle: 90 }, // bottom
+        { label: 'Non-deterministic motion', angle: 135, dx: -124, dy: -32 }, // bottom-left
+        { label: 'Sub-comp wiring drift', angle: 180, dx: -79, dy: 1 }, // left
+        { label: 'Render blocked by console', angle: 225, dx: -128, dy: 45 }, // top-left
       ];
       const BUBBLE_RADIUS = 420; // px from screen center
       const BUBBLE_CENTER_X = W / 2;
@@ -1036,7 +1089,7 @@
          INITIAL STATE (GSAP owns the transform from here on)
          ================================================================ */
       // All phones start stacked at center, then the side phones fan out like the Fitness showcase.
-      gsap.set(".mockup-left", {
+      gsap.set('.mockup-left', {
         xPercent: -50,
         yPercent: -50,
         x: 0,
@@ -1046,7 +1099,7 @@
         scale: 0.86,
         opacity: 0,
       });
-      gsap.set(".mockup-right", {
+      gsap.set('.mockup-right', {
         xPercent: -50,
         yPercent: -50,
         x: 0,
@@ -1056,7 +1109,7 @@
         scale: 0.86,
         opacity: 0,
       });
-      gsap.set(".mockup-center", {
+      gsap.set('.mockup-center', {
         xPercent: -50,
         yPercent: -50,
         x: 0,
@@ -1067,23 +1120,25 @@
         opacity: 0,
       });
 
-      gsap.set(".platform-icon", { scale: 0, opacity: 0 });
+      gsap.set('.platform-icon', { scale: 0, opacity: 0 });
 
       // Avatar — sits centered. xPercent/yPercent centering, pop starts at scale 0.
-      gsap.set(".avatar-stage", { xPercent: -50, yPercent: -50, scale: 0 });
+      gsap.set('.avatar-stage', { xPercent: -50, yPercent: -50, scale: 0 });
 
       /* Build task bubbles deterministically at script load.
          Positions baked into inline style; GSAP only tweens scale/opacity. */
-      const stage = document.getElementById("avatar-bubbles");
+      const stage = document.getElementById('avatar-bubbles');
       BUBBLE_TASKS.forEach((task, i) => {
         const rad = (task.angle * Math.PI) / 180;
-        const x = BUBBLE_CENTER_X + Math.cos(rad) * BUBBLE_RADIUS + (task.dx || 0);
-        const y = BUBBLE_CENTER_Y + Math.sin(rad) * BUBBLE_RADIUS + (task.dy || 0);
-        const el = document.createElement("div");
-        el.className = "task-bubble";
-        el.id = "bubble-" + i;
-        el.style.left = x + "px";
-        el.style.top = y + "px";
+        const x =
+          BUBBLE_CENTER_X + Math.cos(rad) * BUBBLE_RADIUS + (task.dx || 0);
+        const y =
+          BUBBLE_CENTER_Y + Math.sin(rad) * BUBBLE_RADIUS + (task.dy || 0);
+        const el = document.createElement('div');
+        el.className = 'task-bubble';
+        el.id = 'bubble-' + i;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
         el.textContent = task.label;
         stage.appendChild(el);
         // GSAP-owned centering + initial hidden state.
@@ -1095,48 +1150,53 @@
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       /* ---------------------------------------------------------------
          PHASE 1: Mockup entries (center stack → fan-out)
          spring(70, 14) → back.out(1.4)
          --------------------------------------------------------------- */
       tl.to(
-        ".mockup-center",
-        { opacity: 1, scale: 1.0, duration: TIMING.mockupEntryDur, ease: "back.out(1.4)" },
+        '.mockup-center',
+        {
+          opacity: 1,
+          scale: 1.0,
+          duration: TIMING.mockupEntryDur,
+          ease: 'back.out(1.4)',
+        },
         TIMING.mockupCenterAt,
       );
       tl.to(
-        ".mockup-left",
-        { opacity: 1, duration: TIMING.mockupEntryDur, ease: "back.out(1.4)" },
+        '.mockup-left',
+        { opacity: 1, duration: TIMING.mockupEntryDur, ease: 'back.out(1.4)' },
         TIMING.mockupLeftAt,
       );
       tl.to(
-        ".mockup-left",
+        '.mockup-left',
         {
           x: -370,
           rotation: -10,
           rotationY: 6,
           scale: 0.92,
           duration: TIMING.mockupFanDur,
-          ease: "expo.out",
+          ease: 'expo.out',
         },
         TIMING.mockupLeftAt,
       );
       tl.to(
-        ".mockup-right",
-        { opacity: 1, duration: TIMING.mockupEntryDur, ease: "back.out(1.4)" },
+        '.mockup-right',
+        { opacity: 1, duration: TIMING.mockupEntryDur, ease: 'back.out(1.4)' },
         TIMING.mockupRightAt,
       );
       tl.to(
-        ".mockup-right",
+        '.mockup-right',
         {
           x: 370,
           rotation: 10,
           rotationY: -6,
           scale: 0.92,
           duration: TIMING.mockupFanDur,
-          ease: "expo.out",
+          ease: 'expo.out',
         },
         TIMING.mockupRightAt,
       );
@@ -1146,13 +1206,13 @@
          spring(180, 14) → back.out(1.6)
          --------------------------------------------------------------- */
       tl.to(
-        ".platform-icon",
+        '.platform-icon',
         {
           scale: 1,
           opacity: 1,
           duration: TIMING.iconEntryDur,
-          ease: "back.out(1.6)",
-          stagger: { each: TIMING.iconStagger, from: "start" },
+          ease: 'back.out(1.6)',
+          stagger: { each: TIMING.iconStagger, from: 'start' },
         },
         TIMING.iconsAt,
       );
@@ -1163,112 +1223,113 @@
          --------------------------------------------------------------- */
       // 1. Center mockup compositor-scales toward the avatar footprint.
       tl.to(
-        ".mockup-center",
+        '.mockup-center',
         {
           scaleX: MORPH_END_SCALE_X,
           scaleY: MORPH_END_SCALE_Y,
           duration: TIMING.morphDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.morphAt,
       );
 
       // 2. borderRadius repaint — reads as a circle by morph end.
       tl.to(
-        ".mockup-center",
+        '.mockup-center',
         {
-          borderRadius: "50%",
+          borderRadius: '50%',
           duration: TIMING.morphDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.morphAt,
       );
 
       // 3. Surface shifts: black card → cyan-gradient glow.
       tl.to(
-        ".mockup-center",
+        '.mockup-center',
         {
-          background: "linear-gradient(135deg, #14B8A6, #06B6D4, #0EA5E9)",
-          boxShadow: "0 0 50px rgba(20, 184, 166, 0.50), 0 0 100px rgba(6, 182, 212, 0.25)",
+          background: 'linear-gradient(135deg, #14B8A6, #06B6D4, #0EA5E9)',
+          boxShadow:
+            '0 0 50px rgba(20, 184, 166, 0.50), 0 0 100px rgba(6, 182, 212, 0.25)',
           duration: TIMING.morphDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.morphAt,
       );
 
       // 4. Content fades during first 40% of morph (hides aspect-ratio mismatch).
       tl.to(
-        ".mockup-center .mockup-content",
+        '.mockup-center .mockup-content',
         {
           opacity: 0,
           duration: TIMING.morphDur * 0.4,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.morphAt,
       );
 
       // 4b. Fade the physical phone shell early so the morph reads as a clean surface hand-off.
       tl.to(
-        ".mockup-center .phone-shell",
+        '.mockup-center .phone-shell',
         {
           opacity: 0,
           duration: TIMING.morphDur * 0.45,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.morphAt,
       );
 
       // 5. Hand-off: at 85-100% of morph, container fades to 0 → avatar reveals underneath.
       tl.to(
-        ".mockup-center",
+        '.mockup-center',
         {
           opacity: 0,
           duration: TIMING.morphDur * 0.15,
-          ease: "none",
+          ease: 'none',
         },
         TIMING.morphAt + TIMING.morphDur * 0.85,
       );
 
       /* Non-center mockups exit concurrently with morph */
       tl.to(
-        [".mockup-left", ".mockup-right"],
+        ['.mockup-left', '.mockup-right'],
         {
           opacity: 0,
           scale: 0.85,
           duration: TIMING.morphDur * 0.55,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.morphAt,
       );
 
       /* Platform icons exit concurrently with morph (edge-out stagger) */
       tl.to(
-        ".platform-icon",
+        '.platform-icon',
         {
           opacity: 0,
           scale: 0.85,
           duration: TIMING.morphDur * 0.5,
-          ease: "power2.out",
-          stagger: { each: 0.025, from: "edges" },
+          ease: 'power2.out',
+          stagger: { each: 0.025, from: 'edges' },
         },
         TIMING.morphAt,
       );
 
       /* Avatar pop — spring(120, 14) → back.out(1.4), concurrent with morph trigger */
       tl.fromTo(
-        ".avatar-stage",
+        '.avatar-stage',
         { scale: 0 },
-        { scale: 1, duration: TIMING.avatarPopDur, ease: "back.out(1.4)" },
+        { scale: 1, duration: TIMING.avatarPopDur, ease: 'back.out(1.4)' },
         TIMING.avatarPopAt,
       );
 
       /* Avatar layer opacity in at 50% of morph */
       tl.to(
-        "#avatar-bubbles",
+        '#avatar-bubbles',
         {
           opacity: 1,
           duration: TIMING.avatarLayerInDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.avatarLayerInAt,
       );
@@ -1278,13 +1339,13 @@
          spring(180, 12) → back.out(1.4)
          --------------------------------------------------------------- */
       tl.to(
-        ".task-bubble",
+        '.task-bubble',
         {
           scale: 1,
           opacity: 0.95,
           duration: TIMING.bubbleDur,
-          ease: "back.out(1.4)",
-          stagger: { each: TIMING.bubbleStagger, from: "start" },
+          ease: 'back.out(1.4)',
+          stagger: { each: TIMING.bubbleStagger, from: 'start' },
         },
         TIMING.bubblesAt,
       );
@@ -1300,26 +1361,28 @@
            - bubble micro-float (after bubblesAt)
          --------------------------------------------------------------- */
       const orbitDots = [
-        document.getElementById("orbit-0"),
-        document.getElementById("orbit-1"),
-        document.getElementById("orbit-2"),
-        document.getElementById("orbit-3"),
+        document.getElementById('orbit-0'),
+        document.getElementById('orbit-1'),
+        document.getElementById('orbit-2'),
+        document.getElementById('orbit-3'),
       ];
       const ORBIT_RADIUS = 130;
       const ORBIT_SPEED = 2; // degrees per timeline-time unit (i.e. per second × 30)
 
-      const avatarStage = document.getElementById("avatar-stage");
-      const bubbleEls = Array.from(document.querySelectorAll(".task-bubble"));
-      const mockupLeft = document.querySelector(".mockup-left");
-      const mockupRight = document.querySelector(".mockup-right");
-      const platformIcons = Array.from(document.querySelectorAll(".platform-icon"));
+      const avatarStage = document.getElementById('avatar-stage');
+      const bubbleEls = Array.from(document.querySelectorAll('.task-bubble'));
+      const mockupLeft = document.querySelector('.mockup-left');
+      const mockupRight = document.querySelector('.mockup-right');
+      const platformIcons = Array.from(
+        document.querySelectorAll('.platform-icon'),
+      );
 
       tl.to(
         { tick: 0 },
         {
           tick: 1,
           duration: 6.0,
-          ease: "none",
+          ease: 'none',
           onUpdate: function () {
             const t = tl.time();
 

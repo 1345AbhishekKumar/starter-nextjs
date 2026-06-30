@@ -27,21 +27,21 @@ See [references/migration.md](references/migration.md) for v4-focused rules.
 
 ## Reference
 
-| File                                                     | Contents                                |
-| -------------------------------------------------------- | --------------------------------------- |
-| [references/migration.md](references/migration.md)       | Rules, priorities, migration report shape |
+| File                                               | Contents                                  |
+| -------------------------------------------------- | ----------------------------------------- |
+| [references/migration.md](references/migration.md) | Rules, priorities, migration report shape |
 
 ## Review
 
 For checking a migration against these rules, load `review/workflow.md`.
 
-| File                                                       | Contents                        |
-| ---------------------------------------------------------- | ------------------------------- |
-| [review/workflow.md](review/workflow.md)               | Review process                    |
-| [review/checklist.md](review/checklist.md)              | Quick single-pass checklist       |
+| File                                       | Contents                    |
+| ------------------------------------------ | --------------------------- |
+| [review/workflow.md](review/workflow.md)   | Review process              |
+| [review/checklist.md](review/checklist.md) | Quick single-pass checklist |
 
 ## Related skills
 
-| Need                      | Use              |
-| ------------------------- | ---------------- |
+| Need                     | Use               |
+| ------------------------ | ----------------- |
 | Headless UI + skin hooks | `component` skill |

@@ -15,7 +15,12 @@
     "paradigm": "panel",
     "layer": "fg",
     "fontPx": 34,
-    "panel": { "left": 36, "bottom": 30, "width": 470, "header": "SIGNAL LOG_" },
+    "panel": {
+      "left": 36,
+      "bottom": 30,
+      "width": 470,
+      "header": "SIGNAL LOG_"
+    },
     "entrance": "type",
     "exit": "hold",
     "caret": true,

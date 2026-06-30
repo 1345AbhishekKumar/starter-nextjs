@@ -53,7 +53,7 @@
         overflow: hidden;
         background: var(--bg-dark);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -69,8 +69,16 @@
         transform-origin: center center;
         will-change: transform;
         background:
-          radial-gradient(ellipse at 30% 30%, rgba(80, 100, 200, 0.25), transparent 60%),
-          radial-gradient(ellipse at 70% 70%, rgba(180, 80, 150, 0.2), transparent 60%),
+          radial-gradient(
+            ellipse at 30% 30%,
+            rgba(80, 100, 200, 0.25),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 70% 70%,
+            rgba(180, 80, 150, 0.2),
+            transparent 60%
+          ),
           linear-gradient(135deg, #0a0d1f 0%, #1a0d20 100%);
       }
       .bg-overlay {
@@ -186,7 +194,11 @@
       .vignette {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+        background: radial-gradient(
+          ellipse at center,
+          transparent 50%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
         pointer-events: none;
         z-index: 400;
       }
@@ -273,7 +285,14 @@
                     stroke-linecap="round"
                     fill="none"
                   />
-                  <circle cx="6" cy="6" r="2.5" fill="none" stroke="white" stroke-width="1.5" />
+                  <circle
+                    cx="6"
+                    cy="6"
+                    r="2.5"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="1.5"
+                  />
                 </g>
                 <g class="scissor-lower">
                   <path
@@ -283,7 +302,14 @@
                     stroke-linecap="round"
                     fill="none"
                   />
-                  <circle cx="6" cy="18" r="2.5" fill="none" stroke="white" stroke-width="1.5" />
+                  <circle
+                    cx="6"
+                    cy="18"
+                    r="2.5"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="1.5"
+                  />
                 </g>
                 <line
                   class="cutting-line"
@@ -323,7 +349,13 @@
                   stroke-dashoffset="56"
                 />
                 <path d="M8 9L13 12L8 15V9Z" fill="white" />
-                <circle class="record-dot" cx="19" cy="8" r="2.5" fill="#ef4444" />
+                <circle
+                  class="record-dot"
+                  cx="19"
+                  cy="8"
+                  r="2.5"
+                  fill="#ef4444"
+                />
               </svg>
             </div>
           </div>
@@ -349,7 +381,11 @@
                   stroke-dashoffset="56.5"
                 />
                 <circle cx="12" cy="12" r="7" fill="rgba(255,255,255,0.05)" />
-                <path class="play-tri" d="M10 8L16 12L10 16V8Z" fill="#edcb50" />
+                <path
+                  class="play-tri"
+                  d="M10 8L16 12L10 16V8Z"
+                  fill="#edcb50"
+                />
               </svg>
             </div>
           </div>
@@ -408,40 +444,40 @@
 
       const ICONS = [
         {
-          name: "clock",
-          sel: "#clock-pos",
+          name: 'clock',
+          sel: '#clock-pos',
           targetX: W * 0.06,
           targetY: H * 0.18,
           delay: TIMING.clockEntryAt,
           entryRotation: -180,
-          entryEase: "back.out(1.5)",
+          entryEase: 'back.out(1.5)',
         },
         {
-          name: "scissors",
-          sel: "#scissors-pos",
+          name: 'scissors',
+          sel: '#scissors-pos',
           targetX: W * 0.85,
           targetY: H * 0.2,
           delay: TIMING.scissorsEntryAt,
           entryRotation: 0,
-          entryEase: "back.out(1.5)",
+          entryEase: 'back.out(1.5)',
         },
         {
-          name: "video",
-          sel: "#video-pos",
+          name: 'video',
+          sel: '#video-pos',
           targetX: W * 0.04,
           targetY: H * 0.68,
           delay: TIMING.videoEntryAt,
           entryRotation: 0,
-          entryEase: "back.out(1.4)",
+          entryEase: 'back.out(1.4)',
         },
         {
-          name: "play",
-          sel: "#play-pos",
+          name: 'play',
+          sel: '#play-pos',
           targetX: W * 0.88,
           targetY: H * 0.65,
           delay: TIMING.playEntryAt,
           entryRotation: 90,
-          entryEase: "back.out(1.5)",
+          entryEase: 'back.out(1.5)',
         },
       ];
 
@@ -450,8 +486,8 @@
          ================================================================ */
       ICONS.forEach(({ sel, targetX, targetY }) => {
         const el = document.querySelector(sel);
-        el.style.left = targetX + "px";
-        el.style.top = targetY + "px";
+        el.style.left = targetX + 'px';
+        el.style.top = targetY + 'px';
 
         // Initial offset for START_OFFSET = 0.4:
         // position = target + (center - target) * (1 - 0.4) = target + 0.6 * (center - target)
@@ -470,25 +506,25 @@
       });
 
       /* Set initial background and camera scale + subtle pan baseline */
-      gsap.set(".bg", { scale: 1.05 });
-      gsap.set(".camera", { scale: 0.92, x: 0, y: 2 });
-      gsap.set("#counter-number", { scale: 0.2 / 0.42 });
+      gsap.set('.bg', { scale: 1.05 });
+      gsap.set('.camera', { scale: 0.92, x: 0, y: 2 });
+      gsap.set('#counter-number', { scale: 0.2 / 0.42 });
 
       /* ================================================================
          TIMELINE
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       tl.to(
-        ".bg",
+        '.bg',
         {
           scale: 1.07,
           x: 6,
           y: -4,
           duration: 3.5,
-          ease: "sine.inOut",
+          ease: 'sine.inOut',
         },
         0,
       );
@@ -513,31 +549,31 @@
 
       // Stroke-draw the outline circles/rect on clock, video, and play during their entries
       tl.to(
-        ".clock-ring",
+        '.clock-ring',
         {
-          attr: { "stroke-dashoffset": 0 },
+          attr: { 'stroke-dashoffset': 0 },
           duration: TIMING.entryDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.clockEntryAt,
       );
 
       tl.to(
-        ".video-frame",
+        '.video-frame',
         {
-          attr: { "stroke-dashoffset": 0 },
+          attr: { 'stroke-dashoffset': 0 },
           duration: TIMING.entryDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.videoEntryAt,
       );
 
       tl.to(
-        ".play-ring",
+        '.play-ring',
         {
-          attr: { "stroke-dashoffset": 0 },
+          attr: { 'stroke-dashoffset': 0 },
           duration: TIMING.entryDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.playEntryAt,
       );
@@ -547,7 +583,7 @@
          ---------------------------------------------------------------- */
       // Counter 3D entry — translateZ + rotateY + scale + opacity, in parallel.
       tl.fromTo(
-        "#counter-3d",
+        '#counter-3d',
         { rotationY: 10, scale: 0.7, z: -300, opacity: 0 },
         {
           rotationY: 0,
@@ -555,14 +591,14 @@
           z: 0,
           opacity: 1,
           duration: TIMING.counterEntryDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.counterEntryAt,
       );
 
       // Counter number + apparent size. Use discrete frame keyframes so
       // HyperFrames can seek directly to any sampled time.
-      const counterEl = document.querySelector("#counter-number");
+      const counterEl = document.querySelector('#counter-number');
       const COUNT_STEPS = 30;
       const COUNT_START_SCALE = 0.2 / 0.42;
 
@@ -584,7 +620,7 @@
 
       // Percent symbol enters later with its own spring.
       tl.fromTo(
-        "#counter-percent",
+        '#counter-percent',
         { x: 60, rotation: 20, scale: 0.4, opacity: 0 },
         {
           x: 0,
@@ -592,7 +628,7 @@
           scale: 1.0,
           opacity: 1,
           duration: TIMING.percentEntryDur,
-          ease: "back.out(1.4)",
+          ease: 'back.out(1.4)',
         },
         TIMING.percentEntryAt,
       );
@@ -605,7 +641,7 @@
             x: 0,
             y: 0,
             duration: TIMING.countDur,
-            ease: "power2.out",
+            ease: 'power2.out',
           },
           TIMING.countAt,
         );
@@ -615,33 +651,33 @@
          PHASE 4: Multi-phase camera
          ---------------------------------------------------------------- */
       tl.to(
-        ".camera",
+        '.camera',
         {
           scale: 1.0,
           duration: TIMING.cameraFocusDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.cameraFocusAt,
       );
 
       tl.to(
-        ".camera",
+        '.camera',
         {
           scale: 1.08,
           duration: TIMING.cameraPushDur,
-          ease: "power2.out",
+          ease: 'power2.out',
         },
         TIMING.cameraPushAt,
       );
 
       // Subtle deterministic pan from the the source camera micro-movement.
       tl.to(
-        ".camera",
+        '.camera',
         {
           x: 3,
           y: 1.6,
           duration: 3.5,
-          ease: "sine.inOut",
+          ease: 'sine.inOut',
         },
         0,
       );
@@ -663,24 +699,25 @@
       const PLAY_PULSE_AMP = 0.08;
       const CUTTING_FLOW_SPEED = 0.5 * 30; // = 15 units/sec (for stroke-dashoffset)
 
-      const scissorUpper = document.querySelector(".scissor-upper");
-      const scissorLower = document.querySelector(".scissor-lower");
-      const recordDot = document.querySelector(".record-dot");
-      const playTri = document.querySelector(".play-tri");
-      const cuttingLine = document.querySelector(".cutting-line");
+      const scissorUpper = document.querySelector('.scissor-upper');
+      const scissorLower = document.querySelector('.scissor-lower');
+      const recordDot = document.querySelector('.record-dot');
+      const playTri = document.querySelector('.play-tri');
+      const cuttingLine = document.querySelector('.cutting-line');
 
       tl.to(
         { tick: 0 },
         {
           tick: 1,
           duration: 3.5,
-          ease: "none",
+          ease: 'none',
           onUpdate: function () {
             const t = tl.time();
 
             // Scissors — symmetric oscillation, anchored to scissors delay
             const sciT = t - TIMING.scissorsEntryAt;
-            const sciAngle = sciT > 0 ? Math.sin(sciT * SCISSOR_SPEED) * SCISSOR_AMP : 0;
+            const sciAngle =
+              sciT > 0 ? Math.sin(sciT * SCISSOR_SPEED) * SCISSOR_AMP : 0;
             gsap.set(scissorUpper, { rotation: sciAngle });
             gsap.set(scissorLower, { rotation: -sciAngle });
 
@@ -688,7 +725,7 @@
             const cutT = t - TIMING.scissorsEntryAt;
             if (cutT > 0) {
               gsap.set(cuttingLine, {
-                attr: { "stroke-dashoffset": -cutT * CUTTING_FLOW_SPEED },
+                attr: { 'stroke-dashoffset': -cutT * CUTTING_FLOW_SPEED },
               });
             }
 
@@ -696,15 +733,18 @@
             const recT = t - TIMING.videoEntryAt;
             if (recT > 0) {
               const recOpacity =
-                Math.sin(recT * REC_OPACITY_SPEED) * REC_OPACITY_AMP + REC_OPACITY_BASE;
-              const recScale = 1 + Math.sin(recT * REC_SCALE_SPEED) * REC_SCALE_AMP;
+                Math.sin(recT * REC_OPACITY_SPEED) * REC_OPACITY_AMP +
+                REC_OPACITY_BASE;
+              const recScale =
+                1 + Math.sin(recT * REC_SCALE_SPEED) * REC_SCALE_AMP;
               gsap.set(recordDot, { opacity: recOpacity, scale: recScale });
             }
 
             // Play triangle — gentle scale pulse
             const playT = t - TIMING.playEntryAt;
             if (playT > 0) {
-              const playScale = 1 + Math.sin(playT * PLAY_PULSE_SPEED) * PLAY_PULSE_AMP;
+              const playScale =
+                1 + Math.sin(playT * PLAY_PULSE_SPEED) * PLAY_PULSE_AMP;
               gsap.set(playTri, { scale: playScale });
             }
           },
@@ -714,13 +754,13 @@
 
       /* Clock minute hand — linear rotation, anchored to clock entry */
       tl.fromTo(
-        ".clock-hand-min",
-        { rotation: 0, svgOrigin: "12 12" },
+        '.clock-hand-min',
+        { rotation: 0, svgOrigin: '12 12' },
         {
           rotation: 420, // 120 deg/sec × 3.5s, scaled for visible motion
-          svgOrigin: "12 12",
+          svgOrigin: '12 12',
           duration: 3.5 - TIMING.clockEntryAt,
-          ease: "none",
+          ease: 'none',
         },
         TIMING.clockEntryAt,
       );

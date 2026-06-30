@@ -45,7 +45,7 @@
         height: 1080px;
         overflow: hidden;
         background: var(--bg);
-        font-family: "Google Sans", "Roboto", Inter, system-ui, sans-serif;
+        font-family: 'Google Sans', 'Roboto', Inter, system-ui, sans-serif;
         color: var(--text-white);
       }
 
@@ -166,7 +166,14 @@
                         <stop offset="1" stop-color="#3ddc97" />
                       </linearGradient>
                     </defs>
-                    <rect x="4" y="4" width="92" height="92" rx="22" fill="url(#hfMark)" />
+                    <rect
+                      x="4"
+                      y="4"
+                      width="92"
+                      height="92"
+                      rx="22"
+                      fill="url(#hfMark)"
+                    />
                     <text
                       x="50"
                       y="63"
@@ -229,13 +236,13 @@
          Converted from the source frame-based sequence to seconds at 30fps.
          ================================================================ */
       const SEQUENCE = [
-        { t: 0.0, text: "J" },
-        { t: 0.07, text: "Jus" },
-        { t: 0.13, text: "Just" },
-        { t: 0.27, text: "Just" }, // hold for pacing
-        { t: 0.4, text: "Just u" },
-        { t: 0.53, text: "Just us" },
-        { t: 0.67, text: "Just use" },
+        { t: 0.0, text: 'J' },
+        { t: 0.07, text: 'Jus' },
+        { t: 0.13, text: 'Just' },
+        { t: 0.27, text: 'Just' }, // hold for pacing
+        { t: 0.4, text: 'Just u' },
+        { t: 0.53, text: 'Just us' },
+        { t: 0.67, text: 'Just use' },
       ];
 
       /* ================================================================
@@ -243,16 +250,16 @@
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       {
         /* Measure the brand text width with a hidden DOM probe. */
-        const probe = document.createElement("span");
-        probe.className = "measure-probe";
+        const probe = document.createElement('span');
+        probe.className = 'measure-probe';
         probe.style.font = `700 ${BRAND_FONT_SIZE}px "Google Sans", "Roboto", Inter, system-ui, sans-serif`;
-        probe.style.whiteSpace = "pre";
-        probe.style.lineHeight = "1";
-        probe.textContent = "Hyperframes"; // MUST match the rendered .brand-text casing
+        probe.style.whiteSpace = 'pre';
+        probe.style.lineHeight = '1';
+        probe.textContent = 'Hyperframes'; // MUST match the rendered .brand-text casing
         document.body.appendChild(probe);
         const brandTextWidth = probe.getBoundingClientRect().width;
         probe.remove();
@@ -260,13 +267,14 @@
         /* Derive the hero's post-Phase-3 offset from viewport center.
            baseHeroOffset = (C + G + B + L) / 2     <- heroSize cancels out
            HERO_FINAL_OFFSET_X = baseHeroOffset + FINAL_RECENTER_OFFSET */
-        const baseHeroOffset = (COMPANION_WIDTH + COMPANION_GAP + brandTextWidth + HERO_GAP) / 2;
+        const baseHeroOffset =
+          (COMPANION_WIDTH + COMPANION_GAP + brandTextWidth + HERO_GAP) / 2;
         const HERO_FINAL_OFFSET_X = baseHeroOffset + FINAL_RECENTER_OFFSET;
 
         /* ============================================================
            PHASE 1: Discrete companion assembly
            ============================================================ */
-        const textEl = document.querySelector(".companion-text");
+        const textEl = document.querySelector('.companion-text');
 
         for (const entry of SEQUENCE) {
           tl.set(textEl, { textContent: entry.text }, entry.t);
@@ -276,12 +284,12 @@
            PHASE 2: Hero pops in (elastic)
            ============================================================ */
         tl.fromTo(
-          ".hero",
+          '.hero',
           { scale: 0 },
           {
             scale: 1,
             duration: TIMING.popDur,
-            ease: "back.out(2)", // spring(stiffness:200, damping:12)
+            ease: 'back.out(2)', // spring(stiffness:200, damping:12)
           },
           TIMING.popStart,
         );
@@ -291,22 +299,22 @@
            Two concurrent tweens at the same timeline position.
            ============================================================ */
         tl.to(
-          ".companion",
+          '.companion',
           {
             opacity: 0,
             x: -80,
             duration: TIMING.slideDur,
-            ease: "power3.out", // spring(stiffness:100, damping:20)
+            ease: 'power3.out', // spring(stiffness:100, damping:20)
           },
           TIMING.slideStart,
         );
 
         tl.to(
-          ".recenter-shift",
+          '.recenter-shift',
           {
             x: FINAL_RECENTER_OFFSET,
             duration: TIMING.slideDur,
-            ease: "power3.out",
+            ease: 'power3.out',
           },
           TIMING.slideStart,
         );
@@ -315,34 +323,34 @@
            PHASE 4: Zoom — scale (outer) + counter-translate (middle) + brand text exits.
            ============================================================ */
         tl.to(
-          ".zoom-scale",
+          '.zoom-scale',
           {
             scale: 5.5,
             duration: TIMING.zoomDur,
-            ease: "power2.out", // spring(stiffness:80, damping:20, mass:1.5)
+            ease: 'power2.out', // spring(stiffness:80, damping:20, mass:1.5)
           },
           TIMING.zoomStart,
         );
 
         tl.to(
-          ".zoom-translate",
+          '.zoom-translate',
           {
             x: -HERO_FINAL_OFFSET_X,
             y: 0,
             duration: TIMING.zoomDur,
-            ease: "power2.out",
+            ease: 'power2.out',
           },
           TIMING.zoomStart,
         );
 
         // Brand text fades out + slides left so the logo gets all the zoom space.
         tl.to(
-          ".brand-text",
+          '.brand-text',
           {
             opacity: 0,
             x: -600,
             duration: TIMING.zoomDur * 0.4,
-            ease: "power2.out",
+            ease: 'power2.out',
           },
           TIMING.zoomStart,
         );
@@ -351,7 +359,7 @@
            PHASE 5: Breathing — onUpdate so it MULTIPLIES on the hero's
            final pop scale, doesn't overwrite it.
            ============================================================ */
-        const heroEl = document.querySelector(".hero");
+        const heroEl = document.querySelector('.hero');
         const HERO_FINAL_SCALE = 1.0;
         const SCALE_PERIOD = 1.5; // seconds per cycle
         const SCALE_AMP = 0.04;
@@ -364,7 +372,7 @@
           {
             tick: 1,
             duration: breathDur,
-            ease: "none",
+            ease: 'none',
             onUpdate: function () {
               const idleTime = Math.max(0, tl.time() - TIMING.breathStart);
               const omega = (idleTime / SCALE_PERIOD) * Math.PI * 2;

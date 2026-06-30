@@ -18,16 +18,10 @@ const activeUsers = await db
   .where(isNull(users.deletedAt));
 
 // Soft delete
-await db
-  .update(users)
-  .set({ deletedAt: new Date() })
-  .where(eq(users.id, id));
+await db.update(users).set({ deletedAt: new Date() }).where(eq(users.id, id));
 
 // Restore soft-deleted
-await db
-  .update(users)
-  .set({ deletedAt: null })
-  .where(eq(users.id, id));
+await db.update(users).set({ deletedAt: null }).where(eq(users.id, id));
 ```
 
 ## Upsert (Update or Insert)
@@ -39,9 +33,11 @@ import { onConflict } from 'drizzle-orm';
 await db
   .insert(users)
   .values({ id: 1, name: 'John', email: 'john@example.com' })
-  .onConflict(onConflict(users.email).doUpdateSet({
-    name: excluded.name,
-  }));
+  .onConflict(
+    onConflict(users.email).doUpdateSet({
+      name: excluded.name,
+    }),
+  );
 
 // MySQL upsert
 await db
@@ -63,7 +59,7 @@ async function batchInsert(items: any[]) {
 }
 
 // Batch update using upsert
-const updates = batch.map(item => ({
+const updates = batch.map((item) => ({
   id: item.id,
   name: item.name,
 }));
@@ -77,11 +73,13 @@ async function paginate(page: number, pageSize: number) {
   const offset = (page - 1) * pageSize;
 
   const [data, [{ count }]] = await Promise.all([
-    db.select().from(users)
+    db
+      .select()
+      .from(users)
       .limit(pageSize)
       .offset(offset)
       .orderBy(asc(users.id)),
-    db.select({ count: count() }).from(users)
+    db.select({ count: count() }).from(users),
   ]);
 
   return { data, count, page, pageSize };
@@ -99,12 +97,13 @@ export const posts = pgTable('posts', {
   title: text('title').notNull(),
   content: text('content').notNull(),
   searchText: tsVector('search_text').generatedAlwaysAs(
-    sql`to_tsvector('english', coalesce(${posts.title}, '') || ' ' || coalesce(${posts.content}, ''))`
+    sql`to_tsvector('english', coalesce(${posts.title}, '') || ' ' || coalesce(${posts.content}, ''))`,
   ),
 });
 
 // Search query
-const results = await db.select()
+const results = await db
+  .select()
   .from(posts)
   .where(sql`${posts.searchText} @@ to_tsquery('english', ${searchQuery})`);
 ```
@@ -146,12 +145,14 @@ await db.transaction(async (tx) => {
 import { sql } from 'drizzle-orm';
 
 // Increment counter
-await db.update(posts)
+await db
+  .update(posts)
   .set({ viewCount: sql`${posts.viewCount} + 1` })
   .where(eq(posts.id, postId));
 
 // Conditional update (only if value is greater)
-await db.update(users)
+await db
+  .update(users)
   .set({ score: sql`GREATEST(${users.score}, ${newScore})` })
   .where(eq(users.id, userId));
 ```

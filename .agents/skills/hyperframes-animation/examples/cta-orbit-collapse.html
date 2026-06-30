@@ -75,7 +75,12 @@
         --brand-purple-deep: #7c3aed; /* violet-600 */
         --brand-purple-glow: rgba(139, 92, 246, 0.6);
         --glass-bg: rgba(255, 255, 255, 0.08); /* matches CTA_COLORS.inputBg */
-        --glass-border: rgba(139, 92, 246, 0.4); /* matches scene-05 icon border */
+        --glass-border: rgba(
+          139,
+          92,
+          246,
+          0.4
+        ); /* matches scene-05 icon border */
         --cta-dark-bg: rgba(20, 20, 30, 0.8); /* scene-05 CTA card background */
         --record-red: #ef4444;
       }
@@ -92,7 +97,7 @@
         overflow: hidden;
         background: var(--bg-dark);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -118,10 +123,22 @@
           /* mirrored violet blobs — left + right symmetry so the wash
              reads as a single coherent purple atmosphere rather than
              a directional glow. */
-          radial-gradient(circle at 25% 40%, rgba(139, 92, 246, 0.55), transparent 55%),
-          radial-gradient(circle at 75% 40%, rgba(139, 92, 246, 0.55), transparent 55%),
+          radial-gradient(
+            circle at 25% 40%,
+            rgba(139, 92, 246, 0.55),
+            transparent 55%
+          ),
+          radial-gradient(
+            circle at 75% 40%,
+            rgba(139, 92, 246, 0.55),
+            transparent 55%
+          ),
           /* deeper violet pool at the bottom centerline */
-          radial-gradient(ellipse 80% 50% at 50% 90%, rgba(124, 58, 237, 0.35), transparent 65%),
+          radial-gradient(
+              ellipse 80% 50% at 50% 90%,
+              rgba(124, 58, 237, 0.35),
+              transparent 65%
+            ),
           /* deep dark base */
           radial-gradient(
               ellipse 120% 100% at 50% 20%,
@@ -133,7 +150,7 @@
       .bg::after {
         /* frosted overlay tint — emulates the rgba(15,15,25,0.4) layer
            in scene-02's DarkFrostedGlassBackground. */
-        content: "";
+        content: '';
         position: absolute;
         inset: 0;
         background: rgba(15, 15, 25, 0.35);
@@ -348,9 +365,21 @@
         border-radius: 18px;
         overflow: hidden;
         background:
-          radial-gradient(ellipse at 22% 28%, rgba(139, 92, 246, 0.45), transparent 62%),
-          radial-gradient(ellipse at 78% 72%, rgba(124, 58, 237, 0.45), transparent 62%),
-          linear-gradient(135deg, rgba(20, 20, 30, 0.92) 0%, rgba(10, 10, 15, 0.95) 100%);
+          radial-gradient(
+            ellipse at 22% 28%,
+            rgba(139, 92, 246, 0.45),
+            transparent 62%
+          ),
+          radial-gradient(
+            ellipse at 78% 72%,
+            rgba(124, 58, 237, 0.45),
+            transparent 62%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(20, 20, 30, 0.92) 0%,
+            rgba(10, 10, 15, 0.95) 100%
+          );
         border: 1px solid var(--glass-border);
         box-shadow:
           0 50px 100px rgba(0, 0, 0, 0.5),
@@ -369,7 +398,12 @@
         width: 118px;
         height: 118px;
         border-radius: 50%;
-        background: radial-gradient(circle at 35% 30%, #ffffff 0%, #ede9fe 60%, #c4b5fd 100%);
+        background: radial-gradient(
+          circle at 35% 30%,
+          #ffffff 0%,
+          #ede9fe 60%,
+          #c4b5fd 100%
+        );
         display: flex;
         align-items: center;
         justify-content: center;
@@ -383,7 +417,7 @@
       }
       .demo-play::after {
         /* outer ring — adds depth without breaking the seek-safe layout */
-        content: "";
+        content: '';
         position: absolute;
         inset: -10px;
         border-radius: 50%;
@@ -406,7 +440,12 @@
         font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        background: linear-gradient(90deg, #ffffff 0%, #c4b5fd 50%, #8b5cf6 100%);
+        background: linear-gradient(
+          90deg,
+          #ffffff 0%,
+          #c4b5fd 50%,
+          #8b5cf6 100%
+        );
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -420,7 +459,11 @@
         /* scene-05 vignette: transparent 40% → rgba(0,0,0,0.4) at edges */
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+        background: radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
         pointer-events: none;
         z-index: 50;
       }
@@ -453,7 +496,13 @@
       .title-brand {
         font-weight: 800;
         /* Violet ramp matching scene-05's COLORS.brand.purple family */
-        background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 35%, #a78bfa 65%, #8b5cf6 100%);
+        background: linear-gradient(
+          135deg,
+          #ede9fe 0%,
+          #c4b5fd 35%,
+          #a78bfa 65%,
+          #8b5cf6 100%
+        );
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -494,7 +543,11 @@
       .bg-pulse {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.35), transparent 62%);
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          rgba(139, 92, 246, 0.35),
+          transparent 62%
+        );
         opacity: 0;
         pointer-events: none;
         z-index: 1;
@@ -559,7 +612,13 @@
                       stroke-linecap="round"
                     />
                     <defs>
-                      <linearGradient id="g-html" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient
+                        id="g-html"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
                         <stop offset="0%" stop-color="#a78bfa" />
                         <stop offset="100%" stop-color="#8b5cf6" />
                       </linearGradient>
@@ -588,11 +647,35 @@
                       stroke-width="2"
                       fill="rgba(139, 92, 246, 0.18)"
                     />
-                    <circle class="reveal-late css-dot-a" cx="8" cy="9" r="1.9" fill="#c4b5fd" />
-                    <circle class="reveal-late css-dot-b" cx="16" cy="9" r="1.9" fill="#a78bfa" />
-                    <circle class="reveal-late css-dot-c" cx="12" cy="16" r="1.9" fill="#7c3aed" />
+                    <circle
+                      class="reveal-late css-dot-a"
+                      cx="8"
+                      cy="9"
+                      r="1.9"
+                      fill="#c4b5fd"
+                    />
+                    <circle
+                      class="reveal-late css-dot-b"
+                      cx="16"
+                      cy="9"
+                      r="1.9"
+                      fill="#a78bfa"
+                    />
+                    <circle
+                      class="reveal-late css-dot-c"
+                      cx="12"
+                      cy="16"
+                      r="1.9"
+                      fill="#7c3aed"
+                    />
                     <defs>
-                      <linearGradient id="g-css" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient
+                        id="g-css"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
                         <stop offset="0%" stop-color="#c4b5fd" />
                         <stop offset="100%" stop-color="#8b5cf6" />
                       </linearGradient>
@@ -640,7 +723,13 @@
                       />
                     </g>
                     <defs>
-                      <linearGradient id="g-vec" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient
+                        id="g-vec"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
                         <stop offset="0%" stop-color="#c4b5fd" />
                         <stop offset="100%" stop-color="#7c3aed" />
                       </linearGradient>
@@ -677,9 +766,21 @@
                       stroke-linejoin="round"
                       fill="none"
                     />
-                    <circle class="reveal-late gsap-marker" cx="3" cy="12" r="2.2" fill="#c4b5fd" />
+                    <circle
+                      class="reveal-late gsap-marker"
+                      cx="3"
+                      cy="12"
+                      r="2.2"
+                      fill="#c4b5fd"
+                    />
                     <defs>
-                      <linearGradient id="g-gsap" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient
+                        id="g-gsap"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
                         <stop offset="0%" stop-color="#a78bfa" />
                         <stop offset="100%" stop-color="#8b5cf6" />
                       </linearGradient>
@@ -717,7 +818,13 @@
                       />
                     </g>
                     <defs>
-                      <linearGradient id="g-three" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient
+                        id="g-three"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
                         <stop offset="0%" stop-color="#c4b5fd" />
                         <stop offset="100%" stop-color="#7c3aed" />
                       </linearGradient>
@@ -764,7 +871,13 @@
                       fill="rgba(139, 92, 246, 0.28)"
                     />
                     <defs>
-                      <linearGradient id="g-lottie" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient
+                        id="g-lottie"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
                         <stop offset="0%" stop-color="#a78bfa" />
                         <stop offset="100%" stop-color="#8b5cf6" />
                       </linearGradient>
@@ -788,8 +901,12 @@
             stroke="currentColor"
             stroke-width="2"
           >
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            <path
+              d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+            />
+            <path
+              d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+            />
           </svg>
           <span class="cta-placeholder">Drop an HTML scene</span>
           <div class="cta-button">Render</div>
@@ -806,7 +923,12 @@
              ============================================================ -->
         <div class="cursor">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path d="M5 3L19 12L12 13L9 20L5 3Z" fill="#fff" stroke="#000" stroke-width="1.5" />
+            <path
+              d="M5 3L19 12L12 13L9 20L5 3Z"
+              fill="#fff"
+              stroke="#000"
+              stroke-width="1.5"
+            />
           </svg>
         </div>
 
@@ -825,7 +947,9 @@
         <!-- ============================================================
              TITLE
              ============================================================ -->
-        <div class="title"><span class="title-brand">HyperFrames</span> renders any scene</div>
+        <div class="title">
+          <span class="title-brand">HyperFrames</span> renders any scene
+        </div>
 
         <div class="vignette"></div>
       </div>
@@ -862,42 +986,42 @@
       //   are stroke-drawn, no extra accent).
       const ICONS = [
         {
-          sel: ".icon-html",
+          sel: '.icon-html',
           initialAngle: (0 * Math.PI) / 3,
           entryDelay: 0.0,
           drawLen: 50,
           hasReveal: true,
         },
         {
-          sel: ".icon-css",
+          sel: '.icon-css',
           initialAngle: (1 * Math.PI) / 3,
           entryDelay: 0.1,
           drawLen: 100,
           hasReveal: true,
         },
         {
-          sel: ".icon-vector",
+          sel: '.icon-vector',
           initialAngle: (2 * Math.PI) / 3,
           entryDelay: 0.2,
           drawLen: 100,
           hasReveal: true,
         },
         {
-          sel: ".icon-gsap",
+          sel: '.icon-gsap',
           initialAngle: (3 * Math.PI) / 3,
           entryDelay: 0.3,
           drawLen: 100,
           hasReveal: true,
         },
         {
-          sel: ".icon-three",
+          sel: '.icon-three',
           initialAngle: (4 * Math.PI) / 3,
           entryDelay: 0.4,
           drawLen: 100,
           hasReveal: true,
         },
         {
-          sel: ".icon-lottie",
+          sel: '.icon-lottie',
           initialAngle: (5 * Math.PI) / 3,
           entryDelay: 0.5,
           drawLen: 50,
@@ -916,7 +1040,7 @@
       const IDLE_START = 3.95;
       const TOTAL = 6.5;
 
-      const COLLAPSE_EASE = gsap.parseEase("back.out(1.6)");
+      const COLLAPSE_EASE = gsap.parseEase('back.out(1.6)');
       const ORBIT_END = DEMO_AT;
 
       const CURSOR_START_X = W + 100;
@@ -929,12 +1053,24 @@
          can reason about them as timeline operations rather than
          as overlapping zero-duration tweens.
          ============================================================ */
-      tl.set(".icon-entry", { rotateX: 90, rotateY: -45, z: -100, scale: 0, opacity: 0 }, 0);
-      tl.set(".cursor", { x: CURSOR_START_X, y: CURSOR_START_Y, opacity: 0 }, 0);
-      tl.set(".ripple", { scale: 0.3, opacity: 0 }, 0);
+      tl.set(
+        '.icon-entry',
+        { rotateX: 90, rotateY: -45, z: -100, scale: 0, opacity: 0 },
+        0,
+      );
+      tl.set(
+        '.cursor',
+        { x: CURSOR_START_X, y: CURSOR_START_Y, opacity: 0 },
+        0,
+      );
+      tl.set('.ripple', { scale: 0.3, opacity: 0 }, 0);
       // CTA: GSAP-driven centering + 3D entry start state.
-      tl.set(".cta", { xPercent: -50, yPercent: -50, rotateY: -90, scale: 0.7, opacity: 0 }, 0);
-      tl.set(".demo", { scale: 0, rotateY: 90, opacity: 0 }, 0);
+      tl.set(
+        '.cta',
+        { xPercent: -50, yPercent: -50, rotateY: -90, scale: 0.7, opacity: 0 },
+        0,
+      );
+      tl.set('.demo', { scale: 0, rotateY: 90, opacity: 0 }, 0);
 
       /* ============================================================
          TITLE — slides down and fades in early.
@@ -944,9 +1080,15 @@
          start state explicitly.
          ============================================================ */
       tl.fromTo(
-        ".title",
+        '.title',
         { xPercent: -50, y: -30, opacity: 0 },
-        { xPercent: -50, y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.4)" },
+        {
+          xPercent: -50,
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'back.out(1.4)',
+        },
         TITLE_AT,
       );
 
@@ -957,14 +1099,30 @@
          the transform.
          ============================================================ */
       tl.to(
-        ".cta",
-        { rotateY: 0, scale: 1, opacity: 1, duration: 0.75, ease: "back.out(1.4)" },
+        '.cta',
+        {
+          rotateY: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: 'back.out(1.4)',
+        },
         0.3,
       );
 
       // Subtle Y-axis tilt while the CTA is idle waiting for the click.
       // Half-cycle 0.9s, repeats yoyo until just before CLICK_AT.
-      tl.to(".cta", { rotateY: 5, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.05);
+      tl.to(
+        '.cta',
+        {
+          rotateY: 5,
+          duration: 0.9,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: 1,
+        },
+        1.05,
+      );
 
       /* ============================================================
          PHASE 1: 3D flip entry per icon
@@ -980,7 +1138,7 @@
             scale: 1,
             opacity: 1,
             duration: ENTRY_DUR,
-            ease: "back.out(1.4)",
+            ease: 'back.out(1.4)',
           },
           entryDelay,
         );
@@ -998,7 +1156,11 @@
         tl.fromTo(
           `${sel} .draw-${drawLen}`,
           { strokeDashoffset: drawLen },
-          { strokeDashoffset: 0, duration: ENTRY_DUR + 0.1, ease: "power2.out" },
+          {
+            strokeDashoffset: 0,
+            duration: ENTRY_DUR + 0.1,
+            ease: 'power2.out',
+          },
           entryDelay,
         );
       });
@@ -1016,7 +1178,7 @@
         tl.fromTo(
           `${sel} .reveal-late`,
           { opacity: 0 },
-          { opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.1 },
+          { opacity: 1, duration: 0.3, ease: 'power2.out', stagger: 0.1 },
           entryDelay + 0.3,
         );
       });
@@ -1034,17 +1196,21 @@
         {
           tick: 1,
           duration: ORBIT_END,
-          ease: "none",
+          ease: 'none',
           onUpdate: () => {
             const t = tl.time();
-            const collapseLinear = Math.max(0, Math.min(1, (t - CLICK_AT) / COLLAPSE_DUR));
+            const collapseLinear = Math.max(
+              0,
+              Math.min(1, (t - CLICK_AT) / COLLAPSE_DUR),
+            );
             const collapseEased = COLLAPSE_EASE(collapseLinear);
             const radiusFactor = 1 - collapseEased;
             const collapseScale = 1 - collapseEased * 0.5;
 
             // Two-segment opacity envelope: 1 at 0, 0.5 at 0.8, 0 at 1
             const o = collapseEased;
-            const collapseOpacity = o < 0.8 ? 1 - o * 0.625 : (0.5 * (1 - o)) / 0.2;
+            const collapseOpacity =
+              o < 0.8 ? 1 - o * 0.625 : (0.5 * (1 - o)) / 0.2;
 
             ICONS.forEach(({ sel, initialAngle, entryDelay }, i) => {
               const localT = Math.max(0, t - entryDelay);
@@ -1074,44 +1240,73 @@
          PHASE 2: Cursor enters, slides to CTA, clicks
          ============================================================ */
       // Fade in
-      tl.to(".cursor", { opacity: 1, duration: 0.1, ease: "none" }, CURSOR_AT);
+      tl.to('.cursor', { opacity: 1, duration: 0.1, ease: 'none' }, CURSOR_AT);
 
       // Slide to CTA button
       tl.to(
-        ".cursor",
-        { x: CURSOR_TARGET_X, y: CURSOR_TARGET_Y, duration: CURSOR_MOVE, ease: "back.out(1.3)" },
+        '.cursor',
+        {
+          x: CURSOR_TARGET_X,
+          y: CURSOR_TARGET_Y,
+          duration: CURSOR_MOVE,
+          ease: 'back.out(1.3)',
+        },
         CURSOR_AT,
       );
 
       // Click depression — cursor + button compress, then recover
-      tl.to(".cursor", { scale: 0.85, duration: 0.08, ease: "power2.out" }, CLICK_AT);
-      tl.to(".cursor", { scale: 1, duration: 0.18, ease: "back.out(1.6)" }, CLICK_AT + 0.08);
-      tl.to(".cta-button", { scale: 0.95, duration: 0.08, ease: "power2.out" }, CLICK_AT);
-      tl.to(".cta-button", { scale: 1, duration: 0.18, ease: "back.out(1.6)" }, CLICK_AT + 0.08);
-
-      // Button glow pulse during click
-      tl.fromTo(
-        ".cta-button",
-        { boxShadow: "0 0 0 rgba(255,255,255,0)" },
-        { boxShadow: "0 0 40px rgba(255,255,255,0.7)", duration: 0.2, ease: "power2.out" },
+      tl.to(
+        '.cursor',
+        { scale: 0.85, duration: 0.08, ease: 'power2.out' },
         CLICK_AT,
       );
       tl.to(
-        ".cta-button",
-        { boxShadow: "0 0 0 rgba(255,255,255,0)", duration: 0.4, ease: "power2.in" },
+        '.cursor',
+        { scale: 1, duration: 0.18, ease: 'back.out(1.6)' },
+        CLICK_AT + 0.08,
+      );
+      tl.to(
+        '.cta-button',
+        { scale: 0.95, duration: 0.08, ease: 'power2.out' },
+        CLICK_AT,
+      );
+      tl.to(
+        '.cta-button',
+        { scale: 1, duration: 0.18, ease: 'back.out(1.6)' },
+        CLICK_AT + 0.08,
+      );
+
+      // Button glow pulse during click
+      tl.fromTo(
+        '.cta-button',
+        { boxShadow: '0 0 0 rgba(255,255,255,0)' },
+        {
+          boxShadow: '0 0 40px rgba(255,255,255,0.7)',
+          duration: 0.2,
+          ease: 'power2.out',
+        },
+        CLICK_AT,
+      );
+      tl.to(
+        '.cta-button',
+        {
+          boxShadow: '0 0 0 rgba(255,255,255,0)',
+          duration: 0.4,
+          ease: 'power2.in',
+        },
         CLICK_AT + 0.2,
       );
 
       // Ripple — attack-decay envelope via keyframes
       tl.to(
-        ".ripple",
+        '.ripple',
         {
           duration: 0.7,
           keyframes: {
-            "0%": { scale: 0.3, opacity: 0 },
-            "20%": { opacity: 0.7 },
-            "100%": { scale: 5.0, opacity: 0 },
-            easeEach: "power2.out",
+            '0%': { scale: 0.3, opacity: 0 },
+            '20%': { opacity: 0.7 },
+            '100%': { scale: 5.0, opacity: 0 },
+            easeEach: 'power2.out',
           },
         },
         CLICK_AT,
@@ -1121,17 +1316,31 @@
          PHASE 4: Demo springs out of the collapse point
          ============================================================ */
       tl.fromTo(
-        ".demo",
+        '.demo',
         { scale: 0, rotateY: 90, opacity: 0 },
-        { scale: 1, rotateY: 0, opacity: 1, duration: DEMO_DUR, ease: "back.out(1.6)" },
+        {
+          scale: 1,
+          rotateY: 0,
+          opacity: 1,
+          duration: DEMO_DUR,
+          ease: 'back.out(1.6)',
+        },
         DEMO_AT,
       );
 
       // CTA fades out as the demo emerges — the click's "result" replaces the action target.
-      tl.to(".cta", { opacity: 0, duration: 0.3, ease: "power2.in" }, DEMO_AT - 0.05);
+      tl.to(
+        '.cta',
+        { opacity: 0, duration: 0.3, ease: 'power2.in' },
+        DEMO_AT - 0.05,
+      );
 
       // Cursor exits with the CTA
-      tl.to(".cursor", { opacity: 0, duration: 0.3, ease: "power2.in" }, DEMO_AT);
+      tl.to(
+        '.cursor',
+        { opacity: 0, duration: 0.3, ease: 'power2.in' },
+        DEMO_AT,
+      );
 
       /* ============================================================
          PHASE 5: Demo floats with finite-yoyo breathing
@@ -1141,7 +1350,7 @@
       const halfCycles = Math.max(0, Math.floor(remaining / HALF_CYCLE) - 1);
 
       tl.fromTo(
-        ".demo",
+        '.demo',
         { y: 0, rotation: 0, rotateY: 0, rotateX: 0 },
         {
           y: -8,
@@ -1149,7 +1358,7 @@
           rotateY: 6,
           rotateX: -2,
           duration: HALF_CYCLE,
-          ease: "sine.inOut",
+          ease: 'sine.inOut',
           yoyo: true,
           repeat: halfCycles,
         },
@@ -1162,23 +1371,23 @@
          Gated per-icon by its entryDelay so a hidden icon doesn't pay
          the cost (still cheap, but cleaner intent).
          ============================================================ */
-      const htmlBrackets = document.querySelector(".html-brackets-g");
-      const cssDotA = document.querySelector(".css-dot-a");
-      const cssDotB = document.querySelector(".css-dot-b");
-      const cssDotC = document.querySelector(".css-dot-c");
-      const svgCurve = document.querySelector(".svg-curve-g");
-      const gsapMarker = document.querySelector(".gsap-marker");
-      const gsapWave = document.querySelector(".gsap-wave-g");
-      const threeCube = document.querySelector(".three-cube-g");
-      const lottieKfA = document.querySelector(".lottie-kf-a");
-      const lottieKfB = document.querySelector(".lottie-kf-b");
+      const htmlBrackets = document.querySelector('.html-brackets-g');
+      const cssDotA = document.querySelector('.css-dot-a');
+      const cssDotB = document.querySelector('.css-dot-b');
+      const cssDotC = document.querySelector('.css-dot-c');
+      const svgCurve = document.querySelector('.svg-curve-g');
+      const gsapMarker = document.querySelector('.gsap-marker');
+      const gsapWave = document.querySelector('.gsap-wave-g');
+      const threeCube = document.querySelector('.three-cube-g');
+      const lottieKfA = document.querySelector('.lottie-kf-a');
+      const lottieKfB = document.querySelector('.lottie-kf-b');
 
       tl.to(
         { tick2: 0 },
         {
           tick2: 1,
           duration: TOTAL,
-          ease: "none",
+          ease: 'none',
           onUpdate: () => {
             const t = tl.time();
 
@@ -1192,8 +1401,12 @@
             const cssT = t - 0.1;
             if (cssT > 0) {
               gsap.set(cssDotA, { scale: 0.85 + Math.sin(cssT * 5.5) * 0.18 });
-              gsap.set(cssDotB, { scale: 0.85 + Math.sin(cssT * 5.5 + 1.4) * 0.18 });
-              gsap.set(cssDotC, { scale: 0.85 + Math.sin(cssT * 5.5 + 2.8) * 0.18 });
+              gsap.set(cssDotB, {
+                scale: 0.85 + Math.sin(cssT * 5.5 + 1.4) * 0.18,
+              });
+              gsap.set(cssDotC, {
+                scale: 0.85 + Math.sin(cssT * 5.5 + 2.8) * 0.18,
+              });
             }
 
             // SVG bezier — whole curve group gently rotates back and forth
@@ -1221,8 +1434,12 @@
             // LOTTIE keyframes — two diamonds scale-pulse out of phase
             const lottieT = t - 0.5;
             if (lottieT > 0) {
-              gsap.set(lottieKfA, { scale: 1 + Math.sin(lottieT * 2.8) * 0.12 });
-              gsap.set(lottieKfB, { scale: 1 + Math.sin(lottieT * 2.8 + 1.6) * 0.12 });
+              gsap.set(lottieKfA, {
+                scale: 1 + Math.sin(lottieT * 2.8) * 0.12,
+              });
+              gsap.set(lottieKfB, {
+                scale: 1 + Math.sin(lottieT * 2.8 + 1.6) * 0.12,
+              });
             }
 
             // ====== ENHANCEMENT: per-icon tile glow pulse ======
@@ -1237,14 +1454,14 @@
                 const glow = 32 + Math.sin(t * 1.3 + i * 0.95) * 16;
                 gsap.set(`${sel} .icon-tile`, {
                   boxShadow:
-                    "0 15px 40px rgba(0, 0, 0, 0.35), " +
-                    "0 0 " +
+                    '0 15px 40px rgba(0, 0, 0, 0.35), ' +
+                    '0 0 ' +
                     glow +
-                    "px rgba(139, 92, 246, 0.65), " +
-                    "0 0 " +
+                    'px rgba(139, 92, 246, 0.65), ' +
+                    '0 0 ' +
                     glow * 2 +
-                    "px rgba(124, 58, 237, 0.28), " +
-                    "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+                    'px rgba(124, 58, 237, 0.28), ' +
+                    'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                 });
               });
             }
@@ -1255,16 +1472,16 @@
             // DEMO_AT - 0.05 so the static end-state never shows.
             if (t < CLICK_AT) {
               const ctaGlow = 70 + Math.sin(t * 2.6) * 30;
-              gsap.set(".cta", {
+              gsap.set('.cta', {
                 boxShadow:
-                  "0 40px 80px rgba(0, 0, 0, 0.5), " +
-                  "0 0 " +
+                  '0 40px 80px rgba(0, 0, 0, 0.5), ' +
+                  '0 0 ' +
                   ctaGlow +
-                  "px rgba(139, 92, 246, 0.7), " +
-                  "0 0 " +
+                  'px rgba(139, 92, 246, 0.7), ' +
+                  '0 0 ' +
                   ctaGlow * 2 +
-                  "px rgba(124, 58, 237, 0.32), " +
-                  "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+                  'px rgba(124, 58, 237, 0.32), ' +
+                  'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
               });
             }
 
@@ -1275,16 +1492,16 @@
             if (t > DEMO_AT) {
               const demoT = t - DEMO_AT;
               const demoGlow = 90 + Math.sin(demoT * 1.9) * 36;
-              gsap.set(".demo", {
+              gsap.set('.demo', {
                 boxShadow:
-                  "0 50px 100px rgba(0, 0, 0, 0.5), " +
-                  "0 0 " +
+                  '0 50px 100px rgba(0, 0, 0, 0.5), ' +
+                  '0 0 ' +
                   demoGlow +
-                  "px rgba(139, 92, 246, 0.7), " +
-                  "0 0 " +
+                  'px rgba(139, 92, 246, 0.7), ' +
+                  '0 0 ' +
                   demoGlow +
-                  "px rgba(124, 58, 237, 0.42), " +
-                  "inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+                  'px rgba(124, 58, 237, 0.42), ' +
+                  'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
               });
             }
           },
@@ -1292,7 +1509,7 @@
         0,
       );
 
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
     </script>
   </body>
 </html>

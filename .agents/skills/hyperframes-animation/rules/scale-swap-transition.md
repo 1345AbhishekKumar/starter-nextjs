@@ -132,12 +132,12 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
 
   // Outgoing: shrink + fade fast
   tl.to(
-    "#outgoing",
+    '#outgoing',
     {
       scale: EXIT_SCALE,
       opacity: 0,
       duration: EXIT_DUR,
-      ease: "power2.in",
+      ease: 'power2.in',
     },
     TRIGGER,
   );
@@ -145,7 +145,7 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
   // Incoming: scale up + fade in with overshoot, starts slightly BEFORE outgoing
   // finishes (OVERLAP creates the morph illusion).
   tl.to(
-    "#incoming",
+    '#incoming',
     {
       scale: 1.0,
       opacity: 1,
@@ -157,20 +157,25 @@ A small `OVERLAP` window during which both are mid-tween creates the "morph" ill
 
   // Subline reveals AFTER the incoming card settles
   tl.fromTo(
-    "#sub",
+    '#sub',
     { opacity: 0, y: SUB_REVEAL_Y_PX },
-    { opacity: 1, y: 0, duration: SUB_REVEAL_DUR, ease: "power3.out" },
+    { opacity: 1, y: 0, duration: SUB_REVEAL_DUR, ease: 'power3.out' },
     TRIGGER + EXIT_DUR + SUB_REVEAL_DELAY,
   );
 
   // Brand fades in early for context
   tl.from(
-    ".brand",
-    { opacity: 0, y: BRAND_REVEAL_Y_PX, duration: BRAND_REVEAL_DUR, ease: "power3.out" },
+    '.brand',
+    {
+      opacity: 0,
+      y: BRAND_REVEAL_Y_PX,
+      duration: BRAND_REVEAL_DUR,
+      ease: 'power3.out',
+    },
     BRAND_REVEAL_AT,
   );
 
-  window.__timelines["swap-scene"] = tl;
+  window.__timelines['swap-scene'] = tl;
 </script>
 ```
 
@@ -185,16 +190,34 @@ The classic pattern: morph the container, then reveal inner text once the contai
 Chain: A→B→C with two triggers `TRIGGER_AB` and `TRIGGER_BC`. Each transition needs its own pair of tweens, and the previous incoming becomes the next outgoing. Useful for state evolution narratives (e.g. early-state → mid-state → final-state labels).
 
 ```js
-tl.to("#stateA", { scale: EXIT_SCALE, opacity: 0, duration: EXIT_DUR }, TRIGGER_AB);
 tl.to(
-  "#stateB",
-  { scale: 1.0, opacity: 1, duration: ENTER_DUR, ease: `back.out(${BOUNCE_FACTOR})` },
+  '#stateA',
+  { scale: EXIT_SCALE, opacity: 0, duration: EXIT_DUR },
+  TRIGGER_AB,
+);
+tl.to(
+  '#stateB',
+  {
+    scale: 1.0,
+    opacity: 1,
+    duration: ENTER_DUR,
+    ease: `back.out(${BOUNCE_FACTOR})`,
+  },
   TRIGGER_AB + EXIT_DUR - OVERLAP,
 );
-tl.to("#stateB", { scale: EXIT_SCALE, opacity: 0, duration: EXIT_DUR }, TRIGGER_BC);
 tl.to(
-  "#stateC",
-  { scale: 1.0, opacity: 1, duration: ENTER_DUR, ease: `back.out(${BOUNCE_FACTOR})` },
+  '#stateB',
+  { scale: EXIT_SCALE, opacity: 0, duration: EXIT_DUR },
+  TRIGGER_BC,
+);
+tl.to(
+  '#stateC',
+  {
+    scale: 1.0,
+    opacity: 1,
+    duration: ENTER_DUR,
+    ease: `back.out(${BOUNCE_FACTOR})`,
+  },
   TRIGGER_BC + EXIT_DUR - OVERLAP,
 );
 ```

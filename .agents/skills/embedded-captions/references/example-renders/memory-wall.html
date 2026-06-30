@@ -17,7 +17,7 @@
         height: 720px;
         overflow: hidden;
         background: #000;
-        font-family: "Inter", system-ui, sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
       }
 
       #a-roll,
@@ -203,49 +203,49 @@
          ───────────────────────────────────────────────────────────────── */
       const GROUPS = [
         {
-          id: "cg-0",
+          id: 'cg-0',
           words: [
-            { text: "Some", start: 0.24, end: 0.44 },
-            { text: "memories", start: 0.48, end: 0.82 },
-            { text: "feel", start: 0.9, end: 1.14 },
-            { text: "soft", start: 1.2, end: 1.64 },
+            { text: 'Some', start: 0.24, end: 0.44 },
+            { text: 'memories', start: 0.48, end: 0.82 },
+            { text: 'feel', start: 0.9, end: 1.14 },
+            { text: 'soft', start: 1.2, end: 1.64 },
           ],
           in: 0.2,
           out: 4.85,
-          tone: "soft",
+          tone: 'soft',
         },
         {
-          id: "cg-1",
+          id: 'cg-1',
           words: [
-            { text: "like", start: 2.66, end: 2.78 },
-            { text: "old", start: 2.86, end: 3.02 },
-            { text: "film", start: 3.14, end: 3.46 },
+            { text: 'like', start: 2.66, end: 2.78 },
+            { text: 'old', start: 2.86, end: 3.02 },
+            { text: 'film', start: 3.14, end: 3.46 },
           ],
           in: 2.55,
           out: 4.85,
-          tone: "soft",
+          tone: 'soft',
         },
         {
-          id: "cg-2",
+          id: 'cg-2',
           words: [
-            { text: "but", start: 5.02, end: 5.16 },
-            { text: "suddenly", start: 5.22, end: 5.76 },
+            { text: 'but', start: 5.02, end: 5.16 },
+            { text: 'suddenly', start: 5.22, end: 5.76 },
           ],
           in: 4.9,
           out: 8.04,
-          tone: "present",
+          tone: 'present',
         },
         {
-          id: "cg-3",
+          id: 'cg-3',
           words: [
-            { text: "everything", start: 6.8, end: 7.14 },
-            { text: "is", start: 7.16, end: 7.28 },
-            { text: "sharp", start: 7.3, end: 7.52 },
-            { text: "again", start: 7.56, end: 7.92 },
+            { text: 'everything', start: 6.8, end: 7.14 },
+            { text: 'is', start: 7.16, end: 7.28 },
+            { text: 'sharp', start: 7.3, end: 7.52 },
+            { text: 'again', start: 7.56, end: 7.92 },
           ],
           in: 6.7,
           out: 8.04,
-          tone: "present",
+          tone: 'present',
         },
       ];
 
@@ -255,12 +255,12 @@
          groups resolve firmly into place to match the sentence turn.
          ───────────────────────────────────────────────────────────────── */
       GROUPS.forEach(function (g) {
-        var sel = "#" + g.id;
+        var sel = '#' + g.id;
         var words = g.words.map(function (_, i) {
           return sel + " .w[data-i='" + i + "']";
         });
 
-        var isSoft = g.tone === "soft";
+        var isSoft = g.tone === 'soft';
 
         /* Container stays fully visible — each word animates its own fade.
            This avoids a double-fade (container × word) that produced a
@@ -281,8 +281,8 @@
                 opacity: 1,
                 y: 0,
                 duration: 0.45,
-                ease: "power2.out",
-                overwrite: "auto",
+                ease: 'power2.out',
+                overwrite: 'auto',
               },
               w.start,
             );
@@ -295,9 +295,9 @@
                 y: 0,
                 scale: 1.0,
                 duration: 0.22,
-                ease: "power3.out",
-                overwrite: "auto",
-                transformOrigin: "50% 50%",
+                ease: 'power3.out',
+                overwrite: 'auto',
+                transformOrigin: '50% 50%',
               },
               w.start,
             );
@@ -309,11 +309,11 @@
         if (g.out < DUR) {
           tl.to(
             sel,
-            { opacity: 0, duration: 0.5, ease: "power2.in", overwrite: "auto" },
+            { opacity: 0, duration: 0.5, ease: 'power2.in', overwrite: 'auto' },
             g.out - 0.5,
           );
         }
-        tl.set(sel, { opacity: 0, visibility: "hidden" }, g.out);
+        tl.set(sel, { opacity: 0, visibility: 'hidden' }, g.out);
       });
 
       /* Self-lint */
@@ -322,13 +322,18 @@
         if (!el) return;
         tl.seek(g.out + 0.01);
         var cs = window.getComputedStyle(el);
-        if (cs.opacity !== "0" && cs.visibility !== "hidden") {
-          console.warn("[caption-lint] " + g.id + " visible at t=" + (g.out + 0.01).toFixed(2));
+        if (cs.opacity !== '0' && cs.visibility !== 'hidden') {
+          console.warn(
+            '[caption-lint] ' +
+              g.id +
+              ' visible at t=' +
+              (g.out + 0.01).toFixed(2),
+          );
         }
       });
       tl.seek(0);
 
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
     </script>
   </body>
 </html>

@@ -232,7 +232,13 @@ Before calling `render-and-composite.sh`, sanity check:
 ```json
 {
   "template": "corner-column-crown",
-  "wall_position": { "top": 40, "left": 40, "width": 720, "height": 420, "rotateY": 4 },
+  "wall_position": {
+    "top": 40,
+    "left": 40,
+    "width": 720,
+    "height": 420,
+    "rotateY": 4
+  },
   "crown_position": { "top": 440 }
 }
 ```

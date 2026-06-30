@@ -79,20 +79,25 @@ The trick to a "no jump" transition from entry to idle: at `phase = 0`, `sin(0) 
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const hero = document.getElementById("hero");
-  const dot = document.getElementById("dot");
+  const hero = document.getElementById('hero');
+  const dot = document.getElementById('dot');
 
   // Phase 1 — entry beat (e.g. headline fade-up)
   tl.fromTo(
     hero,
     { opacity: 0, y: ENTRY_Y, scale: ENTRY_SCALE },
-    { opacity: 1, y: 0, scale: 1, duration: ENTRY_DUR, ease: "power3.out" },
+    { opacity: 1, y: 0, scale: 1, duration: ENTRY_DUR, ease: 'power3.out' },
     0,
   );
   tl.fromTo(
     dot,
     { opacity: 0, scale: 0 },
-    { opacity: 1, scale: 1, duration: DOT_ENTRY_DUR, ease: `back.out(${BOUNCE_FACTOR})` },
+    {
+      opacity: 1,
+      scale: 1,
+      duration: DOT_ENTRY_DUR,
+      ease: `back.out(${BOUNCE_FACTOR})`,
+    },
     DOT_ENTRY_START,
   );
 
@@ -105,7 +110,7 @@ The trick to a "no jump" transition from entry to idle: at `phase = 0`, `sin(0) 
     {
       p: Math.PI * 2 * CYCLES,
       duration: IDLE_DUR,
-      ease: "none",
+      ease: 'none',
       onUpdate: () => {
         // Hero: scale breathes ±SCALE_AMP, y bobs ±Y_AMP_PX
         const scale = 1 + Math.sin(phase.p) * SCALE_AMP;
@@ -120,7 +125,7 @@ The trick to a "no jump" transition from entry to idle: at `phase = 0`, `sin(0) 
     IDLE_START_TIME,
   );
 
-  window.__timelines["idle-scene"] = tl;
+  window.__timelines['idle-scene'] = tl;
 </script>
 ```
 
@@ -142,7 +147,9 @@ If entry is interactive or skippable, gate the idle:
 
 ```js
 const idleActive = entryProgress >= GATE_THRESHOLD;
-const scale = idleActive ? 1 + Math.sin((time - IDLE_START_TIME) / PERIOD) * SCALE_AMP : 1;
+const scale = idleActive
+  ? 1 + Math.sin((time - IDLE_START_TIME) / PERIOD) * SCALE_AMP
+  : 1;
 ```
 
 ### Settle and fade (long-idle gate — strongly recommended when `IDLE_DUR > 6s`)
@@ -157,7 +164,7 @@ tl.to(
   {
     p: Math.PI * 2 * CYCLES,
     duration: IDLE_DUR,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       const t = phase.p / (Math.PI * 2 * CYCLES); // 0 → 1 across idle
       const env = t < 1 - FADE_FRAC ? 1 : (1 - t) / FADE_FRAC; // 1 → 0 in tail

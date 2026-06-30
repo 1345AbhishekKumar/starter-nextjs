@@ -106,12 +106,12 @@ State continuity is critical: the release tween's start value MUST equal the pre
 
   // Phase 1 — press (linear compression)
   tl.to(
-    "#btn",
+    '#btn',
     {
       scale: PRESS_SCALE,
-      boxShadow: "{btnPressedShadow}",
+      boxShadow: '{btnPressedShadow}',
       duration: PRESS_DUR,
-      ease: "power1.in",
+      ease: 'power1.in',
     },
     PRESS_START,
   );
@@ -119,10 +119,10 @@ State continuity is critical: the release tween's start value MUST equal the pre
   // Phase 2 — release (spring back with overshoot)
   // CRITICAL: start scale == end of phase 1 (PRESS_SCALE) to maintain state continuity.
   tl.to(
-    "#btn",
+    '#btn',
     {
       scale: 1,
-      boxShadow: "{btnRestShadow}",
+      boxShadow: '{btnRestShadow}',
       duration: RELEASE_DUR,
       ease: `back.out(${BOUNCE_FACTOR})`,
     },
@@ -131,31 +131,35 @@ State continuity is critical: the release tween's start value MUST equal the pre
 
   // Phase 3 — burst glow (radial pop behind button), triggered with release
   tl.fromTo(
-    "#burst",
+    '#burst',
     { scale: 1, opacity: 0 },
     {
       scale: BURST_PEAK_SCALE,
       opacity: BURST_PEAK_OPACITY,
       duration: BURST_GROW_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     RELEASE_START,
   );
   // Burst then fades out
-  tl.to("#burst", { opacity: 0, duration: BURST_FADE_DUR, ease: "power2.in" }, BURST_FADE_START);
+  tl.to(
+    '#burst',
+    { opacity: 0, duration: BURST_FADE_DUR, ease: 'power2.in' },
+    BURST_FADE_START,
+  );
 
   // Phase 4 — background environmental glow fades in after release
   tl.to(
-    "#bg-glow",
+    '#bg-glow',
     {
       opacity: BG_GLOW_PEAK_OPACITY,
       duration: BG_GLOW_FADE_DUR,
-      ease: "power2.out",
+      ease: 'power2.out',
     },
     RELEASE_START,
   );
 
-  window.__timelines["press-scene"] = tl;
+  window.__timelines['press-scene'] = tl;
 </script>
 ```
 
@@ -174,8 +178,16 @@ Deeper compression, more overshoot, larger burst. `PRESS_SCALE` toward the low e
 Darken the button mid-press, return on release. Same timeline positions as the scale tweens — interpolated `backgroundColor` on `#btn`. State continuity rule still applies: the release-color tween's start equals the press-color tween's end.
 
 ```js
-tl.to("#btn", { backgroundColor: "{btnPressedColor}", duration: PRESS_DUR }, PRESS_START);
-tl.to("#btn", { backgroundColor: "{btnRestColor}", duration: RELEASE_DUR }, RELEASE_START);
+tl.to(
+  '#btn',
+  { backgroundColor: '{btnPressedColor}', duration: PRESS_DUR },
+  PRESS_START,
+);
+tl.to(
+  '#btn',
+  { backgroundColor: '{btnRestColor}', duration: RELEASE_DUR },
+  RELEASE_START,
+);
 ```
 
 ### State change at release (approve / confirm pattern)
@@ -183,9 +195,13 @@ tl.to("#btn", { backgroundColor: "{btnRestColor}", duration: RELEASE_DUR }, RELE
 When the press signals confirmation, swap the button's resting color to a success token at `RELEASE_START` (instead of returning to `{btnRestColor}`), then pop a checkmark via a separate `back.out(${CHECK_BOUNCE})` tween at the same position. The button is now in its terminal state — no further presses expected.
 
 ```js
-tl.to("#btn", { backgroundColor: "{successColor}", duration: RELEASE_DUR }, RELEASE_START);
 tl.to(
-  ".btn-check",
+  '#btn',
+  { backgroundColor: '{successColor}', duration: RELEASE_DUR },
+  RELEASE_START,
+);
+tl.to(
+  '.btn-check',
   { scale: 1, duration: CHECK_POP_DUR, ease: `back.out(${CHECK_BOUNCE})` },
   RELEASE_START,
 );

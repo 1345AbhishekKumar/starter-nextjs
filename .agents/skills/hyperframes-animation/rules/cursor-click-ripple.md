@@ -107,7 +107,7 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
 
   // Phase 1 — Move cursor to target center (eased, not linear)
   tl.to(
-    ".cursor",
+    '.cursor',
     {
       x: TARGET_X,
       y: TARGET_Y,
@@ -119,22 +119,22 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
 
   // Phase 2 — Click: cursor + target depress together, then return
   tl.to(
-    ".cursor",
+    '.cursor',
     {
       scale: CURSOR_PRESS_SCALE,
       duration: PRESS_DUR,
-      ease: "power2.in",
+      ease: 'power2.in',
       yoyo: true,
       repeat: 1,
     },
     CLICK_AT,
   );
   tl.to(
-    ".target-button",
+    '.target-button',
     {
       scale: TARGET_PRESS_SCALE,
       duration: PRESS_DUR,
-      ease: "power2.in",
+      ease: 'power2.in',
       yoyo: true,
       repeat: 1,
     },
@@ -142,9 +142,9 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
   );
 
   // Phase 3 — Ripple burst, N rings staggered from the click point
-  tl.set([".ripple-1", ".ripple-2", ".ripple-3"], { opacity: 1 }, RIPPLE_AT);
+  tl.set(['.ripple-1', '.ripple-2', '.ripple-3'], { opacity: 1 }, RIPPLE_AT);
   tl.to(
-    [".ripple-1", ".ripple-2", ".ripple-3"],
+    ['.ripple-1', '.ripple-2', '.ripple-3'],
     {
       scale: RIPPLE_SCALE,
       opacity: 0,
@@ -156,7 +156,7 @@ Build a paused timeline. Register it on `window.__timelines` with the same key a
     RIPPLE_AT,
   );
 
-  window.__timelines["cursor-click-scene"] = tl;
+  window.__timelines['cursor-click-scene'] = tl;
 </script>
 ```
 

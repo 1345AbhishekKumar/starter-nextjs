@@ -99,7 +99,7 @@ Because the blur is a tween target (not a CSS `transition`), the renderer can la
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  const ctx = gsap.utils.toArray(".ctx");
+  const ctx = gsap.utils.toArray('.ctx');
 
   // ── Mechanic 1: FOCAL PULL ─────────────────────────────────────────
   // Off-focus layers blur + dim from sharp to defocused over the
@@ -112,17 +112,17 @@ Because the blur is a tween target (not a CSS `transition`), the renderer can la
     tl.to(
       el,
       {
-        "--dof": `${targetBlur}px`,
+        '--dof': `${targetBlur}px`,
         opacity: DIM_LEVEL, // e.g. 0.55 — dim, not gone
         duration: FOCUS_DUR,
-        ease: "power2.inOut",
+        ease: 'power2.inOut',
       },
       FOCUS_START,
     );
   });
   // Focal layer is already sharp (--dof:0, opacity:1) and untouched.
 
-  window.__timelines["dof-scene"] = tl;
+  window.__timelines['dof-scene'] = tl;
 </script>
 ```
 
@@ -134,18 +134,23 @@ Two adjacent tweens on the same `--dof` per plane — focus leaves plane A as it
 
 ```js
 // Start: A sharp, B pre-blurred (set BEFORE the rack so there's no pop).
-gsap.set("#planeA", { "--dof": "0px", opacity: 1 });
-gsap.set("#planeB", { "--dof": `${MAX_BLUR}px`, opacity: DIM_LEVEL });
+gsap.set('#planeA', { '--dof': '0px', opacity: 1 });
+gsap.set('#planeB', { '--dof': `${MAX_BLUR}px`, opacity: DIM_LEVEL });
 
 // Rack: A defocuses while B comes into focus, same position + duration.
 tl.to(
-  "#planeA",
-  { "--dof": `${MAX_BLUR}px`, opacity: DIM_LEVEL, duration: RACK_DUR, ease: "power2.inOut" },
+  '#planeA',
+  {
+    '--dof': `${MAX_BLUR}px`,
+    opacity: DIM_LEVEL,
+    duration: RACK_DUR,
+    ease: 'power2.inOut',
+  },
   RACK_START,
 );
 tl.to(
-  "#planeB",
-  { "--dof": "0px", opacity: 1, duration: RACK_DUR, ease: "power2.inOut" },
+  '#planeB',
+  { '--dof': '0px', opacity: 1, duration: RACK_DUR, ease: 'power2.inOut' },
   RACK_START,
 );
 ```
@@ -157,8 +162,14 @@ Run the focal-pull tween at the **same timeline position** as a camera push-in s
 ```js
 // Camera push-in toward the focal core (see multi-phase-camera / coordinate-target-zoom).
 tl.to(
-  "#world",
-  { scale: PUSH_SCALE, x: PUSH_X, y: PUSH_Y, duration: FOCUS_DUR, ease: "power2.inOut" },
+  '#world',
+  {
+    scale: PUSH_SCALE,
+    x: PUSH_X,
+    y: PUSH_Y,
+    duration: FOCUS_DUR,
+    ease: 'power2.inOut',
+  },
   FOCUS_START,
 );
 // Cluster blurs + dims on the SAME position — "the world recedes as we push in."
@@ -167,10 +178,10 @@ ctx.forEach((el) => {
   tl.to(
     el,
     {
-      "--dof": `${BLUR_PER_DEPTH * depth}px`,
+      '--dof': `${BLUR_PER_DEPTH * depth}px`,
       opacity: DIM_LEVEL,
       duration: FOCUS_DUR,
-      ease: "power2.inOut",
+      ease: 'power2.inOut',
     },
     FOCUS_START,
   );
@@ -182,10 +193,15 @@ ctx.forEach((el) => {
 The `dataviz-countup` beat: a subset of grid cards stays sharp (the hero metric) while the remainder dim + blur. Tag the hero(es) and skip them; everything else defocuses on one shared window.
 
 ```js
-gsap.utils.toArray(".card:not(.hero)").forEach((el) => {
+gsap.utils.toArray('.card:not(.hero)').forEach((el) => {
   tl.to(
     el,
-    { "--dof": `${GRID_BLUR}px`, opacity: DIM_LEVEL, duration: FOCUS_DUR, ease: "power2.out" },
+    {
+      '--dof': `${GRID_BLUR}px`,
+      opacity: DIM_LEVEL,
+      duration: FOCUS_DUR,
+      ease: 'power2.out',
+    },
     FOCUS_START,
   );
 });
@@ -199,7 +215,7 @@ If the beat resolves back to "everything visible" (or hands off to a crossfade t
 ctx.forEach((el) =>
   tl.to(
     el,
-    { "--dof": "0px", opacity: 1, duration: REFOCUS_DUR, ease: "power2.inOut" },
+    { '--dof': '0px', opacity: 1, duration: REFOCUS_DUR, ease: 'power2.inOut' },
     REFOCUS_START,
   ),
 );
@@ -216,10 +232,10 @@ tl.to(
   {
     p: Math.PI * 2 * BREATH_CYCLES,
     duration: BREATH_DUR,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       const b = Math.max(0, Math.sin(drift.p)) * FOCAL_BREATH_PX; // ≤ ~0.6px
-      document.getElementById("focal").style.setProperty("--dof", `${b}px`);
+      document.getElementById('focal').style.setProperty('--dof', `${b}px`);
     },
   },
   BREATH_START,

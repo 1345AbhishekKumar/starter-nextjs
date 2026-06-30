@@ -33,7 +33,9 @@ export const postsRelations = relations(posts, ({ one }) => ({
 ```typescript
 export const profiles = pgTable('profiles', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id).unique(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .unique(),
   bio: text('bio'),
 });
 
@@ -64,22 +66,33 @@ export const groups = pgTable('groups', {
   name: text('name').notNull(),
 });
 
-export const usersToGroups = pgTable('users_to_groups', {
-  userId: integer('user_id').notNull().references(() => users.id),
-  groupId: integer('group_id').notNull().references(() => groups.id),
-}, (t) => [primaryKey({ columns: [t.userId, t.groupId] })]);
+export const usersToGroups = pgTable(
+  'users_to_groups',
+  {
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    groupId: integer('group_id')
+      .notNull()
+      .references(() => groups.id),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.groupId] })],
+);
 
-export const relations = defineRelations({ users, groups, usersToGroups }, (r) => ({
-  users: {
-    groups: r.many.groups({
-      from: r.users.id.through(r.usersToGroups.userId),
-      to: r.groups.id.through(r.usersToGroups.groupId),
-    }),
-  },
-  groups: {
-    participants: r.many.users(),
-  },
-}));
+export const relations = defineRelations(
+  { users, groups, usersToGroups },
+  (r) => ({
+    users: {
+      groups: r.many.groups({
+        from: r.users.id.through(r.usersToGroups.userId),
+        to: r.groups.id.through(r.usersToGroups.groupId),
+      }),
+    },
+    groups: {
+      participants: r.many.users(),
+    },
+  }),
+);
 ```
 
 ## Many-to-Many (v1 syntax)

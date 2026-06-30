@@ -52,7 +52,7 @@
         overflow: hidden;
         background: var(--bg-dark);
         font-family:
-          "Inter",
+          'Inter',
           system-ui,
           -apple-system,
           sans-serif;
@@ -72,9 +72,24 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 35% 50%, rgba(24, 217, 232, 0.2), transparent 45%),
-          radial-gradient(ellipse at 72% 50%, rgba(123, 234, 90, 0.16), transparent 45%),
-          linear-gradient(135deg, #3a3a3a 0%, #17211f 30%, #0b2328 48%, #1f3518 70%, #343434 100%);
+          radial-gradient(
+            ellipse at 35% 50%,
+            rgba(24, 217, 232, 0.2),
+            transparent 45%
+          ),
+          radial-gradient(
+            ellipse at 72% 50%,
+            rgba(123, 234, 90, 0.16),
+            transparent 45%
+          ),
+          linear-gradient(
+            135deg,
+            #3a3a3a 0%,
+            #17211f 30%,
+            #0b2328 48%,
+            #1f3518 70%,
+            #343434 100%
+          );
       }
 
       /* ============================================================
@@ -204,7 +219,11 @@
         opacity: 0.22;
       }
       .mock-thumb {
-        background: linear-gradient(135deg, rgba(24, 217, 232, 0.2), rgba(123, 234, 90, 0.08));
+        background: linear-gradient(
+          135deg,
+          rgba(24, 217, 232, 0.2),
+          rgba(123, 234, 90, 0.08)
+        );
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
@@ -255,13 +274,21 @@
         height: 44px;
         border-radius: 50%;
         flex-shrink: 0;
-        background: linear-gradient(135deg, var(--brand-green), var(--brand-cyan));
+        background: linear-gradient(
+          135deg,
+          var(--brand-green),
+          var(--brand-cyan)
+        );
       }
       .mock-avatar.purple {
         background: linear-gradient(135deg, var(--brand-cyan), #38bdf8);
       }
       .mock-avatar.green {
-        background: linear-gradient(135deg, var(--brand-green), var(--brand-cyan));
+        background: linear-gradient(
+          135deg,
+          var(--brand-green),
+          var(--brand-cyan)
+        );
       }
       .mock-avatar.orange {
         background: linear-gradient(135deg, #facc15, var(--brand-green));
@@ -330,15 +357,27 @@
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse at 30% 50%, var(--brand-cyan-glow) 0%, transparent 35%),
-          radial-gradient(ellipse at 70% 50%, var(--brand-green-glow) 0%, transparent 35%);
+          radial-gradient(
+            ellipse at 30% 50%,
+            var(--brand-cyan-glow) 0%,
+            transparent 35%
+          ),
+          radial-gradient(
+            ellipse at 70% 50%,
+            var(--brand-green-glow) 0%,
+            transparent 35%
+          );
         opacity: 0.13;
         pointer-events: none;
       }
       .vignette {
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.45) 100%);
+        background: radial-gradient(
+          ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.45) 100%
+        );
         pointer-events: none;
         z-index: 400;
       }
@@ -363,7 +402,9 @@
         <div class="bg"></div>
 
         <!-- Title -->
-        <div class="title" id="title">Build Video With <span class="accent">HyperFrames</span></div>
+        <div class="title" id="title">
+          Build Video With <span class="accent">HyperFrames</span>
+        </div>
 
         <!-- Cards row -->
         <div class="cards-row">
@@ -374,16 +415,30 @@
                 <div class="card-content">
                   <div class="card-image">
                     <div class="mock-templates">
-                      <div class="mock-thumb"><span class="label">HTML</span></div>
-                      <div class="mock-thumb"><span class="label">CSS</span></div>
-                      <div class="mock-thumb"><span class="label">GSAP</span></div>
-                      <div class="mock-thumb"><span class="label">Audio</span></div>
-                      <div class="mock-thumb"><span class="label">Captions</span></div>
-                      <div class="mock-thumb"><span class="label">Assets</span></div>
+                      <div class="mock-thumb">
+                        <span class="label">HTML</span>
+                      </div>
+                      <div class="mock-thumb">
+                        <span class="label">CSS</span>
+                      </div>
+                      <div class="mock-thumb">
+                        <span class="label">GSAP</span>
+                      </div>
+                      <div class="mock-thumb">
+                        <span class="label">Audio</span>
+                      </div>
+                      <div class="mock-thumb">
+                        <span class="label">Captions</span>
+                      </div>
+                      <div class="mock-thumb">
+                        <span class="label">Assets</span>
+                      </div>
                     </div>
                   </div>
                   <div class="card-label">HTML Composition</div>
-                  <div class="card-subtitle">Timed DOM clips, media, and motion</div>
+                  <div class="card-subtitle">
+                    Timed DOM clips, media, and motion
+                  </div>
                 </div>
               </div>
             </div>
@@ -419,7 +474,9 @@
                     </div>
                   </div>
                   <div class="card-label">Render Pipeline</div>
-                  <div class="card-subtitle">Preview, check, render, publish</div>
+                  <div class="card-subtitle">
+                    Preview, check, render, publish
+                  </div>
                 </div>
               </div>
             </div>
@@ -461,7 +518,9 @@
               stroke-linejoin="round"
               aria-hidden="true"
             >
-              <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" />
+              <path
+                d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21"
+              />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21V19C22.9986 17.1771 21.765 15.5857 20 15.13" />
               <path
@@ -515,44 +574,54 @@
       /* ================================================================
          BADGE POSITIONS — set via CSS left/top once (not tweened)
          ================================================================ */
-      const badgeLeftEl = document.getElementById("badge-left");
-      const badgeRightEl = document.getElementById("badge-right");
-      badgeLeftEl.style.left = W * 0.12 + "px"; // 230 px
-      badgeLeftEl.style.top = H * 0.35 + "px"; // 378 px
-      badgeLeftEl.style.position = "absolute";
-      badgeRightEl.style.left = W * 0.75 + "px"; // 1440 px
-      badgeRightEl.style.top = H * 0.38 + "px"; // 410 px
-      badgeRightEl.style.position = "absolute";
+      const badgeLeftEl = document.getElementById('badge-left');
+      const badgeRightEl = document.getElementById('badge-right');
+      badgeLeftEl.style.left = W * 0.12 + 'px'; // 230 px
+      badgeLeftEl.style.top = H * 0.35 + 'px'; // 378 px
+      badgeLeftEl.style.position = 'absolute';
+      badgeRightEl.style.left = W * 0.75 + 'px'; // 1440 px
+      badgeRightEl.style.top = H * 0.38 + 'px'; // 410 px
+      badgeRightEl.style.position = 'absolute';
 
       /* ================================================================
          INITIAL STATES (via gsap.set, before the timeline runs)
          ================================================================ */
-      gsap.set("#title", { opacity: 0, y: -40 });
+      gsap.set('#title', { opacity: 0, y: -40 });
 
-      gsap.set("#card-left  .card-pos", { x: -TIMING.slideDist, scale: 0.8, opacity: 0, y: 0 });
-      gsap.set("#card-right .card-pos", { x: TIMING.slideDist, scale: 0.8, opacity: 0, y: 0 });
-      gsap.set("#card-left  .card-tilt", { rotationY: TIMING.baseTilt });
-      gsap.set("#card-right .card-tilt", { rotationY: -TIMING.baseTilt });
+      gsap.set('#card-left  .card-pos', {
+        x: -TIMING.slideDist,
+        scale: 0.8,
+        opacity: 0,
+        y: 0,
+      });
+      gsap.set('#card-right .card-pos', {
+        x: TIMING.slideDist,
+        scale: 0.8,
+        opacity: 0,
+        y: 0,
+      });
+      gsap.set('#card-left  .card-tilt', { rotationY: TIMING.baseTilt });
+      gsap.set('#card-right .card-tilt', { rotationY: -TIMING.baseTilt });
 
-      gsap.set(["#badge-left", "#badge-right"], { scale: 0, opacity: 0, y: 0 });
+      gsap.set(['#badge-left', '#badge-right'], { scale: 0, opacity: 0, y: 0 });
 
       /* ================================================================
          TIMELINE
          ================================================================ */
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["main"] = tl;
+      window.__timelines['main'] = tl;
 
       /* ----------------------------------------------------------------
          PHASE 1: Title slides down
          ---------------------------------------------------------------- */
       tl.to(
-        "#title",
+        '#title',
         {
           opacity: 1,
           y: 0,
           duration: TIMING.titleDur,
-          ease: "power3.out", // spring(stiffness:100, damping:16)
+          ease: 'power3.out', // spring(stiffness:100, damping:16)
         },
         TIMING.titleAt,
       );
@@ -561,25 +630,25 @@
          PHASE 2: Cards enter from opposite sides
          ---------------------------------------------------------------- */
       tl.to(
-        "#card-left .card-pos",
+        '#card-left .card-pos',
         {
           x: 0,
           scale: 1,
           opacity: 1,
           duration: TIMING.entryDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.leftAt,
       );
 
       tl.to(
-        "#card-right .card-pos",
+        '#card-right .card-pos',
         {
           x: 0,
           scale: 1,
           opacity: 1,
           duration: TIMING.entryDur,
-          ease: "power3.out",
+          ease: 'power3.out',
         },
         TIMING.rightAt,
       );
@@ -588,23 +657,23 @@
          PHASE 3: Badges pop in
          ---------------------------------------------------------------- */
       tl.to(
-        "#badge-left",
+        '#badge-left',
         {
           scale: 1,
           opacity: 1,
           duration: TIMING.badgeEntryDur,
-          ease: "back.out(1.7)",
+          ease: 'back.out(1.7)',
         },
         TIMING.badgeLeftAt,
       );
 
       tl.to(
-        "#badge-right",
+        '#badge-right',
         {
           scale: 1,
           opacity: 1,
           duration: TIMING.badgeEntryDur,
-          ease: "back.out(1.7)",
+          ease: 'back.out(1.7)',
         },
         TIMING.badgeRightAt,
       );
@@ -613,24 +682,26 @@
          CONTINUOUS FLOATING — shared scene-ticker onUpdate
          Six gsap.set calls per frame, batched by the browser.
          ---------------------------------------------------------------- */
-      const leftPos = document.querySelector("#card-left  .card-pos");
-      const rightPos = document.querySelector("#card-right .card-pos");
-      const leftTilt = document.querySelector("#card-left  .card-tilt");
-      const rightTilt = document.querySelector("#card-right .card-tilt");
+      const leftPos = document.querySelector('#card-left  .card-pos');
+      const rightPos = document.querySelector('#card-right .card-pos');
+      const leftTilt = document.querySelector('#card-left  .card-tilt');
+      const rightTilt = document.querySelector('#card-right .card-tilt');
 
       tl.to(
         { tick: 0 },
         {
           tick: 1,
           duration: TOTAL_DUR,
-          ease: "none",
+          ease: 'none',
           onUpdate: function () {
             const t = tl.time();
             // Cards float in opposition (phase π apart).
             const lY = Math.sin(t * TIMING.floatYSpeed) * TIMING.floatYAmp;
             const lR = Math.sin(t * TIMING.floatRSpeed) * TIMING.floatRAmp;
-            const rY = Math.sin(t * TIMING.floatYSpeed + Math.PI) * TIMING.floatYAmp;
-            const rR = Math.sin(t * TIMING.floatRSpeed + Math.PI) * TIMING.floatRAmp;
+            const rY =
+              Math.sin(t * TIMING.floatYSpeed + Math.PI) * TIMING.floatYAmp;
+            const rR =
+              Math.sin(t * TIMING.floatRSpeed + Math.PI) * TIMING.floatRAmp;
             gsap.set(leftPos, { y: lY });
             gsap.set(rightPos, { y: rY });
             gsap.set(leftTilt, { rotationY: TIMING.baseTilt + lR });

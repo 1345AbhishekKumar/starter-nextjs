@@ -37,7 +37,13 @@
       "tag": "APEX-01"
     }
   },
-  "fx": { "flash": 0.97, "rings": 2, "sparks": 26, "embers": 7, "seed": 20260611 },
+  "fx": {
+    "flash": 0.97,
+    "rings": 2,
+    "sparks": 26,
+    "embers": 7,
+    "seed": 20260611
+  },
   "plate": {
     "charge": 0.5,
     "dim": 0.32,

@@ -2,14 +2,16 @@
 
 import React, { useRef, useEffect } from 'react';
 
-
 // Magnetic Button component with low latency animations
 interface MagneticButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-
-export function MagneticButton({ children, className, ...props }: MagneticButtonProps) {
+export function MagneticButton({
+  children,
+  className,
+  ...props
+}: MagneticButtonProps) {
   const btnRef = useRef<HTMLButtonElement>(null);
   const innerRef = useRef<HTMLSpanElement>(null);
 
@@ -62,8 +64,12 @@ export function MagneticButton({ children, className, ...props }: MagneticButton
   }, []);
 
   return (
-    <button ref={btnRef} className={`magnetic-btn ${className || ''}`} {...props}>
-      <span ref={innerRef} className="magnetic-btn-inner">
+    <button
+      ref={btnRef}
+      className={`magnetic-btn ${className || ''}`}
+      {...props}
+    >
+      <span ref={innerRef} className='magnetic-btn-inner'>
         {children}
       </span>
     </button>

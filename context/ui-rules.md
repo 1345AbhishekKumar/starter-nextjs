@@ -1,6 +1,6 @@
 # UI Rules
 
-Concise rules for building Jobly UI. Design assets are available — use them as the source of truth for visual decisions. These rules cover the most important patterns and constraints to keep the UI consistent without over-specifying every detail.
+Concise rules for building UI. Design assets are available — use them as the source of truth for visual decisions. These rules cover the most important patterns and constraints to keep the UI consistent without over-specifying every detail.
 
 ---
 
@@ -9,8 +9,8 @@ Concise rules for building Jobly UI. Design assets are available — use them as
 Always import Inter via `next/font/google` in the root layout.
 
 ```typescript
-import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+import { Inter } from 'next/font/google';
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 ```
 
 The `--font-sans` variable is already declared in `@theme` in globals.css. Apply the font variable class to the `<html>` tag in root layout. Never use system fonts as the primary font.

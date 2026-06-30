@@ -17,10 +17,14 @@ HyperFrames controls GSAP through its `gsap` runtime adapter. Create a paused ti
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
 
-  tl.from(".title", { y: 48, opacity: 0, duration: 0.6, ease: "power3.out" }, 0);
-  tl.to(".accent", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 0.25);
+  tl.from(
+    '.title',
+    { y: 48, opacity: 0, duration: 0.6, ease: 'power3.out' },
+    0,
+  );
+  tl.to('.accent', { scaleX: 1, duration: 0.5, ease: 'power2.out' }, 0.25);
 
-  window.__timelines["main"] = tl; // key must equal data-composition-id on the composition root
+  window.__timelines['main'] = tl; // key must equal data-composition-id on the composition root
 </script>
 ```
 
