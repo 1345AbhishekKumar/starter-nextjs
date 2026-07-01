@@ -1,3 +1,4 @@
+/* @import 'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&family=Caveat:wght@400..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap'; */
 @import 'tailwindcss';
 
 html {
@@ -10,6 +11,9 @@ html {
   --brand-green: #6e9c4e;
   --text-secondary: #525252;
   --spacing-base: 24px;
+  --font-inter: 'Inter', sans-serif;
+  --font-caveat: 'Caveat', cursive;
+  --font-space-mono: 'Space Mono', monospace;
 }
 
 * {

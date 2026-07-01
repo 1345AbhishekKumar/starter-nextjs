@@ -8,7 +8,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## Read Before Anything Else
 
     do not read .env.local , you can read only .env.example
-    do not hard code
+    do not hard code api keys , use from `config` folder
     Use the `D:\MyProjects\stater-kits\starter-nextjs\.agents\skills\find-skills` functionality to identify relevant skills based on the task.
 
 ## Development Rules & Constraints

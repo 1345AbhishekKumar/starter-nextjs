@@ -5,7 +5,7 @@ export const clientEnv = createEnv({
   client: {
     // Client-side environment variables must be prefixed with NEXT_PUBLIC_
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-    NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
 
     // Clerk redirect routes
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1).default('/sign-in'),
@@ -24,9 +24,9 @@ export const clientEnv = createEnv({
     NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
-    NEXT_PUBLIC_LOG_LEVEL: z
-      .enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal'])
-      .default('info'),
+    // NEXT_PUBLIC_LOG_LEVEL: z
+    //   .enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal'])
+    //   .default('info'),
   },
 
   // For Next.js server components
@@ -45,7 +45,7 @@ export const clientEnv = createEnv({
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    NEXT_PUBLIC_LOG_LEVEL: process.env.NEXT_PUBLIC_LOG_LEVEL,
+    // NEXT_PUBLIC_LOG_LEVEL: process.env.NEXT_PUBLIC_LOG_LEVEL,
   },
 
   // For server-side validation
