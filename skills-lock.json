@@ -81,6 +81,12 @@
       "sourceType": "local",
       "computedHash": "15e15928db875be3b9b3f68b57627f5c2daf1f5e8724e60a68d3b63b4735d1ce"
     },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "781bd6d3f9b19f8c9af6b53d8d0e4876d0183841b565db34ca7092ffa412d111"
+    },
     "frontend-design": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",
@@ -320,6 +326,11 @@
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",
       "computedHash": "f7366f83faade8fcd91b1fa7541c66d0e42f92ee90eef4bde642dbafd45db082"
+    },
+    "todos-md-generator": {
+      "source": "D:\\MyProjects\\stater-kits\\starter-nextjs\\.agents\\skills\\todo",
+      "sourceType": "local",
+      "computedHash": "a7bd362d4e1faa908b7a3a5b96a34263b52bee508aceebfda6e90610d628ac48"
     },
     "upgrade-stripe": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",

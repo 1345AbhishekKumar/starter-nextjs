@@ -1,6 +1,6 @@
 # Library Docs
 
-Project-specific usage patterns for every third party library in this project. This file only covers how we use each library in this specific project — rules, patterns, and constraints specific to Jobly.
+Project-specific usage patterns for every third party library in this starter kit. This file only covers how we use each library in this specific project — rules, patterns, and constraints for the starter template.
 
 Read the relevant section before implementing any feature that touches these libraries.
 
@@ -26,664 +26,1688 @@ Never rely on general training knowledge alone for library APIs — they change 
 
 ---
 
-## InsForge
+## Next.js 16 (App Router)
 
-**Check first:** Check AGENTS.md for an installed InsForge skill. If an InsForge MCP server is configured — use it. The skill/MCP will have the latest API patterns.
+**Check first:** Check AGENTS.md for an installed Next.js skill. If a Next.js MCP server is configured — use it.
 
-### Client vs Server
+### Server Actions vs API Routes
 
-Two separate instances — never mix them:
+**Primary: Server Actions** — use for all mutations and form submissions.
 
 ```typescript
-// lib/insforge-client.ts — browser context only
-import { createBrowserClient } from '@insforge/ssr';
+'use server';
 
-export const insforge = createBrowserClient(
-  process.env.NEXT_PUBLIC_INSFORGE_URL!,
-  process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY!,
+import { revalidatePath } from 'next/cache';
+import { auth } from '@clerk/nextjs/server';
+import { db } from '@/db';
+import { z } from 'zod';
+
+const updateProfileSchema = z.object({
+  name: z.string().min(2),
+  bio: z.string().optional(),
+});
+
+export async function updateProfile(formData: FormData) {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const parsed = updateProfileSchema.parse({
+    name: formData.get('name'),
+    bio: formData.get('bio'),
+  });
+
+  await db.update(parsed).where({ userId });
+  revalidatePath('/profile');
+}
+```
+
+**Secondary: Route Handlers (`route.ts`)** — use for:
+
+- Webhooks (Stripe, Clerk) — need raw body parsing
+- External API endpoints that need to be called by third parties
+- Streaming responses
+
+**Rules:**
+
+- Never use Route Handlers for internal data fetching — use Server Components or Server Actions
+- Always validate input with Zod in Server Actions
+- Always call `revalidatePath` or `revalidateTag` after mutations
+- Use `'use server'` directive at the top of Server Action files
+
+### Server Components (RSC)
+
+```typescript
+// src/app/dashboard/page.tsx
+import { auth } from '@clerk/nextjs/server';
+import { db } from '@/db';
+
+export default async function DashboardPage() {
+  const { userId } = await auth();
+  if (!userId) return redirect('/sign-in');
+
+  const data = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerkId, userId),
+  });
+
+  return <DashboardClient data={data} />;
+}
+```
+
+**Rules:**
+
+- Server Components are the default — use them unless you need client-side interactivity
+- Never use `useState`, `useEffect`, or event handlers in Server Components
+- Use `'use client'` directive at the top of Client Components only
+- Prefer fetching data directly in RSC over client-side fetching
+
+### Metadata & SEO
+
+```typescript
+// src/app/layout.tsx
+export const metadata = {
+  title: {
+    template: '%s | App Name',
+    default: 'App Name',
+  },
+  description: 'Description',
+};
+
+// src/app/dashboard/page.tsx
+export const metadata = {
+  title: 'Dashboard',
+};
+```
+
+**Rules:**
+
+- Always export `metadata` from layout and page files
+- Use `generateMetadata` for dynamic routes
+- Include Open Graph and Twitter card metadata
+
+---
+
+## Clerk
+
+**Check first:** Check AGENTS.md for an installed Clerk skill. If a Clerk MCP server is configured — use it.
+
+### Auth in Server Context
+
+```typescript
+// src/app/dashboard/page.tsx — Server Component
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
+
+export default async function DashboardPage() {
+  const { userId, sessionClaims } = await auth();
+
+  if (!userId) {
+    redirect('/sign-in');
+  }
+
+  // Role from metadata
+  const role = sessionClaims?.metadata?.role as 'admin' | 'member';
+
+  return <Dashboard userId={userId} role={role} />;
+}
+```
+
+```typescript
+// src/server/actions/profile.ts — Server Action
+'use server';
+
+import { auth } from '@clerk/nextjs/server';
+
+export async function getProfile() {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+  // ...
+}
+```
+
+### Auth in Client Context
+
+```typescript
+// src/components/Navbar.tsx
+'use client';
+
+import { useUser, useClerk } from '@clerk/nextjs';
+import { SignOutButton } from '@clerk/nextjs';
+
+export function Navbar() {
+  const { isSignedIn, user } = useUser();
+  const { signOut } = useClerk();
+
+  if (!isSignedIn) return <SignInButton />;
+
+  return (
+    <div>
+      <span>{user?.fullName}</span>
+      <SignOutButton />
+    </div>
+  );
+}
+```
+
+### Middleware
+
+```typescript
+// src/middleware.ts
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/pricing',
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
+
+  if (!userId && !isPublicRoute(req)) {
+    const signInUrl = new URL('/sign-in', req.url);
+    signInUrl.searchParams.set('redirect_url', req.url);
+    return NextResponse.redirect(signInUrl);
+  }
+});
+
+export const config = {
+  matcher: ['/((?!_next|.*\\..*).*)'],
+};
+```
+
+**Rules:**
+
+- Always call `auth()` on the server — never trust client-side auth state for authorization
+- Store custom user data (role, plan) in Clerk metadata — sync to DB via webhooks
+- Use `createRouteMatcher` for route protection in middleware
+- Never store Clerk secrets in client-side code — use environment variables only on server
+
+---
+
+## Drizzle ORM + Neon
+
+**Check first:** Check AGENTS.md for an installed Drizzle skill. If a Drizzle MCP server is configured — use it.
+
+### Client Setup (Neon HTTP)
+
+```typescript
+// src/db/index.ts
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import * as schema from './schema';
+
+const sql = neon(process.env.DATABASE_URL!);
+export const db = drizzle(sql, { schema });
+
+export type Database = typeof db;
+```
+
+### Schema Definition
+
+```typescript
+// src/db/schema/users.ts
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  clerkId: text('clerk_id').notNull().unique(),
+  email: text('email').notNull(),
+  name: text('name'),
+  role: text('role').default('member'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+```
+
+### Queries
+
+```typescript
+// src/server/actions/users.ts
+'use server';
+
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import { auth } from '@clerk/nextjs/server';
+
+export async function getUser() {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  return db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerkId, userId),
+  });
+}
+```
+
+### Inserts & Updates
+
+```typescript
+// Insert
+const [newUser] = await db
+  .insert(users)
+  .values({
+    clerkId: userId,
+    email: email,
+    name: name,
+  })
+  .returning();
+
+// Update
+await db
+  .update(users)
+  .set({ name: newName, updatedAt: new Date() })
+  .where(eq(users.clerkId, userId));
+```
+
+### Migrations
+
+```bash
+# Generate migration
+pnpm drizzle-kit generate
+
+# Apply migration
+pnpm drizzle-kit migrate
+
+# Generate and apply in one command
+pnpm db:push
+```
+
+**Rules:**
+
+- Always use the Neon HTTP driver — never use `pg` directly
+- Always import `db` from `@/db` — never create new instances
+- Always scope queries to `userId` — never query without user filter
+- Use `returning()` for inserts and updates when you need the result
+- Use `drizzle-kit` for migrations — never manually modify the database schema
+- Always define types with `$inferSelect` and `$inferInsert`
+
+---
+
+## Zod
+
+**Check first:** Check AGENTS.md for an installed Zod skill. If a Zod MCP server is configured — use it.
+
+### Shared Schemas
+
+```typescript
+// src/lib/validations/profile.ts
+import { z } from 'zod';
+
+export const profileSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(50),
+  bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
+  website: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  role: z.enum(['member', 'admin']).default('member'),
+});
+
+export type ProfileInput = z.infer<typeof profileSchema>;
+```
+
+### Validation in Server Actions
+
+```typescript
+// src/server/actions/profile.ts
+'use server';
+
+import { profileSchema } from '@/lib/validations/profile';
+import { auth } from '@clerk/nextjs/server';
+import { db } from '@/db';
+
+export async function updateProfile(data: unknown) {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  // Validate — always on server, never trust client
+  const validated = profileSchema.parse(data);
+
+  await db
+    .update(users)
+    .set({ name: validated.name, bio: validated.bio })
+    .where(eq(users.clerkId, userId));
+}
+```
+
+### Validation in React Hook Form
+
+```typescript
+// src/components/forms/ProfileForm.tsx
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { profileSchema, type ProfileInput } from '@/lib/validations/profile';
+
+export function ProfileForm({
+  defaultValues,
+}: {
+  defaultValues: ProfileInput;
+}) {
+  const form = useForm<ProfileInput>({
+    resolver: zodResolver(profileSchema),
+    defaultValues,
+  });
+
+  // ...
+}
+```
+
+### Environment Variables
+
+```typescript
+// src/config/env.ts
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const env = createEnv({
+  server: {
+    DATABASE_URL: z.string().url(),
+    CLERK_SECRET_KEY: z.string().min(1),
+    STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
+  },
+  client: {
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+  },
+  runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+  },
+});
+```
+
+**Rules:**
+
+- Always define schemas in `src/lib/validations/` — never inline in components
+- Always validate on the server — client validation is convenience, not security
+- Use `z.infer<typeof schema>` for TypeScript types — never duplicate types manually
+- Use `safeParse` when you need to handle errors gracefully
+- Never use `any` or `unknown` without validation — always parse
+
+---
+
+## React Hook Form
+
+**Check first:** Check AGENTS.md for an installed React Hook Form skill. If an RHF MCP server is configured — use it.
+
+### Basic Form Setup
+
+```typescript
+// src/components/forms/ProfileForm.tsx
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { profileSchema, type ProfileInput } from '@/lib/validations/profile';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+
+export function ProfileForm({ defaultValues }: { defaultValues: ProfileInput }) {
+  const form = useForm<ProfileInput>({
+    resolver: zodResolver(profileSchema),
+    defaultValues,
+  });
+
+  async function onSubmit(data: ProfileInput) {
+    // Call Server Action
+    const result = await updateProfile(data);
+    if (result.error) {
+      form.setError('root', { message: result.error });
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Your name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* More fields... */}
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? 'Saving...' : 'Save'}
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Server Action Integration
+
+```typescript
+// src/server/actions/profile.ts
+'use server';
+
+import { profileSchema } from '@/lib/validations/profile';
+
+type ActionResult<T = void> =
+  { success: true; data: T } | { success: false; error: string };
+
+export async function updateProfile(data: unknown): Promise<ActionResult> {
+  try {
+    const validated = profileSchema.parse(data);
+    // ... update database
+    return { success: true, data: undefined };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error: error.errors[0].message };
+    }
+    return { success: false, error: 'Something went wrong' };
+  }
+}
+```
+
+**Rules:**
+
+- Always use `zodResolver` — never write custom validation logic
+- Always pass `defaultValues` from server data — never fetch inside the form component
+- Use `form.setError` for server-side errors (e.g., duplicate email)
+- Always show loading state with `form.formState.isSubmitting`
+- Never use `useEffect` to sync form values — use `defaultValues` or `reset`
+
+---
+
+## TanStack Query
+
+**Check first:** Check AGENTS.md for an installed TanStack Query skill. If a TQ MCP server is configured — use it.
+
+### Query Provider Setup
+
+```typescript
+// src/app/providers/QueryProvider.tsx
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useState } from 'react';
+
+export function QueryProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1 minute
+            gcTime: 5 * 60 * 1000, // 5 minutes
+            retry: 1,
+            refetchOnWindowFocus: process.env.NODE_ENV === 'production',
+          },
+        },
+      })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+### RSC Prefetching
+
+```typescript
+// src/app/dashboard/page.tsx
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { getDashboardData } from '@/server/queries/dashboard';
+
+export default async function DashboardPage() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['dashboard'],
+    queryFn: getDashboardData,
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <DashboardClient />
+    </HydrationBoundary>
+  );
+}
+```
+
+### Client Query
+
+```typescript
+// src/components/dashboard/DashboardClient.tsx
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { getDashboardData } from '@/server/queries/dashboard';
+
+export function DashboardClient() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: getDashboardData,
+  });
+
+  if (isLoading) return <DashboardSkeleton />;
+  if (error) return <div>Error loading dashboard</div>;
+
+  return <DashboardContent data={data} />;
+}
+```
+
+### Mutations with Optimistic Updates
+
+```typescript
+// src/components/forms/ProfileForm.tsx
+'use client';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateProfile } from '@/server/actions/profile';
+
+export function ProfileForm() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: updateProfile,
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: ['profile'] });
+      const previous = queryClient.getQueryData(['profile']);
+      queryClient.setQueryData(['profile'], newData);
+      return { previous };
+    },
+    onError: (err, newData, context) => {
+      queryClient.setQueryData(['profile'], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    },
+  });
+
+  // ...
+}
+```
+
+**Rules:**
+
+- Always use `HydrationBoundary` for RSC prefetching
+- Always set `staleTime` to avoid unnecessary refetches
+- Use optimistic updates for better UX on mutations
+- Invalidate queries after mutations with `invalidateQueries`
+- Use `queryKey` arrays with specific identifiers — never use strings alone
+
+---
+
+## Zustand
+
+**Check first:** Check AGENTS.md for an installed Zustand skill. If a Zustand MCP server is configured — use it.
+
+### Store Definition
+
+```typescript
+// src/stores/ui.ts
+import { create } from 'zustand';
+
+interface UIState {
+  theme: 'light' | 'dark' | 'system';
+  sidebarOpen: boolean;
+  modalOpen: boolean;
+  modalContent: React.ReactNode | null;
+
+  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  toggleSidebar: () => void;
+  openModal: (content: React.ReactNode) => void;
+  closeModal: () => void;
+}
+
+export const useUIStore = create<UIState>((set) => ({
+  theme: 'system',
+  sidebarOpen: true,
+  modalOpen: false,
+  modalContent: null,
+
+  setTheme: (theme) => set({ theme }),
+  toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+  openModal: (content) => set({ modalOpen: true, modalContent: content }),
+  closeModal: () => set({ modalOpen: false, modalContent: null }),
+}));
+```
+
+### Store with Persistence
+
+```typescript
+// src/stores/settings.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface SettingsState {
+  language: string;
+  notifications: boolean;
+  setLanguage: (lang: string) => void;
+  toggleNotifications: () => void;
+}
+
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set) => ({
+      language: 'en',
+      notifications: true,
+      setLanguage: (language) => set({ language }),
+      toggleNotifications: () =>
+        set((state) => ({ notifications: !state.notifications })),
+    }),
+    {
+      name: 'settings-storage', // localStorage key
+    },
+  ),
 );
 ```
 
-```typescript
-// lib/insforge-server.ts — server context only
-import { createServerClient } from '@insforge/ssr';
-import { cookies } from 'next/headers';
+### Usage in Components
 
-export const createInsforgeServer = async () => {
-  const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_INSFORGE_URL!,
-    process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (cookiesToSet) => {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options),
-          );
-        },
-      },
-    },
+```typescript
+// src/components/layout/Sidebar.tsx
+'use client';
+
+import { useUIStore } from '@/stores/ui';
+
+export function Sidebar() {
+  const { sidebarOpen, toggleSidebar } = useUIStore();
+
+  return (
+    <aside className={sidebarOpen ? 'w-64' : 'w-0'}>
+      <button onClick={toggleSidebar}>Toggle</button>
+    </aside>
   );
-};
-```
-
-**Rules:**
-
-- Browser client — Client Components, browser-side auth state, realtime subscriptions
-- Server client — Server Components, API routes, Server Actions, agent functions
-- Never use browser client in server context
-- Never use server client in browser context
-
----
-
-### Auth
-
-```typescript
-// Get current user in server context
-const insforge = await createInsforgeServer();
-const {
-  data: { user },
-  error,
-} = await insforge.auth.getUser();
-if (!user) redirect('/login');
-```
-
----
-
-### DB Queries
-
-```typescript
-// Read
-const { data, error } = await insforge
-  .from('jobs')
-  .select('*')
-  .eq('user_id', user.id)
-  .order('found_at', { ascending: false });
-
-// Insert
-const { data, error } = await insforge
-  .from('jobs')
-  .insert({ user_id: user.id, title, company, match_score })
-  .select()
-  .single();
-
-// Update
-const { error } = await insforge
-  .from('jobs')
-  .update({ company_research: dossier })
-  .eq('id', jobId)
-  .eq('user_id', user.id); // always scope to user
-```
-
-**Rules:**
-
-- Always scope queries to `user_id` — never query without user filter
-- Always handle the `error` return — never assume success
-- Use `.single()` when expecting exactly one row
-
----
-
-### Storage
-
-```typescript
-// Upload file
-const { data, error } = await insforge.storage
-  .from('resumes')
-  .upload(`${userId}/resume.pdf`, fileBuffer, {
-    contentType: 'application/pdf',
-    upsert: true, // overwrites existing file
-  });
-
-// Get public URL
-const { data } = insforge.storage
-  .from('resumes')
-  .getPublicUrl(`${userId}/resume.pdf`);
-
-const url = data.publicUrl;
-```
-
-**Storage paths:**
-
-- Base resume: `resumes/{user_id}/resume.pdf`
-
-**Rules:**
-
-- Always use `upsert: true` for base resume uploads — overwrites existing file
-- Always save the public URL back to the DB after upload
-- Never write files to disk — always upload buffer directly to storage
-
----
-
-## Adzuna API
-
-**Check first:** Check AGENTS.md for an installed Adzuna skill. If none exists — use this file and the official Adzuna API docs.
-
-### Job Search
-
-```typescript
-// lib/adzuna.ts
-export async function searchJobs(
-  jobTitle: string,
-  location: string,
-  country: string = 'us',
-): Promise<AdzunaJob[]> {
-  const params = new URLSearchParams({
-    app_id: process.env.ADZUNA_APP_ID!,
-    app_key: process.env.ADZUNA_APP_KEY!,
-    what: jobTitle,
-    category: 'it-jobs', // always filter to IT jobs
-    results_per_page: '10',
-    'content-type': 'application/json',
-  });
-
-  // Only add where if location is provided
-  if (location) {
-    params.set('where', location);
-  }
-
-  const response = await fetch(
-    `https://api.adzuna.com/v1/api/jobs/${country}/search/1?${params}`,
-  );
-
-  if (!response.ok) {
-    throw new Error(`Adzuna API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data.results || [];
 }
 ```
 
-### Response Shape
-
-Each Adzuna job result contains:
-
-```typescript
-type AdzunaJob = {
-  id: string;
-  title: string;
-  company: { display_name: string };
-  location: { display_name: string };
-  description: string; // snippet only — not full description
-  redirect_url: string; // Adzuna tracking URL → redirects to actual job
-  salary_min?: number;
-  salary_max?: number;
-  salary_is_predicted: '0' | '1'; // "1" means salary is estimated
-  contract_type?: string;
-  created: string; // ISO date string
-  category: { tag: string; label: string };
-};
-```
-
-### Saving Jobs to DB
-
-```typescript
-// Map Adzuna result to jobs table
-const jobRecord = {
-  user_id: userId,
-  run_id: runId,
-  source: 'search', // always 'search' for Adzuna jobs
-  source_url: job.redirect_url,
-  external_apply_url: job.redirect_url,
-  title: job.title,
-  company: job.company.display_name,
-  location: job.location.display_name,
-  salary: job.salary_min
-    ? `$${Math.round(job.salary_min / 1000)}k - $${Math.round(job.salary_max! / 1000)}k`
-    : null,
-  job_type: job.contract_type || 'fulltime',
-  about_role: job.description, // Adzuna returns snippet — used as description
-  match_score: scoredJob.matchScore,
-  match_reason: scoredJob.matchReason,
-  matched_skills: scoredJob.matchedSkills,
-  missing_skills: scoredJob.missingSkills,
-  found_at: new Date().toISOString(),
-};
-```
-
 **Rules:**
 
-- Always include `category=it-jobs` — never search Adzuna without this filter
-- Never pass `where` if location is empty — omit the parameter entirely
-- `source` is always `'search'` for Adzuna jobs — never any other value
-- `salary_is_predicted: "1"` means Adzuna estimated the salary — this is normal
-- Adzuna description is a snippet — GPT-4o scores from it, not a full description
-- Default country to `'us'` — support `gb`, `au`, `ca` as alternatives
+- Use Zustand only for client-side UI state — never for server data
+- Never store canonical data in Zustand — use TanStack Query for server data
+- Use `persist` middleware for settings and preferences
+- Keep stores small and focused — one store per domain
+- Use selectors to avoid unnecessary re-renders: `useUIStore((state) => state.sidebarOpen)`
 
 ---
 
-## Browserbase
+## nuqs
 
-**Check first:** Check AGENTS.md for an installed Browserbase skill. If a Browserbase MCP server is configured — use it. The skill/MCP will have the latest session management and API patterns.
+**Check first:** Check AGENTS.md for an installed nuqs skill. If a nuqs MCP server is configured — use it.
 
-### Session Creation — Company Research
+### Setup
 
 ```typescript
-import Browserbase from '@browserbasehq/sdk';
+// src/app/providers/NuqsAdapter.tsx
+'use client';
 
-const bb = new Browserbase({ apiKey: process.env.BROWSERBASE_API_KEY! });
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
-// Single session for company research — sequential page visits
-const session = await bb.sessions.create({
-  projectId: process.env.BROWSERBASE_PROJECT_ID!,
-  timeout: 120, // 2 minute session — visits 3-4 pages max
-});
+export function NuqsProvider({ children }: { children: React.ReactNode }) {
+  return <NuqsAdapter>{children}</NuqsAdapter>;
+}
 ```
 
-**Important — Browserbase runs independently from your Next.js server:**
-Browserbase sessions run on Browserbase's cloud infrastructure, not inside your Next.js API route. The API route triggers the Browserbase session and returns a response while the session continues running independently on Browserbase's platform. Do not add `maxDuration` or any timeout configuration to Next.js API routes to accommodate Browserbase session length.
-
-**Rules:**
-
-- Always use single sessions — never parallel sessions (free plan limit)
-- Session timeout is 120 seconds — sufficient for 3-4 page visits
-- Always end sessions cleanly — call stagehand.close() when done
-- Project ID always from `process.env.BROWSERBASE_PROJECT_ID` — never hardcode
-- Browserbase client lives in `lib/browserbase.ts` — always import from there
-
----
-
-## Stagehand
-
-**Check first:** Check AGENTS.md for an installed Stagehand skill. If a Stagehand MCP server is configured — use it. The skill/MCP will have the latest act() and extract() patterns.
-
-### Initialisation
+### URL State with Schema
 
 ```typescript
-import { Stagehand } from '@browserbasehq/stagehand';
+// src/components/jobs/JobFilters.tsx
+'use client';
 
-const stagehand = new Stagehand({
-  env: 'BROWSERBASE',
-  apiKey: process.env.BROWSERBASE_API_KEY!,
-  projectId: process.env.BROWSERBASE_PROJECT_ID!,
-  browserbaseSessionID: session.id,
-  model: { modelName: 'openai/gpt-4o', apiKey: process.env.OPENAI_API_KEY! },
-  disablePino: true,
-});
-
-await stagehand.init();
-const page = stagehand.context.activePage()!;
-```
-
-### extract()
-
-```typescript
+import { useQueryState } from 'nuqs';
 import { z } from 'zod';
 
-const result = await stagehand.extract({
-  instruction:
-    'Extract the company overview, main product description, and any technology mentions from this page.',
-  schema: z.object({
-    companyOverview: z.string().optional(),
-    mainProduct: z.string().optional(),
-    techMentions: z.array(z.string()).optional(),
-    navLinks: z
-      .array(
-        z.object({
-          label: z.string(),
-          url: z.string(),
-        }),
-      )
-      .optional(),
-  }),
+const filterSchema = z.object({
+  status: z.enum(['all', 'active', 'closed']).default('all'),
+  search: z.string().default(''),
+  page: z.number().min(1).default(1),
 });
-```
 
-### act()
-
-```typescript
-// Always wrap in try/catch
-try {
-  await stagehand.act({
-    action: 'Click the About link in the navigation',
+export function JobFilters() {
+  const [status, setStatus] = useQueryState('status', {
+    defaultValue: 'all',
+    parse: (value) => value as 'all' | 'active' | 'closed',
+    serialize: (value) => value,
   });
-} catch (error) {
-  await logAgentError(jobId, null, error);
+
+  const [search, setSearch] = useQueryState('search', {
+    defaultValue: '',
+    parse: (value) => value || '',
+  });
+
+  const [page, setPage] = useQueryState('page', {
+    defaultValue: 1,
+    parse: (value) => parseInt(value, 10) || 1,
+  });
+
+  return (
+    <div>
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search..."
+      />
+      <select value={status} onChange={(e) => setStatus(e.target.value as any)}>
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+  );
 }
 ```
 
-## Company Research Section
+### With Zod Parser
 
-Replace the existing Stagehand "Company Research Pattern" section in library-docs.md with this:
+```typescript
+import { useQueryState } from 'nuqs';
+import { parseAsString, parseAsInteger, withDefault } from 'nuqs';
+
+const [search, setSearch] = useQueryState(
+  'search',
+  withDefault(parseAsString, ''),
+);
+const [page, setPage] = useQueryState('page', withDefault(parseAsInteger, 1));
+const [sort, setSort] = useQueryState('sort', {
+  defaultValue: 'newest',
+  parse: (value) => value as 'newest' | 'oldest' | 'score',
+  serialize: (value) => value,
+});
+```
+
+**Rules:**
+
+- Use nuqs for all URL state — filters, pagination, sorting, tabs
+- Always provide default values — URL state should never be undefined
+- Use `parseAsString`, `parseAsInteger`, etc. for type safety
+- Keep URL state separate from other state — it's a source of truth, not a cache
+- Never store sensitive data in URL state
 
 ---
 
-### Company Research Pattern
+## UploadThing
 
-Three-step process: homepage extraction → sub-page extraction → GPT-4o synthesis.
-Job description and user profile come from DB — never re-fetch what you already have.
-Browser's only job is the company website.
+**Check first:** Check AGENTS.md for an installed UploadThing skill. If an UploadThing MCP server is configured — use it.
+
+### File Route Definition
 
 ```typescript
-// Step 1 — Homepage extraction
-const homepageData = await stagehand.extract({
-  instruction:
-    "This is a company's homepage. Capture what the company actually does, who it's for, and any concrete signals (funding, customers, scale, mission, recent launches). Then find the internal links most worth visiting to research them as an employer.",
-  schema: z.object({
-    oneLiner: z.string().describe('What the company does in one sentence'),
-    productSummary: z
-      .string()
-      .describe("What they build/sell and who it's for"),
-    signals: z
-      .array(z.string())
-      .describe('Funding, notable customers, scale, mission, recent news'),
-    pageLinks: z
-      .array(
-        z.object({
-          url: z.string(),
-          kind: z.enum([
-            'about',
-            'careers',
-            'blog',
-            'engineering',
-            'product',
-            'team',
-            'other',
-          ]),
-        }),
-      )
-      .describe('Internal links worth visiting'),
-  }),
+// src/app/api/uploadthing/core.ts
+import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { auth } from '@clerk/nextjs/server';
+
+const f = createUploadthing();
+
+export const ourFileRouter = {
+  // Avatar upload
+  avatarUploader: f({
+    image: {
+      maxFileSize: '2MB',
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async () => {
+      const { userId } = await auth();
+      if (!userId) throw new Error('Unauthorized');
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // Save file URL to database
+      const { userId } = metadata;
+      await db
+        .update(users)
+        .set({ avatarUrl: file.url })
+        .where(eq(users.clerkId, userId));
+    }),
+
+  // Resume upload
+  resumeUploader: f({
+    pdf: {
+      maxFileSize: '5MB',
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async () => {
+      const { userId } = await auth();
+      if (!userId) throw new Error('Unauthorized');
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      // Save resume URL to database
+      await db
+        .update(profiles)
+        .set({ resumeUrl: file.url })
+        .where(eq(profiles.clerkId, metadata.userId));
+    }),
+} satisfies FileRouter;
+
+export type OurFileRouter = typeof ourFileRouter;
+```
+
+### Client Upload Component
+
+```typescript
+// src/components/upload/AvatarUpload.tsx
+'use client';
+
+import { UploadButton } from '@uploadthing/react';
+import { ourFileRouter } from '@/app/api/uploadthing/core';
+
+export function AvatarUpload({ userId }: { userId: string }) {
+  return (
+    <UploadButton<OurFileRouter>
+      endpoint="avatarUploader"
+      onClientUploadComplete={(res) => {
+        // File uploaded successfully
+        const url = res[0]?.url;
+        // Update UI with new avatar
+      }}
+      onUploadError={(error) => {
+        console.error(error);
+        // Show error toast
+      }}
+    />
+  );
+}
+```
+
+**Rules:**
+
+- Always use `middleware` to check authentication
+- Always store file URL in database in `onUploadComplete`
+- Define all file routes in `core.ts` — never inline in components
+- Use `maxFileSize` and `maxFileCount` to enforce limits
+- Always handle upload errors with user feedback
+
+---
+
+## Stripe
+
+**Check first:** Check AGENTS.md for an installed Stripe skill. If a Stripe MCP server is configured — use it.
+
+### Client Setup
+
+```typescript
+// src/lib/stripe.ts
+import Stripe from 'stripe';
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-12-18.acacia',
 });
 
-// If oneLiner and productSummary are empty — wrong site or parked domain
-// Skip to synthesis with job description and profile only
-if (!homepageData.oneLiner && !homepageData.productSummary) {
-  await stagehand.close();
-  // proceed to synthesis with empty companyResearch
+export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET!;
+```
+
+### Checkout Session
+
+```typescript
+// src/server/actions/stripe.ts
+'use server';
+
+import { stripe } from '@/lib/stripe';
+import { auth } from '@clerk/nextjs/server';
+
+export async function createCheckoutSession(priceId: string) {
+  const { userId } = await auth();
+  if (!userId) throw new Error('Unauthorized');
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    line_items: [{ price: priceId, quantity: 1 }],
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
+    customer_email: user.email,
+    metadata: { userId },
+  });
+
+  return { url: session.url };
+}
+```
+
+### Webhook Handler
+
+```typescript
+// src/app/api/webhooks/stripe/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { stripe, STRIPE_WEBHOOK_SECRET } from '@/lib/stripe';
+import { db } from '@/db';
+
+export async function POST(req: NextRequest) {
+  const body = await req.text();
+  const signature = req.headers.get('stripe-signature')!;
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      STRIPE_WEBHOOK_SECRET,
+    );
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+  }
+
+  switch (event.type) {
+    case 'checkout.session.completed': {
+      const session = event.data.object;
+      const userId = session.metadata?.userId;
+      if (userId) {
+        await db
+          .update(users)
+          .set({ plan: 'pro', stripeCustomerId: session.customer as string })
+          .where(eq(users.clerkId, userId));
+      }
+      break;
+    }
+    case 'customer.subscription.deleted': {
+      const subscription = event.data.object;
+      // Find user by customer ID and downgrade plan
+      break;
+    }
+  }
+
+  return NextResponse.json({ received: true });
+}
+```
+
+**Rules:**
+
+- Always use `req.text()` for webhooks — never `req.json()` (raw body needed for signature)
+- Always verify webhook signatures with `constructEvent`
+- Store `stripeCustomerId` in database for webhook lookups
+- Use metadata to pass `userId` through Checkout
+- Always handle webhook errors gracefully — Stripe will retry on non-2xx responses
+
+---
+
+## Resend
+
+**Check first:** Check AGENTS.md for an installed Resend skill. If a Resend MCP server is configured — use it.
+
+### Client Setup
+
+```typescript
+// src/lib/resend.ts
+import { Resend } from 'resend';
+
+export const resend = new Resend(process.env.RESEND_API_KEY!);
+```
+
+### Email Template
+
+```typescript
+// src/emails/WelcomeEmail.tsx
+import { Html, Body, Container, Text, Preview, Heading } from '@react-email/components';
+
+interface WelcomeEmailProps {
+  name: string;
 }
 
-// Step 2 — Sub-page extraction (max 3, prefer about/blog/engineering/product over careers)
-const subPageData = await stagehand.extract({
-  instruction:
-    'Extract substance that helps a candidate understand this company before applying: what they do, their values and how they work, the specific technologies and tools they use, notable projects or customers, and how the team operates. Ignore nav, footers, cookie banners, and generic marketing copy.',
-  schema: z.object({
-    keyPoints: z.array(z.string()),
-    technologies: z
-      .array(z.string())
-      .describe('Specific languages, frameworks, tools, platforms'),
-    valuesOrCulture: z
-      .array(z.string())
-      .describe('Stated values, working style, team norms'),
-    notable: z
-      .array(z.string())
-      .describe('Customers, funding, scale, projects, awards'),
-  }),
-});
-
-// Step 3 — GPT-4o synthesis (after browser closes)
-// Feed three data sources: company research + job from DB + profile from DB
-const systemPrompt = `You are a sharp career strategist preparing a candidate to apply for a specific role. You are given (a) research collected from the company's own website, (b) the job posting, and (c) the candidate's profile. Produce a concise, concrete briefing that gives this specific candidate an edge for this specific role.
-
-Rules:
-- Ground every company claim in the provided research or job posting. Never invent funding, customers, headcount, or facts. If research was thin, infer carefully from the job posting and say what's inferred.
-- Be specific to THIS candidate. Connect their actual skills and past work to this company's stack, product, and values. No generic advice that would apply to anyone.
-- Turn the candidate's missing skills into a strategy: how to frame the gap honestly and what adjacent experience to lean on.
-- Talking points and questions must reference real things from the research, the kind of detail that signals the candidate did their homework.
-- Keep every item tight: one or two sentences. No fluff.
-
-Return ONLY valid JSON matching this shape:
-{
-  "companyOverview": string,
-  "techStack": string[],
-  "culture": string[],
-  "whyThisRole": string,
-  "yourEdge": string[],
-  "gapsToAddress": string[],
-  "smartQuestions": string[],
-  "interviewPrep": string[],
-  "sources": string[]
-}`;
-
-const userPrompt = `COMPANY RESEARCH (from their website):
-${JSON.stringify(companyResearch)}
-
-JOB POSTING:
-Title: ${job.title}
-Company: ${job.company}
-Description: ${job.description}
-Matched skills (already computed): ${job.matched_skills.join(', ')}
-Missing skills (already computed): ${job.missing_skills.join(', ')}
-
-CANDIDATE PROFILE:
-Current title: ${profile.current_title}
-Experience: ${profile.years_experience} years, level ${profile.experience_level}
-Skills: ${profile.skills.join(', ')}
-Work history: ${JSON.stringify(profile.work_experience)}`;
-
-const response = await openai.chat.completions.create({
-  model: 'gpt-4o',
-  response_format: { type: 'json_object' },
-  temperature: 0.4,
-  messages: [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt },
-  ],
-});
+export function WelcomeEmail({ name }: WelcomeEmailProps) {
+  return (
+    <Html>
+      <Preview>Welcome to {process.env.NEXT_PUBLIC_APP_NAME}!</Preview>
+      <Body>
+        <Container>
+          <Heading>Welcome, {name}!</Heading>
+          <Text>Thanks for signing up. We're excited to have you.</Text>
+        </Container>
+      </Body>
+    </Html>
+  );
+}
 ```
 
-**Dossier fields:**
-
-| Field           | Type     | Purpose                                             |
-| --------------- | -------- | --------------------------------------------------- |
-| companyOverview | string   | What the company does                               |
-| techStack       | string[] | Technologies they use                               |
-| culture         | string[] | Values and working style                            |
-| whyThisRole     | string   | Why this role exists                                |
-| yourEdge        | string[] | Specific links between THIS candidate and this role |
-| gapsToAddress   | string[] | Missing skills reframed as strategy                 |
-| smartQuestions  | string[] | Questions that show real research                   |
-| interviewPrep   | string[] | Topics to prepare for this role                     |
-| sources         | string[] | Pages the company info came from                    |
-
-**Rules:**
-
-- Always use `extract()` with a Zod schema — never parse raw HTML or use regex
-- Always wrap every `act()` and `extract()` in try/catch
-- Always call `await stagehand.close()` when done — ends the Browserbase session
-- Model is always `gpt-4o` — never use other models
-- Temperature is `0.4` for synthesis — grounded but flexible enough to make real connections
-- Max 3 sub-pages — never exceed this on free plan
-- Always close session in finally block — never leave sessions open even if research fails
-- Job description and profile always come from DB — never re-fetch via browser
-- If browser research returns empty — still run synthesis with job + profile only
-- yourEdge, gapsToAddress, and smartQuestions are the most valuable fields — never skip them
-
-## OpenAI GPT-4o
-
-**Check first:** Check AGENTS.md for an installed OpenAI skill. The skill will have the latest API patterns and model capabilities.
-
-### Structured JSON Response
+### Sending Email
 
 ```typescript
-import OpenAI from 'openai';
+// src/server/actions/email.ts
+'use server';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+import { resend } from '@/lib/resend';
+import { WelcomeEmail } from '@/emails/WelcomeEmail';
 
-const response = await openai.chat.completions.create({
-  model: 'gpt-4o',
-  response_format: { type: 'json_object' },
-  temperature: 0.3,
-  messages: [
-    {
-      role: 'system',
-      content: 'You are a job matching assistant. Return only valid JSON.',
-    },
-    {
-      role: 'user',
-      content: `Your prompt here`,
-    },
-  ],
-});
-
-const result = JSON.parse(response.choices[0].message.content!);
+export async function sendWelcomeEmail(email: string, name: string) {
+  await resend.emails.send({
+    from: `${process.env.NEXT_PUBLIC_APP_NAME} <noreply@${process.env.NEXT_PUBLIC_DOMAIN}>`,
+    to: email,
+    subject: 'Welcome!',
+    react: WelcomeEmail({ name }),
+  });
+}
 ```
-
-**Temperature settings:**
-
-- `0.3` — matching, scoring, extraction, research synthesis — deterministic results
-- `0.7` — resume generation — natural variation
-
-**Max tokens:**
-
-- Job matching + scoring: `300`
-- Company research synthesis: `800`
-- Resume generation: `1000`
-- Profile extraction from resume: `800`
 
 **Rules:**
 
-- Model string is always `'gpt-4o'` — never use other model names
-- Always use `response_format: { type: 'json_object' }` for structured data
-- Always parse `response.choices[0].message.content` as string — even with json_object it returns a string
-- Always validate parsed JSON before using — wrap in try/catch
-- Match threshold is always `MATCH_THRESHOLD` from `lib/utils.ts` — never hardcode 70
-- Company research synthesis must always return a complete dossier — never return empty even if browser research failed
+- Always use React Email templates — never plain HTML
+- Store templates in `src/emails/` — one file per template
+- Use `react` property with JSX — not `html`
+- Always use a verified sender domain
+
+---
+
+## Pino
+
+**Check first:** Check AGENTS.md for an installed Pino skill. If a Pino MCP server is configured — use it.
+
+### Logger Setup
+
+```typescript
+// src/lib/logger.ts
+import pino from 'pino';
+
+const isDev = process.env.NODE_ENV === 'development';
+
+export const logger = pino({
+  level: isDev ? 'debug' : 'info',
+  transport: isDev
+    ? {
+        target: 'pino-pretty',
+        options: { colorize: true, ignore: 'pid,hostname' },
+      }
+    : undefined,
+  base: {
+    env: process.env.NODE_ENV,
+    service: process.env.NEXT_PUBLIC_APP_NAME || 'app',
+  },
+  redact: {
+    paths: [
+      'password',
+      'token',
+      'secret',
+      'authorization',
+      '*.password',
+      '*.token',
+    ],
+    censor: '[REDACTED]',
+  },
+});
+
+// Request-scoped logger
+export function createReqLogger(requestId: string, userId?: string) {
+  return logger.child({ requestId, userId });
+}
+```
+
+### Usage
+
+```typescript
+// src/middleware.ts — Inject request ID
+import { logger } from '@/lib/logger';
+
+// In middleware
+const requestId = crypto.randomUUID();
+const reqLogger = logger.child({ requestId });
+reqLogger.info({ path: req.nextUrl.pathname }, 'Request started');
+```
+
+```typescript
+// src/server/actions/profile.ts
+import { logger } from '@/lib/logger';
+
+export async function updateProfile(data: unknown) {
+  try {
+    // ...
+    logger.info(
+      { userId, action: 'profile.updated' },
+      'Profile updated successfully',
+    );
+  } catch (error) {
+    logger.error({ error, userId }, 'Failed to update profile');
+    throw error;
+  }
+}
+```
+
+**Rules:**
+
+- Always use `logger.child()` for request-scoped logging
+- Never log passwords, tokens, or secrets — use `redact`
+- Always include structured data as object — never in message string
+- Use `debug` for development, `info` for production
+- Always log errors with `error` level
+
+---
+
+## Sentry
+
+**Check first:** Check AGENTS.md for an installed Sentry skill. If a Sentry MCP server is configured — use it.
+
+### Setup
+
+```typescript
+// next.config.ts
+import { withSentryConfig } from '@sentry/nextjs';
+
+const nextConfig = {
+  // ...
+};
+
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG!,
+  project: process.env.SENTRY_PROJECT!,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+});
+```
+
+### Error Capture
+
+```typescript
+// src/server/actions/profile.ts
+import * as Sentry from '@sentry/nextjs';
+import { logger } from '@/lib/logger';
+
+export async function updateProfile(data: unknown) {
+  try {
+    // ...
+  } catch (error) {
+    logger.error({ error }, 'Failed to update profile');
+    Sentry.captureException(error, {
+      tags: { action: 'profile.update' },
+      extra: { userId },
+    });
+    throw error;
+  }
+}
+```
+
+### Error Boundary
+
+```typescript
+// src/app/error.tsx
+'use client';
+
+import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
+
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
+  return (
+    <div>
+      <h2>Something went wrong</h2>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+```
+
+**Rules:**
+
+- Always capture exceptions with `Sentry.captureException`
+- Always include tags for filtering (action, route, userId)
+- Never include sensitive data in Sentry logs
+- Use error boundaries at route level
 
 ---
 
 ## PostHog
 
-**Check first:** Check AGENTS.md for an installed PostHog skill. If a PostHog MCP server is configured — use it. The skill/MCP will have the latest client and server patterns.
+**Check first:** Check AGENTS.md for an installed PostHog skill. If a PostHog MCP server is configured — use it.
 
-### Client Setup (Browser)
+### Client Setup
 
 ```typescript
-// lib/posthog-client.ts
+// src/lib/posthog-client.ts
 import posthog from 'posthog-js';
 
 export function initPostHog() {
   if (typeof window !== 'undefined') {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
-      capture_pageview: false, // manual pageview tracking
+      capture_pageview: false,
     });
   }
 }
-
-// Capture event client-side
-posthog.capture('job_found', {
-  userId,
-  source: 'search',
-  matchScore: score,
-});
 ```
 
 ### Server Setup
 
 ```typescript
-// lib/posthog-server.ts
+// src/lib/posthog-server.ts
 import { PostHog } from 'posthog-node';
 
 export const createPostHogServer = () =>
   new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
-    flushAt: 1, // send immediately
-    flushInterval: 0, // no batching — Next.js functions are short-lived
+    flushAt: 1,
+    flushInterval: 0,
   });
-
-// Always use and shutdown in the same function
-const posthog = createPostHogServer();
-posthog.capture({
-  distinctId: userId,
-  event: 'company_researched',
-  properties: { userId, jobId, company },
-});
-await posthog.shutdown(); // required — ensures event is sent
 ```
 
-**Rules:**
-
-- Always call `await posthog.shutdown()` in server-side functions — events are lost without it
-- `flushAt: 1` and `flushInterval: 0` always set on server client
-- Event names must match exactly the list in `code-standards.md`
-- Always include `userId` as a property on every server-side event
-- Call `posthog.identify(userId)` after login on client side
-- Call `posthog.reset()` on logout on client side
-
----
-
-## @react-pdf/renderer
-
-**Check first:** Check AGENTS.md for an installed react-pdf skill. PDF generation APIs can differ from general training knowledge.
-
-### Resume PDF Generation
+### Event Tracking
 
 ```typescript
-import { renderToBuffer } from '@react-pdf/renderer'
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+// src/lib/posthog.ts
+import { createPostHogServer } from './posthog-server';
 
-const styles = StyleSheet.create({
-  page: { padding: 30, fontFamily: 'Helvetica' },
-  section: { marginBottom: 10 },
-  heading: { fontSize: 14, fontWeight: 'bold' },
-  text: { fontSize: 10 },
-})
-
-const ResumePDF = ({ profile }: { profile: Profile }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text style={styles.heading}>{profile.fullName}</Text>
-        <Text style={styles.text}>{profile.email}</Text>
-      </View>
-    </Page>
-  </Document>
-)
-
-// Generate buffer
-const buffer = await renderToBuffer(<ResumePDF profile={profile} />)
-
-// Upload directly to InsForge Storage
-await insforge.storage
-  .from('resumes')
-  .upload(`${userId}/resume.pdf`, buffer, {
-    contentType: 'application/pdf',
-    upsert: true
-  })
+export async function trackEvent(
+  distinctId: string,
+  event: string,
+  properties?: Record<string, any>,
+) {
+  const posthog = createPostHogServer();
+  posthog.capture({
+    distinctId,
+    event,
+    properties,
+  });
+  await posthog.shutdown();
+}
 ```
 
-**Supported CSS properties:**
-Only use these — others are silently ignored:
-`padding, margin, fontSize, color, fontFamily, flexDirection, alignItems, justifyContent, borderRadius, width, height, fontWeight, textAlign, lineHeight`
-
-**Rules:**
-
-- Server-side only — never import in client components
-- Always use `renderToBuffer` — not `renderToStream` or `PDFDownloadLink`
-- PDF generation only in `app/api/resume/` routes
-- Generated buffer uploaded directly to InsForge Storage — never written to disk
-- Always save public URL to DB after upload
-
----
-
-## pdf-parse
-
-**Check first:** Check AGENTS.md for an installed pdf-parse skill.
-
-### Extract Text from Uploaded Resume
+### Usage
 
 ```typescript
-import pdf from 'pdf-parse';
+// src/server/actions/profile.ts
+import { trackEvent } from '@/lib/posthog';
 
-// In API route handling resume upload
-export async function POST(req: NextRequest) {
-  const formData = await req.formData();
-  const file = formData.get('resume') as File;
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-
-  const pdfData = await pdf(buffer);
-  const extractedText = pdfData.text; // raw text content
-
-  // Send to GPT-4o for structured extraction
+export async function updateProfile(data: unknown) {
+  // ...
+  await trackEvent(userId, 'profile_updated', {
+    fields: Object.keys(validated),
+  });
 }
 ```
 
 **Rules:**
 
-- Server-side only — never import in client components
-- `pdfData.text` is raw unformatted text — GPT-4o handles the structure extraction
-- Always handle parse errors — some PDFs are image-based and return empty text
-- If `pdfData.text` is empty or very short — return error to user: "Could not extract text from this PDF. Please try a different file."
+- Always call `await posthog.shutdown()` in server functions — events are lost without it
+- Always set `flushAt: 1` and `flushInterval: 0` on server client
+- Always include `userId` as a property on every event
+- Call `posthog.identify(userId)` after login on client
+- Call `posthog.reset()` on logout on client
+
+---
+
+## Arcjet
+
+**Check first:** Check AGENTS.md for an installed Arcjet skill. If an Arcjet MCP server is configured — use it.
+
+### Middleware Setup
+
+```typescript
+// src/middleware.ts
+import arcjet, { tokenBucket, detectBot } from '@arcjet/next';
+import { clerkMiddleware } from '@clerk/nextjs/server';
+
+const aj = arcjet({
+  key: process.env.ARCJET_KEY!,
+  rules: [
+    tokenBucket({
+      mode: 'LIVE',
+      refillRate: 100,
+      interval: 60,
+      capacity: 200,
+    }),
+    detectBot({
+      mode: 'LIVE',
+      allow: ['GOOGLEBOT', 'BINGBOT'],
+    }),
+  ],
+});
+
+export default clerkMiddleware(async (auth, req) => {
+  const decision = await aj.protect(req);
+
+  if (decision.isDenied()) {
+    if (decision.reason.isRateLimit()) {
+      return new NextResponse('Too Many Requests', { status: 429 });
+    }
+    if (decision.reason.isBot()) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+  }
+  // ...
+});
+```
+
+**Rules:**
+
+- Always run Arcjet before your app logic in middleware
+- Use `LIVE` mode in production — `DRY_RUN` for testing
+- Always handle rate limit and bot detection separately
+- Set sensible limits based on your use case
+
+---
+
+## next-intl
+
+**Check first:** Check AGENTS.md for an installed next-intl skill. If a next-intl MCP server is configured — use it.
+
+### Middleware Setup
+
+```typescript
+// src/middleware.ts
+import createIntlMiddleware from 'next-intl/middleware';
+
+const intlMiddleware = createIntlMiddleware({
+  locales: ['en', 'es', 'fr'],
+  defaultLocale: 'en',
+});
+
+export default clerkMiddleware(async (auth, req) => {
+  const response = intlMiddleware(req);
+  // ... auth logic
+  return response;
+});
+```
+
+### Usage in Components
+
+```typescript
+// src/app/dashboard/page.tsx
+import { useTranslations } from 'next-intl';
+
+export default function DashboardPage() {
+  const t = useTranslations('dashboard');
+
+  return (
+    <div>
+      <h1>{t('title')}</h1>
+      <p>{t('welcome', { name: user.name })}</p>
+    </div>
+  );
+}
+```
+
+### Message Files
+
+```typescript
+// src/i18n/messages/en.json
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}!"
+  }
+}
+```
+
+**Rules:**
+
+- Always use `useTranslations` in Server Components — never pass translations as props
+- Use ICU message format with variables: `{name, plural, ...}`
+- Keep messages in `src/i18n/messages/` — one file per locale
+
+---
+
+## next-themes
+
+**Check first:** Check AGENTS.md for an installed next-themes skill. If a next-themes MCP server is configured — use it.
+
+### Provider Setup
+
+```typescript
+// src/app/providers/ThemeProvider.tsx
+'use client';
+
+import { ThemeProvider as NextThemeProvider } from 'next-themes';
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <NextThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      {children}
+    </NextThemeProvider>
+  );
+}
+```
+
+### Usage
+
+```typescript
+// src/components/ThemeToggle.tsx
+'use client';
+
+import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
+import { Moon, Sun } from 'lucide-react';
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+    >
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
+  );
+}
+```
+
+**Rules:**
+
+- Always use `attribute="class"` for Tailwind dark mode
+- Always use `disableTransitionOnChange` to avoid flash
+- Use `useTheme` hook for accessing and changing theme
+
+---
+
+## @t3-oss/env-nextjs
+
+**Check first:** Check AGENTS.md for an installed t3-env skill. If a t3-env MCP server is configured — use it.
+
+### Setup
+
+```typescript
+// src/config/env.ts
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const env = createEnv({
+  server: {
+    DATABASE_URL: z.string().url(),
+    CLERK_SECRET_KEY: z.string().min(1),
+    STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
+    RESEND_API_KEY: z.string().startsWith('re_'),
+    ARCJET_KEY: z.string().min(1),
+    SENTRY_DSN: z.string().url().optional(),
+    SENTRY_AUTH_TOKEN: z.string().optional(),
+  },
+  client: {
+    NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1),
+    NEXT_PUBLIC_POSTHOG_HOST: z.string().url(),
+  },
+  runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    ARCJET_KEY: process.env.ARCJET_KEY,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  emptyStringAsUndefined: true,
+});
+```
+
+### Usage
+
+```typescript
+// src/server/actions/stripe.ts
+import { env } from '@/config/env';
+
+export async function createCheckoutSession() {
+  const session = await stripe.checkout.sessions.create({
+    success_url: `${env.NEXT_PUBLIC_APP_URL}/dashboard`,
+    // ...
+  });
+}
+```
+
+**Rules:**
+
+- Always import `env` from `@/config/env` — never access `process.env` directly
+- Always validate server variables with Zod — fail fast on missing values
+- Client variables must start with `NEXT_PUBLIC_`
+- Use `skipValidation` only in development
+
+---
+
+## Vitest
+
+**Check first:** Check AGENTS.md for an installed Vitest skill. If a Vitest MCP server is configured — use it.
+
+### Config
+
+```typescript
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+export default defineConfig({
+  plugins: [react(), tsconfigPaths()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./tests/setup.ts'],
+    include: ['src/**/*.test.{ts,tsx}', 'tests/unit/**/*.test.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      thresholds: {
+        statements: 70,
+        branches: 65,
+        functions: 70,
+        lines: 70,
+      },
+      exclude: [
+        'src/components/ui/**',
+        'src/types/**',
+        '**/*.d.ts',
+        '**/index.ts',
+      ],
+    },
+  },
+});
+```
+
+### Test Example
+
+```typescript
+// src/lib/utils.test.ts
+import { describe, it, expect } from 'vitest';
+import { cn } from './utils';
+
+describe('cn', () => {
+  it('combines class names', () => {
+    expect(cn('foo', 'bar')).toBe('foo bar');
+    expect(cn('foo', { bar: true })).toBe('foo bar');
+  });
+});
+```
+
+### Component Test
+
+```typescript
+// src/components/ui/Button.test.tsx
+import { render, screen } from '@testing-library/react';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('renders children', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+});
+```
+
+**Rules:**
+
+- Use `describe` and `it` for test structure
+- Use `render` and `screen` from `@testing-library/react`
+- Always use `expect` from `vitest` (globals enabled)
+- Keep coverage thresholds at 70%
+
+---
+
+## Playwright
+
+**Check first:** Check AGENTS.md for an installed Playwright skill. If a Playwright MCP server is configured — use it.
+
+### Config
+
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+  ],
+  webServer: {
+    command: 'pnpm dev',
+    port: 3000,
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+### Test Example
+
+```typescript
+// tests/e2e/auth.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('user can sign in', async ({ page }) => {
+  await page.goto('/sign-in');
+  await page.fill('input[name="email"]', 'test@example.com');
+  await page.fill('input[name="password"]', 'password123');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL('/dashboard');
+});
+```
+
+**Rules:**
+
+- Always use `baseURL` from config — never hardcode URLs
+- Always include accessibility checks with `@axe-core/playwright`
+- Use `trace: 'on-first-retry'` for debugging
+- Run tests against built app in CI

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Caveat, Space_Mono } from 'next/font/google';
 import './globals.css';
+import { PostHogProvider } from './providers';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -110,7 +112,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className='min-h-screen antialiased' suppressHydrationWarning>
-        {children}
+        <ClerkProvider>
+          <PostHogProvider>{children}</PostHogProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

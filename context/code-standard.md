@@ -18,6 +18,19 @@ The AI agent on this project operates as a senior engineer. This means:
 
 ---
 
+# Code Quality Standards
+
+## General Rules
+
+- Production-ready code only.
+- No duplicate code.
+- No dead code.
+- No unused imports.
+- No unused variables.
+- No commented-out code.
+- Reuse existing utilities and abstractions whenever possible.
+- Keep implementations predictable and easy to maintain.
+
 ## TypeScript
 
 - Strict mode enabled in tsconfig.json — no exceptions
