@@ -28,15 +28,15 @@
   - **Why:** Establishes codebase configuration rules and baseline responsive layouts before implementing features.
   - **Stack notes:** Next.js 16, `@t3-oss/env-nextjs`, `next-themes`, Tailwind CSS, shadcn/ui.
   - **Subtasks:**
-    - [ ] Verify core Next.js configuration and folder structures (`src/app`, `src/components`, `src/lib`)
-    - [ ] Install core dependencies (`clsx`, `tailwind-merge`, `lucide-react`, `next-themes`, etc.)
+    - [x] Verify core Next.js configuration and folder structures (`src/app`, `src/components`, `src/lib`)
+    - [x] Install core dependencies (`clsx`, `tailwind-merge`, `lucide-react`, `next-themes`, etc.)
     - [ ] Write environment schemas in `src/env.js` validating system values
-    - [ ] Configure Tailwind CSS rules and import global design variables in global CSS files
-    - [ ] Implement responsive root layouts with unified metadata, custom fonts, and theme providers
-    - [ ] Build core UI layout modules: `Navbar`, `Footer`, and `ThemeToggle`
+    - [x] Configure Tailwind CSS rules and import global design variables in global CSS files
+    - [x] Implement responsive root layouts with unified metadata, custom fonts, and theme providers
+    - [x] Build core UI layout modules: `Navbar`, `Footer`, and `ThemeToggle`
   - **Acceptance criteria:**
-    - [ ] running `npm run dev` builds the layout shell on `localhost:3000` with zero compile errors
-    - [ ] Theme toggle switches between light and dark modes, updating HTML classes appropriately
+    - [x] running `npm run dev` builds the layout shell on `localhost:3000` with zero compile errors
+    - [x] Theme toggle switches between light and dark modes, updating HTML classes appropriately
     - [ ] Unset required environment variables trigger `@t3-oss/env-nextjs` validation crash during startup
 
 ---
@@ -49,19 +49,19 @@
 
 ### Marketing Landing Page
 
-- [ ] **Build Static Homepage** `[M]` 🔴
+- [x] **Build Static Homepage** `[M]` 🔴
   - **What:** Create landing page sections including Hero graphics, value prop lists, testimonial modules, and bottom Call-To-Action segments.
   - **Why:** Communicates product features to unregistered traffic, converting them to active users.
   - **Stack notes:** Tailwind CSS, `next/image` for media files, standard shadcn buttons.
   - **Subtasks:**
-    - [ ] Create landing route at `app/page.tsx` displaying the hero element with CTA links
-    - [ ] Design value proposition grids containing cards detailing app features
-    - [ ] Design social proof and user testimonial sections with mock reviews
-    - [ ] Build bottom signup banner container with secondary action buttons
-    - [ ] Wire links routing unauthenticated traffic to `/sign-up` and signed-in traffic to `/dashboard`
+    - [x] Create landing route at `app/page.tsx` displaying the hero element with CTA links
+    - [x] Design value proposition grids containing cards detailing app features
+    - [x] Design social proof and user testimonial sections with mock reviews
+    - [x] Build bottom signup banner container with secondary action buttons
+    - [x] Wire links routing unauthenticated traffic to `/sign-up` and signed-in traffic to `/dashboard`
   - **Acceptance criteria:**
-    - [ ] Responsive grid structure scales fluidly without overflow across mobile, tablet, and wide screens
-    - [ ] Clicking CTA buttons successfully changes URL paths targeting `/sign-up` or `/dashboard`
+    - [x] Responsive grid structure scales fluidly without overflow across mobile, tablet, and wide screens
+    - [x] Clicking CTA buttons successfully changes URL paths targeting `/sign-up` or `/dashboard`
 
 ---
 
@@ -78,16 +78,16 @@
   - **Why:** Restricts access to sensitive workspace dashboard paths and handles user login flows securely.
   - **Stack notes:** `@clerk/nextjs` SDK, `ClerkProvider`, `auth()`, `useUser()`, Next middleware.
   - **Subtasks:**
-    - [ ] Set up Clerk API key configurations inside local environment settings
-    - [ ] Wrap root layouts in the unified `<ClerkProvider>` context
-    - [ ] Create the sign-in page at `app/sign-in/[[...sign-in]]/page.tsx` using Clerk `<SignIn />`
-    - [ ] Create the sign-up page at `app/sign-up/[[...sign-up]]/page.tsx` using Clerk `<SignUp />`
-    - [ ] Build `middleware.ts` protecting `/dashboard`, `/settings`, and `/admin` routes
-    - [ ] Update Navbar controls showing authenticated profiles or sign-in buttons conditionally
+    - [x] Set up Clerk API key configurations inside local environment settings
+    - [x] Wrap root layouts in the unified `<ClerkProvider>` context
+    - [x] Create the sign-in page at `app/sign-in/[[...sign-in]]/page.tsx` using Clerk `<SignIn />`
+    - [x] Create the sign-up page at `app/sign-up/[[...sign-up]]/page.tsx` using Clerk `<SignUp />`
+    - [ ] Build `proxy.ts` protecting `/dashboard`, `/settings`, and `/admin` routes
+    - [x] Update Navbar controls showing authenticated profiles or sign-in buttons conditionally
   - **Acceptance criteria:**
-    - [ ] Direct navigation to `/dashboard` while signed out redirects user to `/sign-in`
-    - [ ] Completing credentials login routes the user to the secure `/dashboard` screen
-    - [ ] Clicking logout terminates the user session and returns route to homepage
+    - [x] Direct navigation to `/dashboard` while signed out redirects user to `/sign-in`
+    - [x] Completing credentials login routes the user to the secure `/dashboard` screen
+    - [x] Clicking logout terminates the user session and returns route to homepage
 
 ---
 
@@ -324,18 +324,18 @@
 
 ### Monitoring & Error Tracking
 
-- [ ] **Setup Pino and Sentry Monitoring** `[M]` 🔴
+- [x] **Setup Pino and Sentry Monitoring** `[M]` 🔴
   - **What:** Write log singleton helpers, set up Sentry configurations, and wrap app errors in custom boundary layouts.
   - **Why:** Provides observability and diagnostic tools for production incidents.
   - **Stack notes:** `pino`, `pino-pretty`, `@sentry/nextjs`.
   - **Subtasks:**
-    - [ ] Implement Pino logging clients configuring standard JSON output formats
-    - [ ] Run Sentry Next.js configuration scripts initializing server/client tracers
-    - [ ] Insert global error boundary elements at root React layout modules
-    - [ ] Add try-catch blocks to API endpoints and actions reporting issues to Sentry
+    - [x] Implement Pino logging clients configuring standard JSON output formats
+    - [x] Run Sentry Next.js configuration scripts initializing server/client tracers
+    - [x] Insert global error boundary elements at root React layout modules
+    - [x] Add try-catch blocks to API endpoints and actions reporting issues to Sentry
   - **Acceptance criteria:**
-    - [ ] Fatal application crashes render custom error UI fallbacks
-    - [ ] Logged failures upload details to Sentry issues console pages
+    - [x] Fatal application crashes render custom error UI fallbacks
+    - [x] Logged failures upload details to Sentry issues console pages
 
 ---
 

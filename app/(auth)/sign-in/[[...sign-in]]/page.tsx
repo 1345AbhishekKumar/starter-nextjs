@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useSignIn, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { logger } from '@/lib/logger';
 
 export default function SignInPage() {
   const { signIn, errors, fetchStatus } = useSignIn();
@@ -30,12 +31,17 @@ export default function SignInPage() {
     setGeneralError('');
 
     try {
+      logger.info({ email }, 'Attempting password sign-in');
       const res = await signIn.password({
         identifier: email,
         password: password,
       });
 
       if (res.error) {
+        logger.warn(
+          { error: res.error, email },
+          'Clerk password sign-in returned error status',
+        );
         setGeneralError(
           res.error.message ||
             'Failed to sign in. Please check your credentials.',
@@ -44,6 +50,10 @@ export default function SignInPage() {
       }
 
       if (signIn.status === 'needs_second_factor') {
+        logger.info(
+          { email },
+          'Password sign-in requires second factor verification',
+        );
         // Send verification code for phone/SMS MFA if configured,
         // or just let user enter TOTP code.
         const firstPhoneFactor = signIn.supportedSecondFactors?.find(
@@ -53,6 +63,7 @@ export default function SignInPage() {
           await signIn.mfa.sendPhoneCode();
         }
       } else if (signIn.status === 'complete') {
+        logger.info({ email }, 'Password sign-in successful');
         await signIn.finalize({
           navigate: ({ decorateUrl }) => {
             const url = decorateUrl('/dashboard');
@@ -65,6 +76,10 @@ export default function SignInPage() {
         });
       }
     } catch (err: unknown) {
+      logger.error(
+        { error: err, email },
+        'Unexpected error during password sign-in',
+      );
       const message =
         err instanceof Error ? err.message : 'An unexpected error occurred.';
       setGeneralError(message);
@@ -77,6 +92,7 @@ export default function SignInPage() {
     setGeneralError('');
 
     try {
+      logger.info('Attempting MFA verification');
       // Try to verify using phone code first, then fallback to TOTP
       const phoneFactorActive = signIn.supportedSecondFactors?.some(
         (f) => f.strategy === 'phone_code',
@@ -87,11 +103,16 @@ export default function SignInPage() {
         : await signIn.mfa.verifyTOTP({ code: mfaCode });
 
       if (res.error) {
+        logger.warn(
+          { error: res.error },
+          'Clerk MFA verification returned error status',
+        );
         setGeneralError(res.error.message || 'Invalid verification code.');
         return;
       }
 
       if (signIn.status === 'complete') {
+        logger.info('MFA verification successful');
         await signIn.finalize({
           navigate: ({ decorateUrl }) => {
             const url = decorateUrl('/dashboard');
@@ -104,6 +125,7 @@ export default function SignInPage() {
         });
       }
     } catch (err: unknown) {
+      logger.error({ error: err }, 'Unexpected error during MFA verification');
       const message =
         err instanceof Error
           ? err.message
@@ -165,6 +187,7 @@ export default function SignInPage() {
         <button
           onClick={() => {
             if (signIn) {
+              logger.info('MFA sign-in flow cancelled by user');
               signIn.reset();
             }
             setGeneralError('');

@@ -17,6 +17,15 @@ export const serverEnv = createEnv({
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
+
+    // Sentry (optional)
+    SENTRY_AUTH_TOKEN: z.string().optional(),
+    SENTRY_DSN: z.string().optional(),
+
+    // AI & Upstash (optional)
+    NVIDIA_API_KEY: z.string().optional(),
+    UPSTASH_REDIS_REST_URL: z.string().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
   },
 
   // For Next.js server components
@@ -26,6 +35,11 @@ export const serverEnv = createEnv({
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
     NODE_ENV: process.env.NODE_ENV,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    NVIDIA_API_KEY: process.env.NVIDIA_API_KEY,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
   },
 
   // For server-side validation

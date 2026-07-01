@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useSignUp, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { logger } from '@/lib/logger';
 
 export default function SignUpPage() {
   const { signUp, errors, fetchStatus } = useSignUp();
@@ -32,6 +33,7 @@ export default function SignUpPage() {
     setGeneralError('');
 
     try {
+      logger.info({ username, email }, 'Attempting password sign-up');
       const res = await signUp.create({
         username: username,
         emailAddress: email,
@@ -39,21 +41,38 @@ export default function SignUpPage() {
       });
 
       if (res.error) {
+        logger.warn(
+          { error: res.error, username, email },
+          'Clerk password sign-up returned error status',
+        );
         setGeneralError(res.error.message || 'Failed to create account.');
         return;
       }
 
       // Send the email verification code
+      logger.info({ email }, 'Sending email verification code');
       const sendCodeRes = await signUp.verifications.sendEmailCode();
       if (sendCodeRes.error) {
+        logger.warn(
+          { error: sendCodeRes.error, email },
+          'Failed to send Clerk verification code',
+        );
         setGeneralError(
           sendCodeRes.error.message || 'Failed to send verification code.',
         );
         return;
       }
 
+      logger.info(
+        { email },
+        'Verification code sent successfully, switching to OTP verification mode',
+      );
       setMode('verify-otp');
     } catch (err: unknown) {
+      logger.error(
+        { error: err, username, email },
+        'Unexpected error during password sign-up',
+      );
       const message =
         err instanceof Error ? err.message : 'An unexpected error occurred.';
       setGeneralError(message);
@@ -66,17 +85,23 @@ export default function SignUpPage() {
     setGeneralError('');
 
     try {
+      logger.info({ email }, 'Attempting email OTP verification');
       const res = await signUp.verifications.verifyEmailCode({
         code: otpCode,
       });
 
       if (res.error) {
+        logger.warn(
+          { error: res.error, email },
+          'Clerk OTP verification returned error status',
+        );
         setGeneralError(res.error.message || 'Invalid verification code.');
         return;
       }
 
       // Check both the verification result error and final status
       if (!res.error) {
+        logger.info({ email }, 'OTP verified successfully, finalizing sign-up');
         await signUp.finalize({
           navigate: ({ decorateUrl }) => {
             const url = decorateUrl('/dashboard');
@@ -89,6 +114,10 @@ export default function SignUpPage() {
         });
       }
     } catch (err: unknown) {
+      logger.error(
+        { error: err, email },
+        'Unexpected error during email OTP verification',
+      );
       const message =
         err instanceof Error ? err.message : 'Verification error.';
       setGeneralError(message);
@@ -99,13 +128,23 @@ export default function SignUpPage() {
     if (!signUp) return;
     setGeneralError('');
     try {
+      logger.info({ email }, 'Attempting to resend verification code');
       const res = await signUp.verifications.sendEmailCode();
       if (res.error) {
+        logger.warn(
+          { error: res.error, email },
+          'Failed to resend Clerk verification code',
+        );
         setGeneralError(res.error.message || 'Failed to resend code.');
       } else {
+        logger.info({ email }, 'Resent verification code successfully');
         alert('A new verification code has been sent to your email.');
       }
     } catch (err: unknown) {
+      logger.error(
+        { error: err, email },
+        'Unexpected error during resending verification code',
+      );
       const message =
         err instanceof Error ? err.message : 'Failed to resend code.';
       setGeneralError(message);
@@ -176,6 +215,10 @@ export default function SignUpPage() {
             <button
               onClick={() => {
                 if (signUp) {
+                  logger.info(
+                    { email },
+                    'OTP verification flow cancelled by user',
+                  );
                   signUp.reset();
                 }
                 setMode('signup');
