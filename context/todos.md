@@ -37,7 +37,7 @@
   - **Acceptance criteria:**
     - [x] running `npm run dev` builds the layout shell on `localhost:3000` with zero compile errors
     - [x] Theme toggle switches between light and dark modes, updating HTML classes appropriately
-    - [ ] Unset required environment variables trigger `@t3-oss/env-nextjs` validation crash during startup
+    - [x] Unset required environment variables trigger `@t3-oss/env-nextjs` validation crash during startup
 
 ---
 
@@ -73,7 +73,7 @@
 
 ### Authentication & Routing
 
-- [ ] **Integrate Clerk Authentication** `[M]` 🔴
+- [x] **Integrate Clerk Authentication** `[M]` 🔴
   - **What:** Configure the Clerk auth provider, create dedicated auth pages, and set up route protection middleware.
   - **Why:** Restricts access to sensitive workspace dashboard paths and handles user login flows securely.
   - **Stack notes:** `@clerk/nextjs` SDK, `ClerkProvider`, `auth()`, `useUser()`, Next middleware.
@@ -82,7 +82,7 @@
     - [x] Wrap root layouts in the unified `<ClerkProvider>` context
     - [x] Create the sign-in page at `app/sign-in/[[...sign-in]]/page.tsx` using Clerk `<SignIn />`
     - [x] Create the sign-up page at `app/sign-up/[[...sign-up]]/page.tsx` using Clerk `<SignUp />`
-    - [ ] Build `proxy.ts` protecting `/dashboard`, `/settings`, and `/admin` routes
+    - [x] Build `proxy.ts` protecting `/dashboard`, `/settings`, and `/admin` routes
     - [x] Update Navbar controls showing authenticated profiles or sign-in buttons conditionally
   - **Acceptance criteria:**
     - [x] Direct navigation to `/dashboard` while signed out redirects user to `/sign-in`
@@ -99,20 +99,20 @@
 
 ### Database Setup
 
-- [ ] **Setup Drizzle ORM & Neon Connection** `[M]` 🔴
+- [x] **Setup Drizzle ORM & Neon Connection** `[M]` 🔴
   - **What:** Connect database clients, map ORM schemas, generate SQL migrations, and configure data seed scripts.
   - **Why:** Prepares the persistence layer representing users, settings, and CRUD tables.
   - **Stack notes:** `drizzle-orm`, `drizzle-kit`, `@neondatabase/serverless` connection driver.
   - **Subtasks:**
-    - [ ] Install database packages and configure `drizzle.config.ts` options
-    - [ ] Initialize the Neon HTTP connection instance in `src/db/index.ts`
-    - [ ] Write schema models at `src/db/schema.ts` defining `users`, `profiles`, `posts`, and `subscriptions`
-    - [ ] Generate SQL migrations using `npx drizzle-kit generate` command
-    - [ ] Apply migrations to the live database using `npx drizzle-kit migrate` command
-    - [ ] Write a development seed script file inserting dummy records for test profiles
+    - [x] Install database packages and configure `drizzle.config.ts` options
+    - [x] Initialize the Neon HTTP connection instance in `src/db/index.ts`
+    - [x] Write schema models at `src/db/schema.ts` defining `users`, `profiles`, `posts`, and `subscriptions`
+    - [x] Generate SQL migrations using `npx drizzle-kit generate` command
+    - [x] Apply migrations to the live database using `npx drizzle-kit migrate` command
+    - [x] Write a development seed script file inserting dummy records for test profiles
   - **Acceptance criteria:**
-    - [ ] Migration outputs produce valid files in database migrations directories
-    - [ ] Running seed scripts successfully populates target database tables without constraint violations
+    - [x] Migration outputs produce valid files in database migrations directories
+    - [x] Running seed scripts successfully populates target database tables without constraint violations
 
 ---
 
