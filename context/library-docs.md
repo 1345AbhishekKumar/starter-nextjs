@@ -832,104 +832,302 @@ const [sort, setSort] = useQueryState('sort', {
 - Use nuqs for all URL state — filters, pagination, sorting, tabs
 - Always provide default values — URL state should never be undefined
 - Use `parseAsString`, `parseAsInteger`, etc. for type safety
-- Keep URL state separate from other state — it's a source of truth, not a cache
-- Never store sensitive data in URL state
+- Keep URL state separate from other state �## Uploadcare
+
+**Check first:** Check AGENTS.md for an installed Uploadcare skill. If an Uploadcare MCP server is configured — use it.
+
+Uploadcare and Neon integration pattern stores uploaded files on Uploadcare's CDN while persisting each file's UUID, CDN URL, and user ID as metadata rows in a Neon Postgres table. Use this guide when you need a dedicated CDN for images, videos, and documents but want queryable, structured metadata in Postgres rather than in Uploadcare alone.
+
+This section covers:
+
+1. Client-Side File Uploading in Next.js (using `@uploadcare/react-uploader`)
+2. Next.js Image Loader and Component optimization (`@uploadcare/nextjs-loader`)
+3. Backend Server integration (Hono / Flask + Neon DB)
 
 ---
 
-## UploadThing
+### 1. Client-Side File Uploading in Next.js
 
-**Check first:** Check AGENTS.md for an installed UploadThing skill. If an UploadThing MCP server is configured — use it.
+Use `@uploadcare/react-uploader` for React/Next.js client-side uploads. To avoid Server-Side Rendering (SSR) issues, import uploader components from the `/next` sub-path.
 
-### File Route Definition
+#### Installation
 
-```typescript
-// src/app/api/uploadthing/core.ts
-import { createUploadthing, type FileRouter } from 'uploadthing/next';
-import { auth } from '@clerk/nextjs/server';
-
-const f = createUploadthing();
-
-export const ourFileRouter = {
-  // Avatar upload
-  avatarUploader: f({
-    image: {
-      maxFileSize: '2MB',
-      maxFileCount: 1,
-    },
-  })
-    .middleware(async () => {
-      const { userId } = await auth();
-      if (!userId) throw new Error('Unauthorized');
-      return { userId };
-    })
-    .onUploadComplete(async ({ metadata, file }) => {
-      // Save file URL to database
-      const { userId } = metadata;
-      await db
-        .update(users)
-        .set({ avatarUrl: file.url })
-        .where(eq(users.clerkId, userId));
-    }),
-
-  // Resume upload
-  resumeUploader: f({
-    pdf: {
-      maxFileSize: '5MB',
-      maxFileCount: 1,
-    },
-  })
-    .middleware(async () => {
-      const { userId } = await auth();
-      if (!userId) throw new Error('Unauthorized');
-      return { userId };
-    })
-    .onUploadComplete(async ({ metadata, file }) => {
-      // Save resume URL to database
-      await db
-        .update(profiles)
-        .set({ resumeUrl: file.url })
-        .where(eq(profiles.clerkId, metadata.userId));
-    }),
-} satisfies FileRouter;
-
-export type OurFileRouter = typeof ourFileRouter;
+```bash
+npm install @uploadcare/react-uploader
 ```
 
-### Client Upload Component
+#### Configuration
 
-```typescript
-// src/components/upload/AvatarUpload.tsx
+Set up environment variables in your `.env` or `.env.local` file:
+
+```env
+NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY="YOUR_PUBLIC_KEY"
+```
+
+#### Component Integration
+
+Here is a Next.js client component demonstrating the uploader widget integration:
+
+```tsx
 'use client';
 
-import { UploadButton } from '@uploadthing/react';
-import { ourFileRouter } from '@/app/api/uploadthing/core';
+import { useState } from 'react';
+import { FileUploaderRegular } from '@uploadcare/react-uploader/next';
+import '@uploadcare/react-uploader/core.css';
 
-export function AvatarUpload({ userId }: { userId: string }) {
+type UploadedFile = {
+  uuid: string;
+  cdnUrl: string | null;
+  name: string;
+};
+
+export function AvatarUploader({
+  onUploadComplete,
+}: {
+  onUploadComplete: (file: UploadedFile) => void;
+}) {
+  const [files, setFiles] = useState<any[]>([]);
+
+  const handleChangeEvent = (e: any) => {
+    const successFiles = e.allEntries.filter(
+      (file: any) => file.status === 'success',
+    );
+    setFiles(successFiles);
+
+    if (successFiles.length > 0) {
+      const uploaded = successFiles[0];
+      onUploadComplete({
+        uuid: uploaded.uuid,
+        cdnUrl: uploaded.cdnUrl,
+        name: uploaded.name,
+      });
+    }
+  };
+
   return (
-    <UploadButton<OurFileRouter>
-      endpoint="avatarUploader"
-      onClientUploadComplete={(res) => {
-        // File uploaded successfully
-        const url = res[0]?.url;
-        // Update UI with new avatar
-      }}
-      onUploadError={(error) => {
-        console.error(error);
-        // Show error toast
-      }}
+    <div className='flex flex-col gap-4'>
+      <FileUploaderRegular
+        pubkey={process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY}
+        onChange={handleChangeEvent}
+        maxLocalFileSizeBytes={2 * 1024 * 1024} // 2MB limit
+        multiple={false}
+        imgOnly={true}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+### 2. Next.js Image Loader and Component
+
+Optimize images on the fly by using the `UploadcareImage` component or the `uploadcareLoader` custom image loader.
+
+The custom loader allows you to optimize image characteristics (quality, resolution, format, and others) externally via the Uploadcare CDN.
+
+#### Installation
+
+```bash
+npm install @uploadcare/nextjs-loader
+```
+
+#### Configuration
+
+Add the environment variables:
+
+```env
+NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY="YOUR_PUBLIC_KEY"
+# Base URL of your app, required to process local images
+NEXT_PUBLIC_UPLOADCARE_APP_BASE_URL="https://your-domain.com/"
+# Image transformation settings (defaults: stretch/off, progressive/yes)
+NEXT_PUBLIC_UPLOADCARE_TRANSFORMATION_PARAMETERS="quality/lightest, stretch/off, progressive/yes"
+```
+
+Configure `next.config.js` to allow custom image loaders:
+
+```js
+// next.config.ts / next.config.js
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  images: {
+    loader: "custom",
+    loaderFile: "./node_modules/@uploadcare/nextjs-loader/index.js", // If supported, or use custom loader helper
+  },
+};
+
+export default nextConfig;
+```
+
+#### Custom Loader File (`lib/uploadcareLoader.ts`)
+
+If you want to use the built-in `next/image` with a custom loader function:
+
+```typescript
+import { uploadcareLoader } from '@uploadcare/nextjs-loader';
+
+export default uploadcareLoader;
+```
+
+#### Usage
+
+**Using `UploadcareImage` component:**
+
+```tsx
+import { UploadcareImage } from '@uploadcare/nextjs-loader';
+
+export function OptimizedAvatar() {
+  return (
+    <UploadcareImage
+      alt='User Avatar'
+      src='https://ucarecdn.com/xxxxxx-xxxxxx-xxxxx/'
+      width={400}
+      height={300}
     />
   );
 }
 ```
 
-**Rules:**
+**Using built-in `Image` component with custom loader:**
 
-- Always use `middleware` to check authentication
-- Always store file URL in database in `onUploadComplete`
-- Define all file routes in `core.ts` — never inline in components
-- Use `maxFileSize` and `maxFileCount` to enforce limits
-- Always handle upload errors with user feedback
+```tsx
+import Image from 'next/image';
+import { uploadcareLoader } from '@uploadcare/nextjs-loader';
+
+export function CustomOptimizedImage() {
+  return (
+    <Image
+      alt='User Avatar'
+      src='https://ucarecdn.com/xxxxxx-xxxxxx-xxxxx/'
+      width={400}
+      height={300}
+      loader={uploadcareLoader}
+    />
+  );
+}
+```
+
+---
+
+### 3. Backend Metadata Persistence in Neon DB
+
+Keep Neon Postgres synchronized with your file uploads by storing file UUIDs, CDN URLs, and owner metadata.
+
+#### Database Schema (Neon)
+
+```sql
+CREATE TABLE IF NOT EXISTS uploadcare_files (
+    id SERIAL PRIMARY KEY,
+    file_id TEXT NOT NULL UNIQUE,
+    file_url TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    upload_timestamp TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+#### Node.js (Hono Server Example)
+
+```javascript
+import { serve } from '@hono/node-server';
+import { Hono } from 'hono';
+import { uploadFile } from '@uploadcare/upload-client';
+import { neon } from '@neondatabase/serverless';
+import 'dotenv/config';
+
+const sql = neon(process.env.DATABASE_URL);
+const app = new Hono();
+
+const authMiddleware = async (c, next) => {
+  c.set('userId', 'user_123'); // Custom auth validation
+  await next();
+};
+
+app.post('/upload', authMiddleware, async (c) => {
+  try {
+    const userId = c.get('userId');
+    const formData = await c.req.formData();
+    const file = formData.get('file');
+    const fileName = formData.get('fileName') || file.name;
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    const result = await uploadFile(buffer, {
+      publicKey: process.env.UPLOADCARE_PUBLIC_KEY,
+      fileName: fileName,
+      contentType: file.type,
+    });
+
+    await sql`
+      INSERT INTO uploadcare_files (file_id, file_url, user_id)
+      VALUES (${result.uuid}, ${result.cdnUrl}, ${userId})
+    `;
+
+    return c.json({ success: true, fileUrl: result.cdnUrl });
+  } catch (error) {
+    console.error('Upload Error:', error);
+    return c.json({ success: false, error: 'Upload failed' }, 500);
+  }
+});
+
+serve({ fetch: app.fetch, port: 3000 });
+```
+
+#### Python (Flask Server Example)
+
+```python
+import os
+import psycopg2
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
+from pyuploadcare import Uploadcare
+
+load_dotenv()
+
+def get_database():
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
+
+uploadcare = Uploadcare(
+    public_key=os.getenv("UPLOADCARE_PUBLIC_KEY"),
+    secret_key=os.getenv("UPLOADCARE_SECRET_KEY"),
+)
+
+app = Flask(__name__)
+
+@app.route("/upload", methods=["POST"])
+def upload_file():
+    try:
+        user_id = "user_123" # Authenticated user ID placeholder
+        file = request.files["file"]
+
+        if file:
+            response = uploadcare.upload(file)
+            file_url = response.cdn_url
+
+            conn = get_database()
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO uploadcare_files (file_id, file_url, user_id) VALUES (%s, %s, %s)",
+                (response.uuid, file_url, user_id),
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+            return jsonify({"success": True, "fileUrl": response.cdn_url})
+        return jsonify({"success": False, "error": "No file provided"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+```
+
+---
+
+### Resources
+
+- [Uploadcare documentation](https://uploadcare.com/docs/)
+- [Uploadcare access control with signed URLs](https://uploadcare.com/docs/security/secure-delivery/)
+- [Uploadcare Next.js Loader GitHub](https://github.com/uploadcare/nextjs-loader)
+
+---cess control with signed URLs](https://uploadcare.com/docs/security/secure-delivery/)
 
 ---
 

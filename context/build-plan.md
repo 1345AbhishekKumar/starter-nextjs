@@ -205,15 +205,15 @@ Wire profile form to actual database updates.
 
 - Server Action `updateProfile` validates with Zod and updates `profiles` table
 - On success → revalidatePath, show toast
-- Avatar upload: integrate UploadThing
+- Avatar upload: integrate Uploadcare
 
 ---
 
-## Phase 10 — File Uploads (UploadThing)
+## Phase 10 — File Uploads (Uploadcare)
 
 ### 11 Avatar Upload — Real Data
 
-Enable avatar upload directly to S3.
+Enable avatar upload directly to Uploadcare CDN and store metadata in Neon.
 
 **UI:**
 
@@ -222,9 +222,9 @@ Enable avatar upload directly to S3.
 
 **Logic:**
 
-- Install `uploadthing` and set up file routes
-- Create upload component using `@uploadthing/react`
-- On success, update profile with new avatar URL
+- Install `@uploadcare/upload-client` (JS) or `pyuploadcare` (Python) and set up credentials
+- Create upload component using Uploadcare client SDK / widgets
+- On success, save file metadata (UUID, CDN URL, userId) to Neon DB and update profile with new avatar URL
 
 ---
 

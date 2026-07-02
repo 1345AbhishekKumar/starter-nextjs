@@ -1,7 +1,7 @@
 # TODOS.md — Starter NextJS
 
 > Phased, start-to-end build plan for the Starter NextJS project.
-> **Stack:** Next.js 16 (App Router), TypeScript, Tailwind CSS, shadcn/ui, next-themes, Clerk Auth, Drizzle ORM, Neon DB, UploadThing, Stripe, Resend, Pino, Sentry, PostHog, Vitest, Playwright.
+> **Stack:** Next.js 16 (App Router), TypeScript, Tailwind CSS, shadcn/ui, next-themes, Clerk Auth, Drizzle ORM, Neon DB, Uploadcare, Stripe, Resend, Pino, Sentry, PostHog, Vitest, Playwright.
 > **Type:** Web | **Solo**
 > **Generated:** 2026-07-01
 
@@ -30,6 +30,7 @@
   - **Subtasks:**
     - [x] Verify core Next.js configuration and folder structures (`src/app`, `src/components`, `src/lib`)
     - [x] Install core dependencies (`clsx`, `tailwind-merge`, `lucide-react`, `next-themes`, etc.)
+    - [x] Set up Zustand, TanStack Query, and nuqs dependencies and providers
     - [ ] Write environment schemas in `src/env.js` validating system values
     - [x] Configure Tailwind CSS rules and import global design variables in global CSS files
     - [x] Implement responsive root layouts with unified metadata, custom fonts, and theme providers
@@ -245,26 +246,25 @@
 
 ---
 
-## Phase 10 — File Uploads (UploadThing)
+## Phase 10 — File Uploads (Uploadcare)
 
-> **Goal:** Implement image file uploads to S3-compatible cloud storage for user avatars.
+> **Goal:** Implement image file uploads to Uploadcare CDN and store metadata in Neon for user avatars.
 > **Estimated:** 1 day
 > **Ships when:** Users can upload custom images from settings and see updated avatar icons immediately.
 
 ### Asset Uploads
 
-- [ ] **Integrate UploadThing Media Service** `[M]` 🟡
-  - **What:** Set up API upload routes, render drag-and-drop buttons, and save asset CDN URLs.
+- [ ] **Integrate Uploadcare Media Service** `[M]` 🟡
+  - **What:** Set up API upload integration, render upload button/widget, and save asset CDN URLs and UUIDs.
   - **Why:** Enables users to upload custom profile pictures.
-  - **Stack notes:** `uploadthing`, `@uploadthing/react` components.
+  - **Stack notes:** `@uploadcare/upload-client`, `uploadcare_files` metadata table in Neon DB.
   - **Subtasks:**
-    - [ ] Set up UploadThing keys and dependencies
-    - [ ] Create backend UploadThing route handler at `app/api/uploadthing/route.ts`
-    - [ ] Define the `imageUploader` upload route config
-    - [ ] Replace settings avatar sections with `@uploadthing/react` upload triggers
+    - [ ] Set up Uploadcare keys, dependencies, and metadata table schema in Neon
+    - [ ] Create backend API route/Server Action for saving and validating metadata
+    - [ ] Integrate Uploadcare upload widget/SDK in settings page
     - [ ] Update profile database columns with the returned image URLs on upload success
   - **Acceptance criteria:**
-    - [ ] Dragging and dropping an image executes file upload and returns success
+    - [ ] Uploading an image to Uploadcare executes successfully and metadata is saved in Neon DB
     - [ ] New images update profile database records and display in page headers
 
 ---

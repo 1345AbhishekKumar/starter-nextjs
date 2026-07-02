@@ -28,6 +28,41 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - add proper caching
 - use sentry , and logger
 
+### Caching in Next.js
+
+- **Request Memoization** (automatic)
+  - Dedupes identical `fetch` calls within the same request.
+  - No config. Lasts for the duration of the request only.
+
+- **`fetch` Cache** (legacy, opt‑in)
+  - Caches `fetch` responses across requests via `cache: 'force-cache'`.
+  - Deprecated in favor of Cache Components.
+
+- **Full Route Cache** (build‑time)
+  - Pre‑renders entire pages to static HTML (no dynamic APIs).
+  - Revalidated via `revalidateTag`/`revalidatePath` or time intervals.
+
+- **Router Cache** (client‑side)
+  - Stores prefetched pages in browser memory for instant back/forward nav.
+  - Cleared via `router.refresh()` or full reload.
+
+- **Cache Components** (✨ v16+, recommended)
+  - `'use cache'` caches async functions, components, or routes.
+  - TTL: `cacheLife('seconds'|'minutes'|'hours'|'days'|'weeks'|'max')`.
+  - Invalidation: `cacheTag()` + `revalidateTag()` for precise control.
+
+  Invalidation Methods
+
+- **Time‑based** – `cacheLife` or `revalidate` intervals.
+- **On‑demand** – `revalidateTag(tag)` or `revalidatePath(path)`.
+- **Automatic** – `router.refresh()` (client) or new deployment (build caches).
+
+  Best Practices
+
+- Prefer **Cache Components** (`'use cache'`) over legacy `fetch` caching.
+- Use **`cacheTag`** to group related entries (e.g., `'products'`) for bulk invalidation.
+- Omit `'use cache'` + wrap in **`<Suspense>`** for truly real‑time data.
+
 ### Validation
 
 - Use **Zod** for all input validation.

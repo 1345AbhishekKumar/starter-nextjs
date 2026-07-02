@@ -74,7 +74,7 @@ Full‑width layout on all pages. No sidebar.
 
 - User profile form (name, email, avatar)
 - Profile updates stored in database (Drizzle)
-- Secure file uploads for avatar or documents via UploadThing
+- Secure file uploads for avatar or documents via Uploadcare
 
 ### Admin Area (optional)
 
@@ -92,8 +92,8 @@ Full‑width layout on all pages. No sidebar.
 
 ### File Uploads
 
-- UploadThing provides type‑safe file routes
-- Direct‑to‑S3 uploads from the client (no server proxy)
+- Uploadcare provides cloud storage and CDN delivery
+- Direct-to-CDN uploads from the client (no server proxy) with metadata persisted in Neon
 - File metadata stored in DB; validation rules (size, type) enforced
 
 ### Real‑time (optional)
@@ -128,7 +128,7 @@ Full‑width layout on all pages. No sidebar.
 
 ### Storage
 
-- User‑uploaded files stored in S3 (via UploadThing)
+- User‑uploaded files stored on Uploadcare's CDN (with references in Neon Postgres)
 - Redis (Upstash) used for caching, rate‑limiting counters, and socket.io pub/sub
 
 ### Schema Design Principles
@@ -151,7 +151,7 @@ Full‑width layout on all pages. No sidebar.
 - TanStack Query for server‑state management (caching, optimistic updates)
 - Zustand for client‑only UI state (modals, theme, sidebar)
 - nuqs for type‑safe URL state (filters, pagination, sorting)
-- UploadThing for file uploads (direct‑to‑S3)
+- Uploadcare for file uploads (direct-to-CDN)
 - Stripe integration for subscription billing, checkouts, and webhooks
 - Resend + React Email for transactional emails
 - Socket.io (optional) for real‑time features

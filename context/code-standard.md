@@ -275,21 +275,21 @@ export async function analyzeProjectRisks(
 
 All environment variables defined in `.env.local` for development. Never hardcode any key, URL, or secret anywhere in the codebase.
 
-| Variable                            | Used In                      |
-| ----------------------------------- | ---------------------------- |
-| `DATABASE_URL`                      | lib/db.ts                    |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | middleware.ts, root layout   |
-| `CLERK_SECRET_KEY`                  | middleware.ts, server config |
-| `NVIDIA_API_KEY`                    | agent/ functions             |
-| `NVIDIA_API_BASE_URL`               | agent/ functions             |
-| `NEXT_PUBLIC_POSTHOG_KEY`           | lib/posthog-client.ts        |
-| `NEXT_PUBLIC_POSTHOG_HOST`          | lib/posthog-client.ts        |
-| `SENTRY_DSN`                        | sentry.server.config.ts      |
-| `NEXT_PUBLIC_SENTRY_DSN`            | sentry.client.config.ts      |
-| `RESEND_API_KEY`                    | lib/resend.ts                |
-| `UPSTASH_REDIS_REST_URL`            | lib/redis.ts                 |
-| `UPSTASH_REDIS_REST_TOKEN`          | lib/redis.ts                 |
-| `NEXT_PUBLIC_SOCKET_SERVER_URL`     | lib/socket-client.ts         |
+| Variable                            | Used In                 |
+| ----------------------------------- | ----------------------- |
+| `DATABASE_URL`                      | lib/db.ts               |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | proxy.ts, root layout   |
+| `CLERK_SECRET_KEY`                  | proxy.ts, server config |
+| `NVIDIA_API_KEY`                    | agent/ functions        |
+| `NVIDIA_API_BASE_URL`               | agent/ functions        |
+| `NEXT_PUBLIC_POSTHOG_KEY`           | lib/posthog-client.ts   |
+| `NEXT_PUBLIC_POSTHOG_HOST`          | lib/posthog-client.ts   |
+| `SENTRY_DSN`                        | sentry.server.config.ts |
+| `NEXT_PUBLIC_SENTRY_DSN`            | sentry.client.config.ts |
+| `RESEND_API_KEY`                    | lib/resend.ts           |
+| `UPSTASH_REDIS_REST_URL`            | lib/redis.ts            |
+| `UPSTASH_REDIS_REST_TOKEN`          | lib/redis.ts            |
+| `NEXT_PUBLIC_SOCKET_SERVER_URL`     | lib/socket-client.ts    |
 
 `NEXT_PUBLIC_` prefix means the variable is exposed to the browser. Never add `NEXT_PUBLIC_` to secret keys.
 
@@ -365,7 +365,7 @@ Approved dependencies for this project:
   - `drizzle-orm` — Type‑safe SQL ORM with zero runtime overhead (supports Edge runtime)
   - `drizzle-kit` — Schema migrations and database introspection (dev dependency)
   - `@neondatabase/serverless` — HTTP/WebSocket driver for Neon serverless PostgreSQL
-  - `uploadthing` — Type‑safe file uploads with direct‑to‑S3 signed URLs
+  - `@uploadcare/upload-client` — Direct-to-CDN file uploads with metadata persisted in Neon
 
 - **Payments & Email**:
   - `stripe` — Subscription billing, Checkout, Customer Portal, and webhook handling

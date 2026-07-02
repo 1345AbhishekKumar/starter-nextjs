@@ -10,7 +10,7 @@ This section describes the high‑level architecture of the starter template –
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              CLIENT (Browser)                               │
 │  React Client Components · TanStack Query · Zustand · nuqs · shadcn/ui    │
-│  React Hook Form · UploadThing Client · PostHog · Sentry Browser           │
+│  React Hook Form · Uploadcare Client · PostHog · Sentry Browser            │
 └───────────────────────────────┬─────────────────────────────────────────────┘
                                 │ HTTP / WebSockets
 ┌───────────────────────────────▼─────────────────────────────────────────────┐
@@ -30,7 +30,7 @@ This section describes the high‑level architecture of the starter template –
 ┌───────────────────────────────▼─────────────────────────────────────────────┐
 │                              DATA LAYER                                    │
 │  Neon PostgreSQL (via @neondatabase/serverless) · Drizzle ORM              │
-│  Stripe · UploadThing S3 · Resend (email) · Upstash Redis (optional)      │
+│  Stripe · Uploadcare CDN · Resend (email) · Upstash Redis (optional)      │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -60,7 +60,7 @@ This section describes the high‑level architecture of the starter template –
    - UI state (modal open, theme, sidebar collapsed) is managed by Zustand.
    - URL state (pagination, filters) is synchronised with `nuqs` (which uses the browser URL).
    - Forms use React Hook Form; validation schemas are shared with the server via Zod.
-   - File uploads use UploadThing’s client SDK (direct to S3, no server proxy).
+   - File uploads use Uploadcare's client SDK (direct to CDN, with metadata in Neon).
 
 5. **Mutations (Server Actions)**:
    - When a form is submitted, a Server Action is called.
@@ -125,7 +125,7 @@ src/
 ├── lib/                           # Utilities
 │   ├── logger.ts                  # Pino logger singleton
 │   ├── stripe.ts                  # Stripe client
-│   ├── uploadthing.ts             # UploadThing client
+│   ├── uploadcare.ts              # Uploadcare client
 │   └── utils.ts                   # cn(), formatDate(), etc.
 ├── middleware.ts                  # Clerk + i18n + Arcjet (edge)
 ├── instrumentation.ts             # (Optional) OpenTelemetry / Sentry init
