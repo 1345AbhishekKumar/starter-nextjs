@@ -93,6 +93,7 @@ export function HeroSection() {
                     src='/1.png'
                     alt='Artist painting sheep in a meadow'
                     fill
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw'
                     className='object-cover'
                     priority
                   />
@@ -219,6 +220,7 @@ export function HeroSection() {
                 src='/2.png'
                 alt='Handcrafted pottery in meadow'
                 fill
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw'
                 className='object-cover'
               />
               <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent'></div>
@@ -340,6 +342,7 @@ export function HeroSection() {
                 src='/3.png'
                 alt='Rustic cabin in rolling hills'
                 fill
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                 className='object-cover'
               />
               <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent'></div>
@@ -364,6 +367,7 @@ export function HeroSection() {
                 src='/4.png'
                 alt='White sheep with wildflowers'
                 fill
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw'
                 className='object-cover'
               />
               <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/15 via-transparent to-transparent'></div>
@@ -385,6 +389,7 @@ export function HeroSection() {
                 src='/5.png'
                 alt='Artist painting landscape'
                 fill
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw'
                 className='object-cover'
               />
               <div className='pointer-events-none absolute inset-0 bg-linear-to-t from-black/15 via-transparent to-transparent'></div>
