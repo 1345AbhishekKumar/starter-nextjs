@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUser, useAuth, useSessionList } from '@clerk/nextjs';
+import {
+  useUser,
+  useAuth,
+  useSessionList,
+  useReverification,
+} from '@clerk/nextjs';
+import { isReverificationCancelledError } from '@clerk/nextjs/errors';
 import {
   Key,
   Shield,
@@ -81,14 +87,23 @@ export function SecuritySettings() {
     }
   };
 
+  const createPasskeyWithReverification = useReverification(async () => {
+    if (user) {
+      await user.createPasskey();
+    }
+  });
+
   const handleAddPasskey = async () => {
     try {
       if (user) {
-        await user.createPasskey();
+        await createPasskeyWithReverification();
         setSuccessMessage('New passkey registered successfully.');
         setTimeout(() => setSuccessMessage(null), 4000);
       }
     } catch (err) {
+      if (isReverificationCancelledError(err)) {
+        return;
+      }
       console.error('Error adding passkey:', err);
       const message =
         err instanceof Error ? err.message : 'Failed to register passkey.';
