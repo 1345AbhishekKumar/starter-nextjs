@@ -27,7 +27,7 @@ export default function ErrorBoundary({
       strokeWidth='1.2'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className='text-[var(--brand-green)]'
+      className='text-(--brand-green)'
     >
       {/* Cloud */}
       <path
@@ -64,7 +64,7 @@ export default function ErrorBoundary({
       </MagneticButton>
       <MagneticButton
         href='/'
-        className='group font-mono-custom border-[1.5px] border-[var(--accent-black)] !bg-transparent text-xs tracking-wider !text-[var(--accent-black)] uppercase hover:!bg-[var(--accent-black)] hover:!text-white'
+        className='group font-mono-custom border-[1.5px] border-(--accent-black) bg-transparent! text-xs tracking-wider text-(--accent-black)! uppercase hover:bg-(--accent-black)! hover:text-white!'
       >
         Go Home
       </MagneticButton>

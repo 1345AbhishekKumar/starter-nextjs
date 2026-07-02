@@ -125,19 +125,19 @@
 
 ### User Dashboard
 
-- [ ] **Build Dashboard Workspace Layout** `[M]` 🟡
+- [x] **Build Dashboard Workspace Layout** `[M]` 🟡
   - **What:** Implement the secure dashboard page wrapper presenting stats metrics, activity feeds, and action buttons.
   - **Why:** Serves as the primary operational user interface after authentication.
   - **Stack notes:** Recharts (or styling charts), shadcn cards, protected routes.
   - **Subtasks:**
-    - [ ] Create page layout container at `app/dashboard/page.tsx`
-    - [ ] Design numerical KPI metrics blocks (Active Sessions, New Users) using mock numbers
-    - [ ] Add mock recent user action feed lists detailing recent events
-    - [ ] Render visual charts summarizing activity trends using mock data points
-    - [ ] Add top dashboard action buttons linking to creation page portals
+    - [x] Create page layout container at `app/dashboard/page.tsx`
+    - [x] Design numerical KPI metrics blocks (Active Sessions, New Users) using mock numbers
+    - [x] Add mock recent user action feed lists detailing recent events
+    - [x] Render visual charts summarizing activity trends using mock data points
+    - [x] Add top dashboard action buttons linking to creation page portals
   - **Acceptance criteria:**
-    - [ ] Dashboard is inaccessible to unauthenticated users, triggering redirect flows
-    - [ ] Grid contents automatically wrap, aligning vertically on small screen viewports
+    - [x] Dashboard is inaccessible to unauthenticated users, triggering redirect flows
+    - [x] Grid contents automatically wrap, aligning vertically on small screen viewports
 
 ---
 

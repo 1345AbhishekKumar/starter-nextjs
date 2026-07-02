@@ -178,7 +178,9 @@ Read in this exact order before any implementation:
 5. context/library-docs.md
 6. context/build-plan.md
 7. context/progress-tracker.md
+
 8. context/ui-rules.md
+9. context/report.md
 
 ## Rules That Never Change
 

@@ -117,7 +117,7 @@ function DraftsPageContent() {
       {/* Paper texture overlay */}
       <div className='paper-texture'></div>
 
-      <div className='relative z-10 mx-auto w-full max-w-[1000px]'>
+      <div className='relative z-10 mx-auto w-full max-w-275'>
         {/* Header navigation bar */}
         <header className='mb-12 flex items-center justify-between'>
           <Link
@@ -439,7 +439,7 @@ function DraftsPageContent() {
                 {data.drafts.map((draft: Draft) => (
                   <div
                     key={draft.id}
-                    className='bento-cell flex min-h-[160px] flex-col justify-between p-6 transition-all duration-300 hover:translate-y-[-2px]'
+                    className='bento-cell flex min-h-40 flex-col justify-between p-6 transition-all duration-300 hover:-translate-y-0.5'
                   >
                     <div>
                       {/* Top Category and Date */}
@@ -468,7 +468,7 @@ function DraftsPageContent() {
                       </h3>
 
                       {/* Draft Content preview */}
-                      <p className='font-sans text-[13px] leading-relaxed break-words text-[#525252]'>
+                      <p className='font-sans text-[13px] leading-relaxed wrap-break-word text-[#525252]'>
                         {draft.content}
                       </p>
                     </div>
@@ -554,7 +554,7 @@ export default function DraftsPage() {
       fallback={
         <div className='relative flex min-h-screen flex-col bg-[#f9f8f6] px-6 py-12 md:py-20'>
           <div className='paper-texture'></div>
-          <div className='relative z-10 mx-auto flex min-h-[50vh] w-full max-w-[1000px] items-center justify-center'>
+          <div className='relative z-10 mx-auto flex min-h-[50vh] w-full max-w-250 items-center justify-center'>
             <Loader2 className='animate-spin text-[#6e9c4e]' size={32} />
           </div>
         </div>
