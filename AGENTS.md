@@ -22,7 +22,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ### Project Structure
 
 - All UI-related components must be placed inside:
-  `app/components/<feature>/`
+  `components/<feature>/`
 - If the required UI folder does not exist, create it before adding components.
 - Keep UI components organized by feature/domain.
 - add proper caching

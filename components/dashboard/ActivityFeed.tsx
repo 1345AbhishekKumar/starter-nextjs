@@ -52,11 +52,11 @@ export function ActivityFeed() {
         </h3>
 
         {/* Timeline List */}
-        <div className='relative space-y-6 pl-6 before:absolute before:top-2 before:bottom-2 before:left-[11px] before:w-[1px] before:bg-[#111111]/10'>
+        <div className='relative space-y-6 pl-6 before:absolute before:inset-y-2 before:left-[11px] before:w-[1px] before:bg-[#111111]/10'>
           {mockActivities.map((act) => (
             <div key={act.id} className='group relative'>
               {/* Timeline marker */}
-              <div className='absolute top-1.5 -left-[23px] flex size-[15px] items-center justify-center rounded-full border border-white bg-[#f9f8f6] text-[#6e9c4e] transition-all group-hover:bg-[#6e9c4e] group-hover:text-white'>
+              <div className='absolute top-1.5 left-[-23px] flex size-[15px] items-center justify-center rounded-full border border-white bg-[#f9f8f6] text-[#6e9c4e] transition-all group-hover:bg-[#6e9c4e] group-hover:text-white'>
                 <div className='size-1.5 rounded-full bg-[#6e9c4e] group-hover:bg-white' />
               </div>
 

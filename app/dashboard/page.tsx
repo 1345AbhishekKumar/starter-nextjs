@@ -1,9 +1,10 @@
 'use client';
 
+import React from 'react';
 import { useUser, useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Plus, Compass } from 'lucide-react';
+import { Plus, Compass, Settings } from 'lucide-react';
 
 import { KPICards } from '@/components/dashboard/KPICards';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
@@ -37,7 +38,7 @@ export default function DashboardPage() {
       {/* Paper texture overlay */}
       <div className='paper-texture'></div>
 
-      <div className='relative z-10 mx-auto w-full max-w-275'>
+      <div className='relative z-10 mx-auto w-full max-w-[1100px]'>
         {/* Header navigation bar inside dashboard */}
         <header className='mb-12 flex items-center justify-between'>
           <Link
@@ -61,12 +62,21 @@ export default function DashboardPage() {
             </span>
           </Link>
 
-          <button
-            onClick={() => signOut()}
-            className='outline-btn font-mono-custom border-[#111111]/30 bg-transparent px-5 py-2.5 text-[10px] tracking-wider uppercase hover:border-[#111111]'
-          >
-            Sign Out
-          </button>
+          <div className='flex items-center gap-3'>
+            <Link
+              href='/settings'
+              className='outline-btn font-mono-custom flex items-center gap-1.5 border-[#111111]/30 bg-transparent px-4 py-2.5 text-[10px] tracking-wider uppercase hover:border-[#111111]'
+            >
+              <Settings size={12} />
+              Settings
+            </Link>
+            <button
+              onClick={() => signOut()}
+              className='outline-btn font-mono-custom border-[#111111]/30 bg-transparent px-5 py-2.5 text-[10px] tracking-wider uppercase hover:border-[#111111]'
+            >
+              Sign Out
+            </button>
+          </div>
         </header>
 
         {/* Welcome & Action Header Section */}

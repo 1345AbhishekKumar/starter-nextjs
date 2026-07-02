@@ -6,6 +6,12 @@
       "sourceType": "local",
       "computedHash": "b93b77d9a63143fcefa7d371c1fceba58f1f310ef76a5f2ad3d4d2077efa8c25"
     },
+    "agent-reach": {
+      "source": "panniantong/agent-reach",
+      "sourceType": "github",
+      "skillPath": "agent_reach/skill/SKILL.md",
+      "computedHash": "bed27534fdf82a3c9ab960f8f89306e64de81612869bbb56faed17e3c9a972ab"
+    },
     "ai-sdk": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",

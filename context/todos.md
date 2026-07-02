@@ -85,6 +85,7 @@
     - [x] Create the sign-up page at `app/sign-up/[[...sign-up]]/page.tsx` using Clerk `<SignUp />`
     - [x] Build `proxy.ts` protecting `/dashboard`, `/settings`, and `/admin` routes
     - [x] Update Navbar controls showing authenticated profiles or sign-in buttons conditionally
+    - [x] Integrate Google & GitHub OAuth using custom Clerk UI (.sso()) and sso-callback page
   - **Acceptance criteria:**
     - [x] Direct navigation to `/dashboard` while signed out redirects user to `/sign-in`
     - [x] Completing credentials login routes the user to the secure `/dashboard` screen
@@ -149,18 +150,18 @@
 
 ### Profile Settings
 
-- [ ] **Build Profile Form Interface** `[S]` 🟡
+- [x] **Build Profile Form Interface** `[S]` 🟡
   - **What:** Write user profile settings pages displaying username, biographical text, and avatar fields.
   - **Why:** Grants users control over details displayed publicly on their profiles.
   - **Stack notes:** `react-hook-form`, `zod`, `@hookform/resolvers/zod`.
   - **Subtasks:**
-    - [ ] Design route at `app/settings/page.tsx` with dedicated sidebar options tabs
-    - [ ] Build form fields mapping to Name, read-only Email, Bio, and Website inputs
-    - [ ] Apply Zod validation constraints enforcing string limits and URL formatting rules
-    - [ ] Integrate Clerk credentials hooks enabling profile updates within settings
+    - [x] Design route at `app/settings/page.tsx` with dedicated sidebar options tabs
+    - [x] Build form fields mapping to Name, read-only Email, Bio, and Website inputs
+    - [x] Apply Zod validation constraints enforcing string limits and URL formatting rules
+    - [x] Integrate Clerk credentials hooks enabling profile updates within settings
   - **Acceptance criteria:**
-    - [ ] Submitting blank mandatory inputs triggers inline form validation errors
-    - [ ] Submitting valid settings outputs inputs to the browser console logs (mocked)
+    - [x] Submitting blank mandatory inputs triggers inline form validation errors
+    - [x] Submitting valid settings outputs inputs to the browser console logs (mocked)
 
 ---
 
