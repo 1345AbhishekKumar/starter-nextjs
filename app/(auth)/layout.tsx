@@ -39,6 +39,9 @@ export default function AuthLayout({
         {/* Content card */}
         <div className='bento-cell w-full px-6 py-10 md:p-8'>{children}</div>
       </div>
+
+      {/* Required for custom sign-up flows with Clerk, placed in the layout to ensure it's always present and stable during transitions */}
+      <div id='clerk-captcha' />
     </div>
   );
 }

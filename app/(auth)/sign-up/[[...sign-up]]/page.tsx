@@ -28,9 +28,12 @@ export default function SignUpPage() {
   }
 
   const handleGoogleSignUp = async () => {
+    console.log('1');
+
     if (!signUp) return;
     setGeneralError('');
     try {
+      console.log('2');
       logger.info('Initiating Google OAuth sign-up');
       const res = await signUp.sso({
         strategy: 'oauth_google',
@@ -44,7 +47,9 @@ export default function SignUpPage() {
         );
         setGeneralError(res.error.message || 'Google sign-up failed.');
       }
+      console.log('3', res);
     } catch (err: unknown) {
+      console.error('4', err);
       const errorDetails =
         err instanceof Error
           ? { message: err.message, name: err.name, stack: err.stack }
@@ -467,9 +472,6 @@ export default function SignUpPage() {
           </span>
         </>
       )}
-
-      {/* Required for sign-up flows with Clerk, always present in the DOM */}
-      <div id='clerk-captcha' />
     </div>
   );
 }

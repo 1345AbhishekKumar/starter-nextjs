@@ -4,28 +4,40 @@ import posthog from 'posthog-js';
 
 const isServer = typeof window === 'undefined';
 
+// Set up log stream for server-side development logging
+let stream;
+if (isServer && process.env.NODE_ENV === 'development') {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pretty = require('pino-pretty');
+    stream = pretty({
+      colorize: true,
+      sync: true,
+    });
+  } catch (error) {
+    console.error('Failed to initialize pino-pretty stream:', error);
+  }
+}
+
 // Configure the raw Pino logger
-const rawPino = pino({
-  level: process.env.NEXT_PUBLIC_LOG_LEVEL || 'info',
-  formatters: {
-    level: (label) => {
-      return { level: label.toUpperCase() };
+const rawPino = pino(
+  {
+    level: process.env.NEXT_PUBLIC_LOG_LEVEL || 'info',
+    formatters: {
+      level: (label) => {
+        return { level: label.toUpperCase() };
+      },
+    },
+    timestamp: pino.stdTimeFunctions.isoTime,
+    browser: {
+      asObject: true,
+      write: (o) => {
+        console.log(JSON.stringify(o));
+      },
     },
   },
-  timestamp: pino.stdTimeFunctions.isoTime,
-  browser: {
-    asObject: true,
-  },
-  transport:
-    isServer && process.env.NODE_ENV === 'development'
-      ? {
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
-          },
-        }
-      : undefined,
-});
+  stream,
+);
 
 // Wrap logger methods to capture errors/warnings in Sentry and PostHog (client-side only)
 function createLogFn(

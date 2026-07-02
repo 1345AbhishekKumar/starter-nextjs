@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useUser, useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -10,7 +9,11 @@ import { KPICards } from '@/components/dashboard/KPICards';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
 
+import { logger } from '@/lib/logger';
+
 export default function DashboardPage() {
+  logger.info('Rendering dashboard server component');
+
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut } = useAuth();
   const router = useRouter();

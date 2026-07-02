@@ -26,9 +26,12 @@ export default function SignInPage() {
   }
 
   const handleGoogleSignIn = async () => {
+    console.log('1');
+
     if (!signIn) return;
     setGeneralError('');
     try {
+      console.log('2');
       logger.info('Initiating Google OAuth sign-in');
       const res = await signIn.sso({
         strategy: 'oauth_google',
@@ -42,7 +45,9 @@ export default function SignInPage() {
         );
         setGeneralError(res.error.message || 'Google sign-in failed.');
       }
+      console.log('3', res);
     } catch (err: unknown) {
+      console.error('4', err);
       const errorDetails =
         err instanceof Error
           ? { message: err.message, name: err.name, stack: err.stack }
