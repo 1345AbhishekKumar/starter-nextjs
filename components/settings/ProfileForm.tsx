@@ -75,6 +75,23 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload a valid image file (JPEG, PNG, WEBP).');
+      if (e.target) e.target.value = '';
+      return;
+    }
+
+    // Validate file size (2MB)
+    const MAX_FILE_SIZE = 2 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      alert(
+        'File size exceeds the 2MB limit. Please compress your image first.',
+      );
+      if (e.target) e.target.value = '';
+      return;
+    }
+
     setUploading(true);
     setUploadProgress(0);
 

@@ -12,7 +12,6 @@ import {
 import { isReverificationCancelledError } from '@clerk/nextjs/errors';
 import {
   Key,
-  Shield,
   Smartphone,
   Trash2,
   Eye,
@@ -374,40 +373,7 @@ export function SecuritySettings() {
         </div>
       </div>
 
-      {/* 3. TWO-STEP VERIFICATION */}
-      <div className='space-y-4 border-t border-[#111111]/5 pt-6'>
-        <div className='flex items-start gap-4'>
-          <div className='mt-0.5 flex size-9 items-center justify-center rounded-full bg-[#111111]/5 text-[#111111]'>
-            <Shield size={16} />
-          </div>
-          <div className='flex flex-1 items-center justify-between'>
-            <div>
-              <h4 className='text-sm font-semibold text-[#111111]'>
-                Two-step verification
-              </h4>
-              <p className='font-mono-custom mt-1 text-[9px] tracking-widest text-[#525252]/60 uppercase'>
-                Add an extra layer of protection to your account
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                alert(
-                  'Multi-factor Authentication (MFA) must be configured via your account security details by registering a TOTP app or SMS phone number.',
-                );
-              }}
-              className={`font-mono-custom rounded-full px-4 py-2 text-[9px] tracking-wider uppercase transition-colors ${
-                user?.twoFactorEnabled
-                  ? 'bg-[#6e9c4e]/10 text-[#6e9c4e]'
-                  : 'bg-[#525252]/10 text-[#525252]'
-              }`}
-            >
-              {user?.twoFactorEnabled ? 'Enabled' : 'Setup Required'}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. ACTIVE DEVICES */}
+      {/* 3. ACTIVE DEVICES */}
       <div className='space-y-4 border-t border-[#111111]/5 pt-6'>
         <div className='flex items-start gap-4'>
           <div className='mt-0.5 flex size-9 items-center justify-center rounded-full bg-[#111111]/5 text-[#111111]'>
@@ -421,12 +387,12 @@ export function SecuritySettings() {
             <div className='space-y-3'>
               {activeSessions.map((session) => {
                 const isCurrent = session.id === currentSessionId;
-                // const activity = (session as any).latestActivity;
                 const activity = (
                   session as {
                     latestActivity?: {
-                      browser?: string;
-                      device?: string;
+                      browserName?: string;
+                      browserVersion?: string;
+                      deviceType?: string;
                       city?: string;
                       country?: string;
                       ipAddress?: string;
@@ -434,8 +400,8 @@ export function SecuritySettings() {
                   }
                 ).latestActivity;
 
-                const deviceName = activity?.browser
-                  ? `${activity.browser} on ${activity.device || 'Unknown Device'}`
+                const deviceName = activity?.browserName
+                  ? `${activity.browserName} ${activity.browserVersion || ''} on ${activity.deviceType || 'Unknown Device'}`
                   : 'Unknown Device';
                 const location =
                   [activity?.city, activity?.country]
