@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { useState } from 'react';
+import { PreferencesSync } from '@/components/settings/PreferencesSync';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -25,7 +26,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PHProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <PreferencesSync>{children}</PreferencesSync>
+        </NuqsAdapter>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </PHProvider>

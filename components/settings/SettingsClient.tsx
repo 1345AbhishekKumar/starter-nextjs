@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Sliders } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 import {
   SettingsSidebar,
@@ -10,6 +10,7 @@ import {
 } from '@/components/settings/SettingsSidebar';
 import { ProfileForm } from '@/components/settings/ProfileForm';
 import { SecuritySettings } from '@/components/settings/SecuritySettings';
+import { PreferencesSettings } from '@/components/settings/PreferencesSettings';
 
 type ProfileData = {
   id: string;
@@ -86,17 +87,11 @@ export function SettingsClient({ initialProfile }: SettingsClientProps) {
               )}
 
               {activeTab === 'preferences' && (
-                <div className='flex flex-col items-center justify-center py-12 text-center'>
-                  <div className='mb-4 flex size-12 items-center justify-center rounded-full bg-[#6e9c4e]/10 text-[#6e9c4e]'>
-                    <Sliders size={20} />
-                  </div>
-                  <h3 className='mb-2 text-base font-semibold text-[#111111]'>
-                    Preferences Settings
+                <div>
+                  <h3 className='mb-6 text-lg font-semibold text-[#111111]'>
+                    Preferences & Layout
                   </h3>
-                  <p className='font-mono-custom max-w-sm text-xs leading-relaxed tracking-wide text-[#525252]/80'>
-                    Custom themes, font sizing, and email notifications will
-                    bloom here soon.
-                  </p>
+                  <PreferencesSettings />
                 </div>
               )}
 

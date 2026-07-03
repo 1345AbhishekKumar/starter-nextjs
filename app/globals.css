@@ -204,3 +204,210 @@ body {
     grid-row: span 1 !important;
   }
 }
+
+/* Preferences Themes & Typography overrides */
+
+/* 1. Theme Variables & Scope overrides */
+body.theme-dark {
+  --bg-alabaster: #09090b;
+  --accent-black: #fafafa;
+  --text-secondary: #a1a1aa;
+  --brand-green: #4ade80;
+
+  background-color: #09090b !important;
+  color: #fafafa !important;
+}
+
+body.theme-dark .paper-texture {
+  opacity: 0.01;
+}
+
+/* Dark Component Overrides */
+body.theme-dark .bg-\[\#f9f8f6\],
+body.theme-dark .bg-\[\#fcfbf9\] {
+  background-color: #09090b !important;
+}
+body.theme-dark .bento-cell,
+body.theme-dark .bento-cell-img,
+body.theme-dark .floating-nav,
+body.theme-dark .bg-white {
+  background: #18181b !important;
+  border-color: #27272a !important;
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5) !important;
+}
+body.theme-dark .bg-\[\#111111\] {
+  background-color: #fafafa !important;
+  color: #09090b !important;
+}
+body.theme-dark .text-white {
+  color: #09090b !important;
+}
+body.theme-dark .text-\[\#111111\] {
+  color: #fafafa !important;
+}
+body.theme-dark .text-\[\#525252\],
+body.theme-dark .text-\[\#525252\]\/60,
+body.theme-dark .text-\[\#525252\]\/80 {
+  color: #a1a1aa !important;
+}
+body.theme-dark .bg-\[\#111111\]\/5 {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+body.theme-dark .border-\[\#111111\]\/15,
+body.theme-dark .border-\[\#111111\]\/20,
+body.theme-dark .border-\[\#111111\]\/25,
+body.theme-dark .border-\[\#111111\]\/5 {
+  border-color: #27272a !important;
+}
+body.theme-dark .outline-btn {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #fafafa !important;
+}
+body.theme-dark .outline-btn:hover {
+  background-color: #fafafa !important;
+  color: #09090b !important;
+}
+
+body.theme-midnight {
+  --bg-alabaster: #0a0b0d;
+  --accent-black: #f8fafc;
+  --text-secondary: #94a3b8;
+  --brand-green: #86efac;
+
+  background-color: #0a0b0d !important;
+  color: #f8fafc !important;
+}
+
+body.theme-midnight .paper-texture {
+  opacity: 0.015;
+}
+
+/* Midnight Component Overrides */
+body.theme-midnight .bg-\[\#f9f8f6\],
+body.theme-midnight .bg-\[\#fcfbf9\] {
+  background-color: #0a0b0d !important;
+}
+body.theme-midnight .bento-cell,
+body.theme-midnight .bento-cell-img,
+body.theme-midnight .floating-nav,
+body.theme-midnight .bg-white {
+  background: rgba(20, 24, 33, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.4) !important;
+}
+body.theme-midnight .bg-\[\#111111\] {
+  background-color: #f8fafc !important;
+  color: #0a0b0d !important;
+}
+body.theme-midnight .text-white {
+  color: #0a0b0d !important;
+}
+body.theme-midnight .text-\[\#111111\] {
+  color: #f8fafc !important;
+}
+body.theme-midnight .text-\[\#525252\],
+body.theme-midnight .text-\[\#525252\]\/60,
+body.theme-midnight .text-\[\#525252\]\/80 {
+  color: #94a3b8 !important;
+}
+body.theme-midnight .bg-\[\#111111\]\/5 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+body.theme-midnight .border-\[\#111111\]\/15,
+body.theme-midnight .border-\[\#111111\]\/20,
+body.theme-midnight .border-\[\#111111\]\/25,
+body.theme-midnight .border-\[\#111111\]\/5 {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+body.theme-midnight .outline-btn {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #f8fafc !important;
+}
+body.theme-midnight .outline-btn:hover {
+  background-color: #f8fafc !important;
+  color: #0a0b0d !important;
+}
+
+body.theme-classic-light {
+  --bg-alabaster: #f8fafc;
+  --accent-black: #0f172a;
+  --text-secondary: #475569;
+  --brand-green: #2563eb;
+
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+body.theme-classic-light .paper-texture {
+  display: none !important;
+}
+
+/* Classic Light Component Overrides */
+body.theme-classic-light .bg-\[\#f9f8f6\],
+body.theme-classic-light .bg-\[\#fcfbf9\] {
+  background-color: #f8fafc !important;
+}
+body.theme-classic-light .bento-cell,
+body.theme-classic-light .bento-cell-img,
+body.theme-classic-light .floating-nav,
+body.theme-classic-light .bg-white {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.04) !important;
+}
+body.theme-classic-light .text-\[\#111111\] {
+  color: #0f172a !important;
+}
+body.theme-classic-light .text-\[\#525252\] {
+  color: #475569 !important;
+}
+body.theme-classic-light .border-\[\#111111\]\/15,
+body.theme-classic-light .border-\[\#111111\]\/20,
+body.theme-classic-light .border-\[\#111111\]\/25,
+body.theme-classic-light .border-\[\#111111\]\/5 {
+  border-color: #e2e8f0 !important;
+}
+
+/* 2. Global Typography Overrides */
+body.theme-font-handwritten {
+  --font-body-current: var(--font-caveat), cursive;
+}
+body.theme-font-serif {
+  --font-body-current: georgia, cambria, 'Times New Roman', times, serif;
+}
+body.theme-font-sans {
+  --font-body-current: var(--font-inter), sans-serif;
+}
+body.theme-font-mono {
+  --font-body-current: var(--font-space-mono), monospace;
+}
+
+/* Apply derived font family to text blocks */
+body.theme-font-serif p,
+body.theme-font-serif span,
+body.theme-font-serif input,
+body.theme-font-serif textarea,
+body.theme-font-serif select,
+body.theme-font-serif button,
+body.theme-font-serif div:not(.font-mono-custom) {
+  font-family: var(--font-body-current) !important;
+}
+
+body.theme-font-sans p,
+body.theme-font-sans span,
+body.theme-font-sans input,
+body.theme-font-sans textarea,
+body.theme-font-sans select,
+body.theme-font-sans button,
+body.theme-font-sans div:not(.font-mono-custom) {
+  font-family: var(--font-body-current) !important;
+}
+
+body.theme-font-mono p,
+body.theme-font-mono span,
+body.theme-font-mono input,
+body.theme-font-mono textarea,
+body.theme-font-mono select,
+body.theme-font-mono button,
+body.theme-font-mono div:not(.font-mono-custom) {
+  font-family: var(--font-body-current) !important;
+}
