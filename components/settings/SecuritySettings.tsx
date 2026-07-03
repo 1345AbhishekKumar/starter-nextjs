@@ -3,12 +3,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  useUser,
-  useAuth,
-  useSessionList,
-  useReverification,
-} from '@clerk/nextjs';
+import { useUser, useAuth, useReverification } from '@clerk/nextjs';
 import { isReverificationCancelledError } from '@clerk/nextjs/errors';
 import {
   Key,
@@ -30,10 +25,53 @@ import {
 import { changePassword, revokeSessionAction } from '@/actions/security';
 import { deleteAccount } from '@/actions/profile';
 
+type UserSessions = Awaited<
+  ReturnType<NonNullable<ReturnType<typeof useUser>['user']>['getSessions']>
+>;
+
 export function SecuritySettings() {
   const { user, isLoaded: isUserLoaded } = useUser();
   const { sessionId: currentSessionId, signOut } = useAuth();
-  const { sessions, isLoaded: isSessionsLoaded } = useSessionList();
+  const [activeSessions, setActiveSessions] = useState<UserSessions>([]);
+  const [isSessionsLoading, setIsSessionsLoading] = useState(true);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    async function loadSessions() {
+      if (!user) {
+        if (isMounted) {
+          setIsSessionsLoading(false);
+        }
+        return;
+      }
+      try {
+        const list = await user.getSessions();
+        if (isMounted) {
+          setActiveSessions(list);
+          setIsSessionsLoading(false);
+        }
+      } catch (err) {
+        console.error('Error fetching sessions:', err);
+        if (isMounted) {
+          setIsSessionsLoading(false);
+        }
+      }
+    }
+
+    if (isUserLoaded) {
+      const timer = setTimeout(() => {
+        loadSessions();
+      }, 0);
+      return () => {
+        clearTimeout(timer);
+        isMounted = false;
+      };
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isUserLoaded, user]);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
@@ -75,6 +113,10 @@ export function SecuritySettings() {
       const res = await revokeSessionAction(id);
       if (res.success) {
         setSuccessMessage('Device session revoked successfully.');
+        if (user) {
+          const list = await user.getSessions();
+          setActiveSessions(list);
+        }
         setTimeout(() => setSuccessMessage(null), 4000);
       } else {
         alert(res.error || 'Failed to revoke device session.');
@@ -147,7 +189,7 @@ export function SecuritySettings() {
     }
   };
 
-  if (!isUserLoaded || !isSessionsLoaded) {
+  if (!isUserLoaded || isSessionsLoading) {
     return (
       <div className='flex h-48 items-center justify-center'>
         <Loader2 className='size-6 animate-spin text-[#6e9c4e]' />
@@ -156,7 +198,6 @@ export function SecuritySettings() {
   }
 
   const passkeys = user?.passkeys || [];
-  const activeSessions = sessions || [];
 
   return (
     <div className='space-y-8 text-[#111111]'>
