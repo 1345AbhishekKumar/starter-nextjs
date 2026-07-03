@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, serial } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(), // Clerk user ID
@@ -37,6 +37,11 @@ export const posts = pgTable('posts', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   status: text('status').notNull().default('draft'),
+  category: text('category').notNull().default('nature'),
+  tags: text('tags')
+    .array()
+    .notNull()
+    .default(sql`ARRAY[]::text[]`),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

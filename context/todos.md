@@ -173,31 +173,31 @@
 
 ### CRUD UI Interface
 
-- [ ] **Build Posts Listing Table** `[M]` 🟡
+- [x] **Build Posts Listing Table** `[M]` 🟡
   - **What:** Build a data table showing mock post records, search filters, and status dropdowns.
   - **Why:** Provides administrative control and lists post entries.
   - **Stack notes:** Table UI elements, client-side pagination, client-side array search.
   - **Subtasks:**
-    - [ ] Create route at `app/dashboard/posts/page.tsx` with headers and creation buttons
-    - [ ] Build custom tables mapping data fields (Title, Status, Created At, Action Links)
-    - [ ] Write client search logic filtering mock data arrays on keyup events
-    - [ ] Write status category dropdown filtering active mock rows
-    - [ ] Implement pagination selectors slicing array ranges
+    - [x] Create route at `app/dashboard/posts/page.tsx` with headers and creation buttons (implemented as `/dashboard/drafts`)
+    - [x] Build custom tables mapping data fields (Title, Status, Created At, Action Links)
+    - [x] Write client search logic filtering mock data arrays on keyup events
+    - [x] Write status category dropdown filtering active mock rows
+    - [x] Implement pagination selectors slicing array ranges
   - **Acceptance criteria:**
-    - [ ] Typing query strings updates the visible table rows matches the title keys
-    - [ ] Changing page indices displays correct pagination subsets of data arrays
+    - [x] Typing query strings updates the visible table rows matches the title keys
+    - [x] Changing page indices displays correct pagination subsets of data arrays
 
-- [ ] **Build Posts Creation Form** `[S]` 🟡
+- [x] **Build Posts Creation Form** `[S]` 🟡
   - **What:** Create input forms for writing new posts with title, text editor, and publishing options.
   - **Why:** Provides the UI canvas to author content.
   - **Stack notes:** `react-hook-form`, `zod` schema resolvers.
   - **Subtasks:**
-    - [ ] Create the new post form container page under `app/dashboard/posts/new/page.tsx`
-    - [ ] Add Form fields for Title, Content text area, and Status selection
-    - [ ] Apply validation rules requiring titles and contents before submitting
+    - [x] Create the new post form container page under `app/dashboard/posts/new/page.tsx` (implemented inline inside `/dashboard/drafts`)
+    - [x] Add Form fields for Title, Content text area, and Status selection
+    - [x] Apply validation rules requiring titles and contents before submitting
   - **Acceptance criteria:**
-    - [ ] Incomplete inputs trigger visual validation messages on screen
-    - [ ] Submitting valid configurations fires alert toast notifications (mocked)
+    - [x] Incomplete inputs trigger visual validation messages on screen
+    - [x] Submitting valid configurations fires alert toast notifications (mocked)
 
 ---
 
@@ -209,19 +209,19 @@
 
 ### DB Post Integration
 
-- [ ] **Connect CRUD to Database Server Actions** `[L]` 🔴
+- [x] **Connect CRUD to Database Server Actions** `[L]` 🔴
   - **What:** Implement mutation Server Actions, wrap queries in TanStack Query, and replace mock layers.
   - **Why:** Enables persistent data storage for all user posts.
   - **Stack notes:** Server Actions, `drizzle-orm`, `@tanstack/react-query` query hooks.
   - **Subtasks:**
-    - [ ] Write Server Actions: `getPosts`, `createPost`, `updatePost`, and `deletePost`
-    - [ ] Add Zod inputs parser inside Server Actions, validating owner user IDs
-    - [ ] Configure `revalidatePath` calls inside actions to update client caching layers
-    - [ ] Wire TanStack Query providers to manage post list queries and mutations
-    - [ ] Replace UI mock array templates with database query hooks
+    - [x] Write Server Actions: `getPosts`, `createPost`, `updatePost`, and `deletePost` (implemented for drafts)
+    - [x] Add Zod inputs parser inside Server Actions, validating owner user IDs
+    - [x] Configure `revalidatePath` calls inside actions to update client caching layers
+    - [x] Wire TanStack Query providers to manage post list queries and mutations
+    - [x] Replace UI mock array templates with database query hooks
   - **Acceptance criteria:**
-    - [ ] Creating posts writes records to Neon DB tables
-    - [ ] Deleting posts deletes database row entries and updates current list tables instantly
+    - [x] Creating posts writes records to Neon DB tables
+    - [x] Deleting posts deletes database row entries and updates current list tables instantly
 
 ---
 
@@ -233,17 +233,17 @@
 
 ### DB Settings Integration
 
-- [ ] **Wire Profile Settings Actions** `[S]` 🟡
+- [x] **Wire Profile Settings Actions** `[S]` 🟡
   - **What:** Create the `updateProfile` Server Action, connect the form, and show success toasts.
   - **Why:** Ensures settings adjustments persist across logins.
   - **Stack notes:** Server Actions, `drizzle-orm` update statements, shadcn toasts.
   - **Subtasks:**
-    - [ ] Write `updateProfile` Server Action with inputs validation
-    - [ ] Connect settings form submit events to trigger the new Server Action
-    - [ ] Add loading indicators and toast confirmations on response completion
+    - [x] Write `updateProfile` Server Action with inputs validation
+    - [x] Connect settings form submit events to trigger the new Server Action
+    - [x] Add loading indicators and toast confirmations on response completion
   - **Acceptance criteria:**
-    - [ ] Submitting profile form writes changes to the database
-    - [ ] Refreshing pages displays correct saved settings values
+    - [x] Submitting profile form writes changes to the database
+    - [x] Refreshing pages displays correct saved settings values
 
 ---
 

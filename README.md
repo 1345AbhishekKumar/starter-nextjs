@@ -61,11 +61,12 @@ All development commands configured in `package.json` can be run using your pack
 
 ### Code Quality & Linting
 
-| Command            | Action                     | Tool Description                                                                          |
-| :----------------- | :------------------------- | :---------------------------------------------------------------------------------------- |
-| `bun run lint`     | Check ESLint violations    | Inspects JavaScript/TypeScript code for syntax, style, and programmatic errors.           |
-| `bun run lint:fix` | Auto-fix ESLint violations | Automatically resolves auto-fixable lint warnings/errors in the codebase.                 |
-| `bun run format`   | Auto-format files          | Uses **Prettier** to rewrite all files matching the configurations in `.prettierrc.json`. |
+| Command              | Action                         | Tool Description                                                                          |
+| :------------------- | :----------------------------- | :---------------------------------------------------------------------------------------- |
+| `bun run lint`       | Check ESLint violations        | Inspects JavaScript/TypeScript code for syntax, style, and programmatic errors.           |
+| `bun run lint:fix`   | Auto-fix ESLint violations     | Automatically resolves auto-fixable lint warnings/errors in the codebase.                 |
+| `bun run format`     | Auto-format files              | Uses **Prettier** to rewrite all files matching the configurations in `.prettierrc.json`. |
+| `bun x tsc --noEmit` | checking typscript error files |
 
 ### Styling & CSS Validation
 

@@ -18,6 +18,8 @@ import {
   Loader2,
   BookOpen,
   Hash,
+  Edit,
+  Trash2,
 } from 'lucide-react';
 
 import { useUIStore } from '@/stores/ui';
@@ -26,12 +28,25 @@ import {
   type DraftFormInput,
   draftCategories,
 } from '@/lib/validations/drafts';
-import { useDrafts, useCreateDraft, type Draft } from '@/hooks/use-drafts';
+import {
+  useDrafts,
+  useCreateDraft,
+  useUpdateDraft,
+  useDeleteDraft,
+  type Draft,
+} from '@/hooks/use-drafts';
 
 function DraftsPageContent() {
   // Zustand UI Store state and actions
   const isCreateDialogOpen = useUIStore((state) => state.isCreateDialogOpen);
   const setCreateDialogOpen = useUIStore((state) => state.setCreateDialogOpen);
+
+  // Edit and delete state / hooks
+  const [editingDraft, setEditingDraft] = React.useState<Draft | null>(null);
+  const updateDraftMutation = useUpdateDraft();
+  const deleteDraftMutation = useDeleteDraft();
+
+  const isFormOpen = isCreateDialogOpen || !!editingDraft;
 
   // nuqs URL State Configuration
   const [search, setSearch] = useQueryState(
@@ -88,21 +103,69 @@ function DraftsPageContent() {
     setTagsList(tagsList.filter((t) => t !== tagToRemove));
   };
 
+  // Reset form when editingDraft changes
+  React.useEffect(() => {
+    if (editingDraft) {
+      reset({
+        title: editingDraft.title,
+        content: editingDraft.content,
+        category: editingDraft.category,
+        tags: editingDraft.tags,
+      });
+    } else {
+      reset({
+        title: '',
+        content: '',
+        category: 'nature',
+        tags: [],
+      });
+    }
+  }, [editingDraft, reset]);
+
+  const handleCloseForm = () => {
+    setCreateDialogOpen(false);
+    setEditingDraft(null);
+    reset();
+    setTagsList([]);
+    setFormError(null);
+  };
+
   const handleFormSubmit = async (values: DraftFormInput) => {
     setFormError(null);
     try {
-      await createDraftMutation.mutateAsync({
-        ...values,
-        tags: tagsList,
-      });
+      if (editingDraft) {
+        await updateDraftMutation.mutateAsync({
+          id: editingDraft.id,
+          input: {
+            ...values,
+            tags: tagsList,
+          },
+        });
+        setEditingDraft(null);
+      } else {
+        await createDraftMutation.mutateAsync({
+          ...values,
+          tags: tagsList,
+        });
+        setCreateDialogOpen(false);
+      }
       // Reset form on success
       reset();
       setTagsList([]);
-      setCreateDialogOpen(false);
     } catch (err) {
-      setFormError(
-        err instanceof Error ? err.message : 'Failed to create draft',
-      );
+      setFormError(err instanceof Error ? err.message : 'Failed to save draft');
+    }
+  };
+
+  const handleDeleteDraft = async (id: string) => {
+    if (
+      confirm('Are you sure you want to return this creation to the earth?')
+    ) {
+      try {
+        await deleteDraftMutation.mutateAsync(id);
+      } catch (err) {
+        alert(err instanceof Error ? err.message : 'Failed to delete draft');
+      }
     }
   };
 
@@ -150,9 +213,14 @@ function DraftsPageContent() {
             </p>
           </div>
 
-          {!isCreateDialogOpen && (
+          {!isFormOpen && (
             <button
-              onClick={() => setCreateDialogOpen(true)}
+              onClick={() => {
+                setEditingDraft(null);
+                setCreateDialogOpen(true);
+                setTagsList([]);
+                setFormError(null);
+              }}
               className='magnetic-btn font-mono-custom flex items-center gap-2 bg-[#111111] px-6 py-3.5 text-xs tracking-wider text-white uppercase hover:opacity-90'
             >
               <Plus size={14} />
@@ -230,18 +298,20 @@ function DraftsPageContent() {
 
           {/* Main Content Column (Right 2 Spans) */}
           <div className='space-y-6 md:col-span-2'>
-            {/* Create Draft Form Card (Inline expandable managed by Zustand) */}
-            {isCreateDialogOpen && (
+            {/* Create/Edit Draft Form Card (Inline expandable) */}
+            {isFormOpen && (
               <div className='bento-cell animate-in fade-in slide-in-from-top-4 border-[#6e9c4e]/20 bg-[#6e9c4e]/5 p-6 duration-350'>
                 <div className='mb-6 flex items-center justify-between border-b border-[#111111]/5 pb-4'>
                   <div className='flex items-center gap-2'>
                     <PenTool size={16} className='text-[#6e9c4e]' />
                     <h2 className='text-lg font-semibold text-[#111111]'>
-                      Sowing a New Idea
+                      {editingDraft
+                        ? 'Refining Your Creation'
+                        : 'Sowing a New Idea'}
                     </h2>
                   </div>
                   <button
-                    onClick={() => setCreateDialogOpen(false)}
+                    onClick={handleCloseForm}
                     className='rounded-full p-1.5 text-[#525252] hover:bg-[#111111]/5'
                   >
                     <X size={16} />
@@ -260,7 +330,10 @@ function DraftsPageContent() {
                     <input
                       type='text'
                       {...register('title')}
-                      disabled={createDraftMutation.isPending}
+                      disabled={
+                        createDraftMutation.isPending ||
+                        updateDraftMutation.isPending
+                      }
                       placeholder='Name your creation...'
                       className='font-mono-custom w-full rounded-xl border border-[#111111]/10 bg-white/80 p-3 text-xs text-[#111111] outline-none focus:border-[#111111]/30'
                     />
@@ -278,7 +351,10 @@ function DraftsPageContent() {
                     </label>
                     <select
                       {...register('category')}
-                      disabled={createDraftMutation.isPending}
+                      disabled={
+                        createDraftMutation.isPending ||
+                        updateDraftMutation.isPending
+                      }
                       className='font-mono-custom w-full rounded-xl border border-[#111111]/10 bg-white/80 p-3 text-xs text-[#111111] outline-none focus:border-[#111111]/30'
                     >
                       {draftCategories.map((cat) => (
@@ -302,7 +378,10 @@ function DraftsPageContent() {
                     <textarea
                       rows={5}
                       {...register('content')}
-                      disabled={createDraftMutation.isPending}
+                      disabled={
+                        createDraftMutation.isPending ||
+                        updateDraftMutation.isPending
+                      }
                       placeholder='Let the words flow onto the paper...'
                       className='font-mono-custom w-full rounded-xl border border-[#111111]/10 bg-white/80 p-3 text-xs leading-relaxed text-[#111111] outline-none focus:border-[#111111]/30'
                     />
@@ -330,7 +409,9 @@ function DraftsPageContent() {
                           }
                         }}
                         disabled={
-                          createDraftMutation.isPending || tagsList.length >= 5
+                          createDraftMutation.isPending ||
+                          updateDraftMutation.isPending ||
+                          tagsList.length >= 5
                         }
                         placeholder={
                           tagsList.length >= 5
@@ -343,7 +424,9 @@ function DraftsPageContent() {
                         type='button'
                         onClick={addTag}
                         disabled={
-                          createDraftMutation.isPending || tagsList.length >= 5
+                          createDraftMutation.isPending ||
+                          updateDraftMutation.isPending ||
+                          tagsList.length >= 5
                         }
                         className='outline-btn font-mono-custom border-[#111111]/30 bg-transparent px-4 text-[10px] uppercase hover:border-[#111111]'
                       >
@@ -381,21 +464,27 @@ function DraftsPageContent() {
                   <div className='flex justify-end gap-3 border-t border-[#111111]/5 pt-4'>
                     <button
                       type='button'
-                      onClick={() => setCreateDialogOpen(false)}
+                      onClick={handleCloseForm}
                       className='outline-btn font-mono-custom border-transparent bg-transparent px-5 py-2.5 text-[10px] tracking-wider uppercase'
                     >
                       Cancel
                     </button>
                     <button
                       type='submit'
-                      disabled={createDraftMutation.isPending}
+                      disabled={
+                        createDraftMutation.isPending ||
+                        updateDraftMutation.isPending
+                      }
                       className='magnetic-btn font-mono-custom flex items-center gap-2 bg-[#111111] px-5 py-2.5 text-[10px] tracking-wider text-white uppercase disabled:opacity-50'
                     >
-                      {createDraftMutation.isPending ? (
+                      {createDraftMutation.isPending ||
+                      updateDraftMutation.isPending ? (
                         <>
                           <Loader2 size={12} className='animate-spin' />
-                          Sowing...
+                          {editingDraft ? 'Refining...' : 'Sowing...'}
                         </>
+                      ) : editingDraft ? (
+                        'Update Draft'
                       ) : (
                         'Save Draft'
                       )}
@@ -448,18 +537,44 @@ function DraftsPageContent() {
                           <Folder size={10} />
                           {draft.category}
                         </span>
-                        <span className='font-mono-custom inline-flex items-center gap-1 text-[10px] text-[#525252]/60'>
-                          <Calendar size={10} />
-                          {new Date(draft.createdAt).toLocaleDateString(
-                            undefined,
-                            {
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            },
-                          )}
-                        </span>
+
+                        <div className='flex items-center gap-3'>
+                          <span className='font-mono-custom inline-flex items-center gap-1 text-[10px] text-[#525252]/60'>
+                            <Calendar size={10} />
+                            {new Date(draft.createdAt).toLocaleDateString(
+                              undefined,
+                              {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              },
+                            )}
+                          </span>
+
+                          <div className='flex items-center gap-1 border-l border-[#111111]/10 pl-3'>
+                            <button
+                              onClick={() => {
+                                setEditingDraft(draft);
+                                setCreateDialogOpen(false);
+                                setTagsList(draft.tags || []);
+                                setFormError(null);
+                              }}
+                              className='rounded-full p-1 text-[#525252] hover:bg-[#111111]/5 hover:text-[#111111]'
+                              title='Edit Draft'
+                            >
+                              <Edit size={12} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteDraft(draft.id)}
+                              disabled={deleteDraftMutation.isPending}
+                              className='rounded-full p-1 text-[#dc2626]/80 hover:bg-[#dc2626]/10 hover:text-[#dc2626]'
+                              title='Delete Draft'
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Draft Title */}

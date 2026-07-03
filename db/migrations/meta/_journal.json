@@ -8,6 +8,13 @@
       "when": 1782909925202,
       "tag": "0000_curly_zaladane",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1783062616930,
+      "tag": "0001_vengeful_reavers",
+      "breakpoints": true
     }
   ]
 }
