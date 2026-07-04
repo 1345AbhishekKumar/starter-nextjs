@@ -1,38 +1,38 @@
-# Memory — Settings Page Expansion & Component Relocation
+# Memory — Uploadcare Integration and Neon DB Syncing
 
-Last updated: 2026-07-02T13:24:10+05:30
+Last updated: 2026-07-04T12:11:22+05:30
 
 ## What was built
 
-- Relocated all custom components from `app/components/` to the canonical root `components/` directory:
-  - Moved KPI Cards, Activity Chart, and Activity Feed to `components/dashboard/`.
-  - Moved Settings Sidebar, Profile Form, and Security Settings to `components/settings/`.
-- Created a Zod validation schema for passwords at `lib/validations/security.ts`.
-- Redesigned and implemented `components/settings/SecuritySettings.tsx` to match the Meadow design system (light theme, translucent cards, Space Mono subtitles, pill-shaped input fields, and dynamic toggles) while mirroring the structure of the Clerk security reference screenshot (Password expander, Passkeys registry, Two-step MFA switch, Active Device sessions list, and Danger Zone Delete Account card).
-- Enhanced `components/settings/ProfileForm.tsx` to include a profile portrait upload control with a simulated loading progress bar.
-- Added a Settings navigation link and gear icon to the dashboard header at `app/dashboard/page.tsx`.
+- **Uploadcare Integration & Neon DB Sync:**
+  - Added new `uploadcareFiles` metadata table to [db/schema.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/db/schema.ts) and successfully generated and applied Neon migrations.
+  - Added environment schemas and validation in [config/env.client.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/config/env.client.ts) and [config/env.server.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/config/env.server.ts) with placeholders in [.env.example](file:///d:/MyProjects/stater-kits/starter-nextjs/.env.example).
+  - Confired authorized image CDN hosts in [next.config.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/next.config.ts) (`*.ucarecdn.com`).
+  - Implemented Server Actions (`syncUploadcareFile`, `getSyncedFiles`, `deleteSyncedFile`) with Zod input schema validations in [actions/uploadcare.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/actions/uploadcare.ts).
+  - Configured TanStack Query custom hooks (`useFiles`, `useSyncFile`, `useDeleteFile`) in [hooks/use-files.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/hooks/use-files.ts) for automatic cache invalidation and query synchronization.
+  - Built styled client component [components/uploader/FileUploader.tsx](file:///d:/MyProjects/stater-kits/starter-nextjs/components/uploader/FileUploader.tsx) with custom theme color overrides added to [app/globals.css](file:///d:/MyProjects/stater-kits/starter-nextjs/app/globals.css) using Meadow's OKLCH palette.
+  - Built gallery grid [components/uploader/FileGrid.tsx](file:///d:/MyProjects/stater-kits/starter-nextjs/components/uploader/FileGrid.tsx) displaying original images in a clickable container that opens the asset full-size in a new tab.
+  - Integrated everything under a new dedicated route [app/dashboard/uploads/page.tsx](file:///d:/MyProjects/stater-kits/starter-nextjs/app/dashboard/uploads/page.tsx) and linked to it inside [app/dashboard/page.tsx](file:///d:/MyProjects/stater-kits/starter-nextjs/app/dashboard/page.tsx).
+  - Updated status items for Phase 10 in [context/todos.md](file:///d:/MyProjects/stater-kits/starter-nextjs/context/todos.md).
 
 ## Decisions made
 
-- **Component Organization:** Placed all UI components in the root `components/` folder to respect clean-architecture requirements.
-- **Derived React State:** Avoided setting state in a `useEffect` inside `ProfileForm.tsx` to prevent cascading renders and satisfy the local hook lint checks. Initialized the preview URL via a derived state expression: `uploadedAvatarUrl || user?.imageUrl || null`.
-- **Aesthetic Alignment:** Integrated the detailed security options from the Clerk reference within the warm light-alabaster theme and text spacing guidelines defined in `context/design.md`.
+- **Separate Gallery Route:** Created a dedicated `/dashboard/uploads` subroute rather than integrating Uploadcare into settings profile pictures, since avatar updates are natively handled by Clerk.
+- **TanStack Query Caching:** Leveraged the query key `'synced-files'` to synchronize state between the uploader and gallery grid dynamically, ensuring automated live refreshes without page reloads.
 
 ## Problems solved
 
-- **RHF Type Incompatibility:** Fixed a TypeScript type check issue in `SecuritySettings.tsx` by removing the `.default(false)` parameter from the Zod boolean field, aligning input and output types for the React Hook Form resolver.
-- **Hook Lint Error:** Resolved `react-hooks/set-state-in-effect` by using derived state instead of synchronizing avatar images inside a `useEffect` handler.
-- **Prettier & ESLint Cleanups:** Cleared all warnings regarding custom Tailwind animations and unused variables (`ArrowLeft`, `watch`). Eslint run finishes with 0 warnings/errors.
+- **Uploader Unique Constraint Violation (Error 23505):** Resolved duplicate sync attempts caused by multiple `onChange` event fires using client-side `useRef` batch tracking and appending `.onConflictDoNothing()` to Drizzle's db insert statement.
 
 ## Current state
 
-- All settings sub-sections (Profile Form with Avatar upload simulation, Security settings with Password expander form, passkeys list, MFA switch, active devices, and delete account cards) are complete, fully functional, and visually integrated.
-- The dashboard settings link works correctly.
-- Prettier, ESLint, TypeScript, and the full Next.js production compiler build cleanly with zero errors.
+- Uploadcare File Uploader and Neon DB syncing are 100% complete, fully functional, and styled.
+- The gallery updates dynamically and supports clickable full-size asset views.
+- All migrations are applied successfully.
 
 ## Next session starts with
 
-- Proceeding to the next Phase listed in `context/todos.md` (e.g. database integration, live state tracking, or next features).
+- Phase 11 — Payments (Stripe integration) in [context/todos.md](file:///d:/MyProjects/stater-kits/starter-nextjs/context/todos.md) to set up subscription tiers and checkout sessions.
 
 ## Open questions
 

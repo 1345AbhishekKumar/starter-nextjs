@@ -3,7 +3,7 @@
 import { useUser, useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Plus, Compass, Settings } from 'lucide-react';
+import { Plus, Compass, Settings, UploadCloud } from 'lucide-react';
 
 import { KPICards } from '@/components/dashboard/KPICards';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
@@ -109,6 +109,12 @@ export default function DashboardPage() {
               <button className='outline-btn font-mono-custom flex items-center gap-2 border-[#111111]/30 px-5 py-3 text-[10px] tracking-wider uppercase hover:border-[#111111]'>
                 <Compass size={12} />
                 My Journal Drafts
+              </button>
+            </Link>
+            <Link href='/dashboard/uploads'>
+              <button className='outline-btn font-mono-custom flex items-center gap-2 border-[#111111]/30 px-5 py-3 text-[10px] tracking-wider uppercase hover:border-[#111111]'>
+                <UploadCloud size={12} />
+                Upload Gallery
               </button>
             </Link>
           </div>

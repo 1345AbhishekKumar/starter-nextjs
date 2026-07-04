@@ -22,7 +22,7 @@ import {
   Trash2,
 } from 'lucide-react';
 
-import { useUIStore } from '@/stores/ui';
+import { useUIStore } from '@/store/ui';
 import {
   draftFormSchema,
   type DraftFormInput,

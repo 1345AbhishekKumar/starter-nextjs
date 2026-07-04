@@ -6,6 +6,10 @@ export const clientEnv = createEnv({
     // Client-side environment variables must be prefixed with NEXT_PUBLIC_
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
     NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
+    NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY: z.string().min(1),
+    NEXT_PUBLIC_UPLOADCARE_TRANSFORMATION_PARAMETERS: z
+      .string()
+      .default('quality/lightest, progressive/yes'),
 
     // Clerk redirect routes
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1).default('/sign-in'),
@@ -34,6 +38,10 @@ export const clientEnv = createEnv({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY:
+      process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY,
+    NEXT_PUBLIC_UPLOADCARE_TRANSFORMATION_PARAMETERS:
+      process.env.NEXT_PUBLIC_UPLOADCARE_TRANSFORMATION_PARAMETERS,
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
     NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL:

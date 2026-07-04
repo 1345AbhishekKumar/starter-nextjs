@@ -411,3 +411,32 @@ body.theme-font-mono button,
 body.theme-font-mono div:not(.font-mono-custom) {
   font-family: var(--font-body-current) !important;
 }
+
+/* Uploadcare File Uploader Customization */
+.uploadcare-custom-theme uc-file-uploader-regular {
+  --uc-primary-oklch-light: 70% 0.235 146.65; /* Nice greenish accent */
+  --uc-primary-oklch-dark: 70% 0.235 146.65;
+  --uc-background-oklch-light: 98% 0.01 100;
+  --uc-border-radius: 24px;
+}
+
+.uploadcare-custom-theme uc-file-uploader-regular uc-simple-btn button {
+  font-family: var(--font-space-mono), monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  background-color: var(--brand-green) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  border: 1px solid var(--brand-green) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+.uploadcare-custom-theme uc-file-uploader-regular uc-simple-btn button:hover {
+  background-color: transparent !important;
+  color: var(--brand-green) !important;
+  box-shadow: 0 4px 12px rgba(110, 156, 78, 0.2) !important;
+}

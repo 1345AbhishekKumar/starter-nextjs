@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, serial } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, serial, integer } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
@@ -73,11 +73,26 @@ export const webhookEvents = pgTable('webhook_events', {
     .notNull(),
 });
 
+export const uploadcareFiles = pgTable('uploadcare_files', {
+  id: serial('id').primaryKey(),
+  fileId: text('file_id').notNull().unique(), // Uploadcare UUID
+  fileUrl: text('file_url').notNull(), // CDN URL
+  fileName: text('file_name').notNull(),
+  fileSize: integer('file_size').notNull(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 // Relationships
 export const usersRelations = relations(users, ({ one, many }) => ({
   profile: one(profiles),
   posts: many(posts),
   subscription: one(subscriptions),
+  uploadcareFiles: many(uploadcareFiles),
 }));
 
 export const profilesRelations = relations(profiles, ({ one }) => ({
@@ -91,3 +106,13 @@ export const postsRelations = relations(posts, ({ one }) => ({
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
   user: one(users, { fields: [subscriptions.userId], references: [users.id] }),
 }));
+
+export const uploadcareFilesRelations = relations(
+  uploadcareFiles,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [uploadcareFiles.userId],
+      references: [users.id],
+    }),
+  }),
+);

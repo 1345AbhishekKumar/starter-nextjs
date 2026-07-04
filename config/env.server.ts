@@ -6,6 +6,9 @@ export const serverEnv = createEnv({
     // Database
     DATABASE_URL: z.string().min(1),
 
+    // Uploadcare
+    UPLOADCARE_SECRET_KEY: z.string().min(1),
+
     // Authentication
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
@@ -31,6 +34,7 @@ export const serverEnv = createEnv({
   // For Next.js server components
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
+    UPLOADCARE_SECRET_KEY: process.env.UPLOADCARE_SECRET_KEY,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
     NODE_ENV: process.env.NODE_ENV,

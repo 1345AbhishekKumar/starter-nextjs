@@ -249,24 +249,24 @@
 
 ## Phase 10 — File Uploads (Uploadcare)
 
-> **Goal:** Implement image file uploads to Uploadcare CDN and store metadata in Neon for user avatars.
+> **Goal:** Implement image file uploads to Uploadcare CDN and store metadata in Neon for user uploads in a dedicated gallery.
 > **Estimated:** 1 day
-> **Ships when:** Users can upload custom images from settings and see updated avatar icons immediately.
+> **Ships when:** Users can upload custom images from `/dashboard/uploads` and see synced files in the gallery.
 
 ### Asset Uploads
 
-- [ ] **Integrate Uploadcare Media Service** `[M]` 🟡
+- [x] **Integrate Uploadcare Media Service** `[M]` 🟡
   - **What:** Set up API upload integration, render upload button/widget, and save asset CDN URLs and UUIDs.
-  - **Why:** Enables users to upload custom profile pictures.
-  - **Stack notes:** `@uploadcare/upload-client`, `uploadcare_files` metadata table in Neon DB.
+  - **Why:** Showcase optimized file uploading and metadata syncing.
+  - **Stack notes:** `@uploadcare/react-uploader`, `@uploadcare/nextjs-loader`, `uploadcare_files` metadata table in Neon DB.
   - **Subtasks:**
-    - [ ] Set up Uploadcare keys, dependencies, and metadata table schema in Neon
-    - [ ] Create backend API route/Server Action for saving and validating metadata
-    - [ ] Integrate Uploadcare upload widget/SDK in settings page
-    - [ ] Update profile database columns with the returned image URLs on upload success
+    - [x] Set up Uploadcare keys, dependencies, and metadata table schema in Neon
+    - [x] Create backend Server Action for saving and validating metadata
+    - [x] Integrate Uploadcare upload widget in `/dashboard/uploads` page
+    - [x] Implement `<UploadcareImage>` component for automatic optimization comparison and transforms
   - **Acceptance criteria:**
-    - [ ] Uploading an image to Uploadcare executes successfully and metadata is saved in Neon DB
-    - [ ] New images update profile database records and display in page headers
+    - [x] Uploading an image to Uploadcare executes successfully and metadata is saved in Neon DB
+    - [x] Uploaded images appear in the gallery grid and render optimized sizes with on-the-fly transforms
 
 ---
 

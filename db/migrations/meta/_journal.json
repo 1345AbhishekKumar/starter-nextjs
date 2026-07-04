@@ -15,6 +15,13 @@
       "when": 1783062616930,
       "tag": "0001_vengeful_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783145780451,
+      "tag": "0002_narrow_mandarin",
+      "breakpoints": true
     }
   ]
 }
