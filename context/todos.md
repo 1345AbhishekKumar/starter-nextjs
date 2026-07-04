@@ -304,19 +304,19 @@
 
 ### Payments Integration
 
-- [ ] **Integrate Stripe Billing Pipelines** `[XL]` 🔴
+- [x] **Integrate Stripe Billing Pipelines** `[XL]` 🔴
   - **What:** Create billing tables, checkout page redirect hooks, webhook handlers, and plan checks.
   - **Why:** Monetizes the application platform.
   - **Stack notes:** `stripe` NPM package, Stripe Webhooks, API routes.
   - **Subtasks:**
-    - [ ] Configure Stripe Developer credentials inside local environment variables
-    - [ ] Design pricing tier selections showing Free, Pro, and Enterprise options
-    - [ ] Write `createCheckoutSession` Server Action redirecting users to checkout portal
-    - [ ] Create API route handler at `app/api/webhooks/stripe/route.ts` parsing checkout events
-    - [ ] Handle `checkout.session.completed` events updating subscriber status in DB
+    - [x] Configure Stripe Developer credentials inside local environment variables
+    - [x] Design pricing tier selections showing Free, Pro, and Enterprise options
+    - [x] Write `createCheckoutSession` Server Action redirecting users to checkout portal
+    - [x] Create API route handler at `app/api/webhooks/stripe/route.ts` parsing checkout events
+    - [x] Handle `checkout.session.completed` events updating subscriber status in DB
   - **Acceptance criteria:**
-    - [ ] Clicking premium plan buttons opens Stripe's Hosted payment dashboard
-    - [ ] Test purchase webhook signals success, upgrading database profiles to premium tiers
+    - [x] Clicking premium plan buttons opens Stripe's Hosted payment dashboard
+    - [x] Test purchase webhook signals success, upgrading database profiles to premium tiers
 
 ---
 

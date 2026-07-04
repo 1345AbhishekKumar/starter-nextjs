@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { User, Shield, Sliders } from 'lucide-react';
+import { User, Shield, Sliders, CreditCard } from 'lucide-react';
 
-export type SettingsTab = 'profile' | 'preferences' | 'security';
+export type SettingsTab = 'profile' | 'preferences' | 'security' | 'billing';
 
 interface SettingsSidebarProps {
   activeTab: SettingsTab;
@@ -29,6 +29,11 @@ export function SettingsSidebar({
       id: 'security' as SettingsTab,
       label: 'Security & Auth',
       icon: <Shield size={14} />,
+    },
+    {
+      id: 'billing' as SettingsTab,
+      label: 'Billing & Plans',
+      icon: <CreditCard size={14} />,
     },
   ];
 

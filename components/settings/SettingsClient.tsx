@@ -11,6 +11,7 @@ import {
 import { ProfileForm } from '@/components/settings/ProfileForm';
 import { SecuritySettings } from '@/components/settings/SecuritySettings';
 import { PreferencesSettings } from '@/components/settings/PreferencesSettings';
+import { BillingSettings } from '@/components/settings/BillingSettings';
 
 type ProfileData = {
   id: string;
@@ -101,6 +102,15 @@ export function SettingsClient({ initialProfile }: SettingsClientProps) {
                     Security Settings
                   </h3>
                   <SecuritySettings />
+                </div>
+              )}
+
+              {activeTab === 'billing' && (
+                <div>
+                  <h3 className='mb-6 text-lg font-semibold text-[#111111]'>
+                    Billing & Subscription Plans
+                  </h3>
+                  <BillingSettings />
                 </div>
               )}
             </div>

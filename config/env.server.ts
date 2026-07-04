@@ -6,6 +6,17 @@ export const serverEnv = createEnv({
     // Database
     DATABASE_URL: z.string().min(1),
 
+    // Stripe
+    STRIPE_SECRET_KEY: z
+      .string()
+      .refine(
+        (val) => val.startsWith('sk_') || val.startsWith('rk_'),
+        'Stripe API key must start with sk_ or rk_',
+      ),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1),
+    STRIPE_PRO_PRICE_ID: z.string().optional(),
+    STRIPE_ENTERPRISE_PRICE_ID: z.string().optional(),
+
     // Uploadcare
     UPLOADCARE_SECRET_KEY: z.string().min(1),
 
@@ -36,6 +47,10 @@ export const serverEnv = createEnv({
   // For Next.js server components
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    STRIPE_PRO_PRICE_ID: process.env.STRIPE_PRO_PRICE_ID,
+    STRIPE_ENTERPRISE_PRICE_ID: process.env.STRIPE_ENTERPRISE_PRICE_ID,
     UPLOADCARE_SECRET_KEY: process.env.UPLOADCARE_SECRET_KEY,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,

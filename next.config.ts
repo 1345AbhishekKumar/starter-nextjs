@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['pino', 'pino-pretty'],
+  allowedDevOrigins: ['closing-upward-mite.ngrok-free.app'],
   images: {
     remotePatterns: [
       {
