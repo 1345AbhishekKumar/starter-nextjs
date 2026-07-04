@@ -380,6 +380,9 @@ Approved dependencies for this project:
   - `@arcjet/next` — Edge‑native rate limiting, bot detection, and OWASP Top‑10 attack protection
 
 - **AI & Automation**:
+  - `ai` — Vercel AI SDK core library
+  - `@ai-sdk/openai` — OpenAI provider for Vercel AI SDK (also used for NVIDIA NIM and OpenRouter)
+  - `@ai-sdk/google` — Google provider for Vercel AI SDK (Gemini)
   - `openai` — SDK for connecting to OpenAI‑compatible APIs (e.g., NVIDIA GPT OSS 120B)
   - `openrouter` — SDK for connecting to APIs
   - `gemini` — SDK for connecting to APIs

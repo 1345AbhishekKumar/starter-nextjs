@@ -7,6 +7,8 @@ import {
   createDraft,
   updateDraft,
   deleteDraft,
+  generateDraftSummary,
+  getAIModels,
 } from '@/actions/drafts';
 
 export interface Draft {
@@ -15,6 +17,7 @@ export interface Draft {
   content: string;
   category: 'nature' | 'poetry' | 'reflection' | 'journal';
   tags: string[];
+  summary: string | null;
   createdAt: string;
 }
 
@@ -24,6 +27,7 @@ export const draftKeys = {
   lists: () => [...draftKeys.all, 'list'] as const,
   list: (filters: { search: string; category: string; page: number }) =>
     [...draftKeys.lists(), filters] as const,
+  models: () => [...draftKeys.all, 'models'] as const,
 };
 
 // Custom hooks for TanStack Query
@@ -114,5 +118,36 @@ export function useDeleteDraft() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: draftKeys.all });
     },
+  });
+}
+
+export function useSummarizeDraft() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, model }: { id: string; model: string }) => {
+      const res = await generateDraftSummary(id, model);
+      if (!res.success || !res.summary) {
+        throw new Error(res.error || 'Failed to generate summary');
+      }
+      return res.summary;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: draftKeys.all });
+    },
+  });
+}
+
+export function useAIModels() {
+  return useQuery({
+    queryKey: draftKeys.models(),
+    queryFn: async () => {
+      const res = await getAIModels();
+      if (!res.success || !res.data) {
+        throw new Error(res.error || 'Failed to fetch AI models');
+      }
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
   });
 }

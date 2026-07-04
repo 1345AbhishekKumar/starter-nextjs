@@ -7,6 +7,22 @@ import { clientEnv } from '@/config/env.client';
 import { useSyncFile } from '@/hooks/use-files';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 
+interface UploadcareFile {
+  status: string;
+  cdnUrl: string | null;
+  uuid: string | null;
+  name?: string | null;
+  size?: number | null;
+}
+
+interface UploadcareChangeEvent {
+  allEntries: UploadcareFile[];
+}
+
+interface UploadcareErrorEvent {
+  errors: { message: string }[];
+}
+
 export function FileUploader() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -14,9 +30,9 @@ export function FileUploader() {
   const syncedFilesRef = useRef<Set<string>>(new Set());
   const syncFileMutation = useSyncFile();
 
-  const handleChangeEvent = async (e: any) => {
+  const handleChangeEvent = async (e: UploadcareChangeEvent) => {
     const successfulFiles = e.allEntries.filter(
-      (file: any) => file.status === 'success',
+      (file: UploadcareFile) => file.status === 'success',
     );
 
     if (successfulFiles.length === 0) return;
@@ -43,9 +59,10 @@ export function FileUploader() {
           );
           setErrorMessage(null);
           setTimeout(() => setSuccessMessage(null), 5000);
-        } catch (err: any) {
+        } catch (err) {
+          const errMsg = err instanceof Error ? err.message : String(err);
           setErrorMessage(
-            `Failed to sync "${file.name}" to the database: ${err.message || err}`,
+            `Failed to sync "${file.name}" to the database: ${errMsg}`,
           );
           setSuccessMessage(null);
           setTimeout(() => setErrorMessage(null), 5000);
@@ -54,7 +71,7 @@ export function FileUploader() {
     }
   };
 
-  const handleUploadFailed = (e: any) => {
+  const handleUploadFailed = (e: UploadcareErrorEvent) => {
     const errorDetail = e.errors?.[0]?.message || 'File upload failed';
     setErrorMessage(`Upload error: ${errorDetail}`);
     setSuccessMessage(null);
@@ -77,6 +94,7 @@ export function FileUploader() {
         </div>
       )}
 
+      {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
       <div className='uploadcare-custom-theme flex justify-center py-6'>
         <FileUploaderRegular
           pubkey={pubKey}

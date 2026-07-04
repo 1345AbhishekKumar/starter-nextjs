@@ -69,6 +69,7 @@ export async function getDrafts(filters: {
       content: post.content,
       category: post.category as 'nature' | 'poetry' | 'reflection' | 'journal',
       tags: post.tags || [],
+      summary: post.summary,
       createdAt: post.createdAt.toISOString(),
     }));
 
@@ -143,6 +144,7 @@ export async function createDraft(data: unknown) {
         category: newPost.category as
           'nature' | 'poetry' | 'reflection' | 'journal',
         tags: newPost.tags || [],
+        summary: newPost.summary,
         createdAt: newPost.createdAt.toISOString(),
       },
     };
@@ -221,10 +223,83 @@ export async function deleteDraft(id: string) {
 
     revalidatePath('/dashboard/drafts');
 
-    return { success: true };
+    return {
+      success: true,
+    };
   } catch (error) {
     logger.error({ error, id }, 'Failed to delete draft');
     Sentry.captureException(error);
     return { success: false, error: 'Failed to delete draft' };
+  }
+}
+
+/**
+ * Generates an AI summary for a specific draft and updates it in the Neon database.
+ */
+export async function generateDraftSummary(id: string, model: string) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const postId = parseInt(id, 10);
+    if (isNaN(postId)) {
+      return { success: false, error: 'Invalid draft ID' };
+    }
+
+    // Fetch the draft to verify ownership
+    const draft = await db.query.posts.findFirst({
+      where: (p, { and: andOp, eq: eqOp }) =>
+        andOp(eqOp(p.id, postId), eqOp(p.userId, userId)),
+    });
+
+    if (!draft) {
+      return { success: false, error: 'Draft not found or unauthorized' };
+    }
+
+    // Call the AI utility to generate summary
+    const { generateSummary } = await import('@/lib/ai');
+    const summary = await generateSummary(draft.content, model);
+
+    // Save the summary back to the database
+    await db
+      .update(posts)
+      .set({ summary, updatedAt: new Date() })
+      .where(and(eq(posts.id, postId), eq(posts.userId, userId)));
+
+    revalidatePath('/dashboard/drafts');
+
+    return { success: true, summary };
+  } catch (error) {
+    logger.error({ error, id, model }, 'Failed to generate draft summary');
+    Sentry.captureException(error);
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to generate draft summary',
+    };
+  }
+}
+
+/**
+ * Server Action to fetch available models from AI catalog (or fallbacks).
+ */
+export async function getAIModels() {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const { fetchAIModels } = await import('@/lib/ai');
+    const models = await fetchAIModels();
+    return { success: true, data: models };
+  } catch (error) {
+    logger.error({ error }, 'Failed to get AI models');
+    Sentry.captureException(error);
+    return { success: false, error: 'Failed to get AI models' };
   }
 }

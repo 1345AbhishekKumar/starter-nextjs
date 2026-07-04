@@ -42,6 +42,7 @@ export const posts = pgTable('posts', {
     .array()
     .notNull()
     .default(sql`ARRAY[]::text[]`),
+  summary: text('summary'),
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

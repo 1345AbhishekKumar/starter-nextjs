@@ -270,6 +270,32 @@
 
 ---
 
+## Phase 10B — AI Draft Summarization (NVIDIA)
+
+> **Goal:** Integrate NVIDIA's API catalog to summarize drafts in "My Drafts" with dynamic model switching.
+> **Estimated:** 1 day
+> **Ships when:** Users can select any available NVIDIA catalog model, generate a 1-2 sentence thoughtful reflection/summary on-demand, and see it persisted in the DB and displayed with spacing in the UI.
+
+### AI Draft summaries
+
+- [x] **AI Draft Summaries & Dynamic Models** `[M]` 🔴
+  - **What:** Create client helper, backend actions, database column migrations, and refactored UI components supporting model switching.
+  - **Why:** Adds intelligent reasoning summaries to user writings.
+  - **Stack notes:** NVIDIA chat completions / models API, `nuqs` URL state, TanStack Query mutations.
+  - **Subtasks:**
+    - [x] Add optional `summary` column to `posts` table and migrate Neon DB
+    - [x] Create `lib/nvidia.ts` client helper querying dynamic catalog models and chat completions
+    - [x] Write `generateDraftSummary` and `getNvidiaModels` server actions
+    - [x] Implement mutations and available model cache hooks in `hooks/use-drafts.ts`
+    - [x] Extract `DraftCard` and `DraftForm` UI sub-components to stay under line limits
+    - [x] Implement persistent model selector and style reflection cards with generous padding in the UI
+  - **Acceptance criteria:**
+    - [x] Changing selected model updates query parameters and dropdown
+    - [x] Clicking "Summarize" generates a 1-2 sentence summary, saves it to Neon, and renders it inside a padded box
+    - [x] Sub-components compile cleanly with zero TypeScript errors
+
+---
+
 ## Phase 11 — Payments (Stripe)
 
 > **Goal:** Set up monetization checkout pipelines using Stripe subscription billing.

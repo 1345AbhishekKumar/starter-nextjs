@@ -12,10 +12,17 @@
       "skillPath": "agent_reach/skill/SKILL.md",
       "computedHash": "bed27534fdf82a3c9ab960f8f89306e64de81612869bbb56faed17e3c9a972ab"
     },
+    "ai-elements": {
+      "source": "vercel/ai-elements",
+      "sourceType": "github",
+      "skillPath": "skills/ai-elements/SKILL.md",
+      "computedHash": "aee43f238ee8a8f0caa04286b4a803b87f429a5d38ec4f821456755cd4b69ff4"
+    },
     "ai-sdk": {
-      "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
-      "sourceType": "local",
-      "computedHash": "8190ed3dc5fd836fb9b902f6cf8266a0ede8fb1e1c2fff754aaf79cbdaba5670"
+      "source": "vercel/ai",
+      "sourceType": "github",
+      "skillPath": "skills/use-ai-sdk/SKILL.md",
+      "computedHash": "dfce60b0f2749991e000123526e298d5ede1c8353d837e71886fb3c8e5f8b730"
     },
     "architect": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
@@ -61,6 +68,12 @@
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",
       "computedHash": "4764eeeef1e80ce9757759ef119a3a5e77322383e8a37975d7c8ea718c259ec9"
+    },
+    "cra-to-next-migration": {
+      "source": "vercel-labs/migration-skills",
+      "sourceType": "github",
+      "skillPath": "cra-to-next-migration/SKILL.md",
+      "computedHash": "0bd86445950c30038fd2111940e667db37f0038933fe068ac0e7d764a41c0462"
     },
     "css-to-tailwind": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
@@ -337,6 +350,12 @@
       "source": "D:\\MyProjects\\stater-kits\\starter-nextjs\\.agents\\skills\\todo",
       "sourceType": "local",
       "computedHash": "a7bd362d4e1faa908b7a3a5b96a34263b52bee508aceebfda6e90610d628ac48"
+    },
+    "turborepo": {
+      "source": "vercel/turborepo",
+      "sourceType": "github",
+      "skillPath": "skills/turborepo/SKILL.md",
+      "computedHash": "cffbaecb75975e9cad15dbb7eedc3d678d54cf7cb845f3e97279576b294faf2a"
     },
     "upgrade-stripe": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
