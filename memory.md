@@ -1,35 +1,47 @@
-# Memory — Vercel AI SDK Integration & Multi-Provider Models
+# Memory — Phase 12 — Email (Resend) Integration
 
-Last updated: 2026-07-04T14:14:00+05:30
+Last updated: 2026-07-05T16:46:45+05:30
 
 ## What was built
 
-- **Vercel AI SDK Migration:**
-  - Installed `ai`, `@ai-sdk/openai`, and `@ai-sdk/google` dependencies.
-  - Registered packages as approved dependencies in [code-standard.md](file:///d:/MyProjects/stater-kits/starter-nextjs/context/code-standard.md).
-  - Configured `OPENROUTER_API_KEY` and `GEMINI_API_KEY` validation schemas in [env.server.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/config/env.server.ts).
-  - Created a unified AI service layer [ai.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/lib/ai.ts) handling provider configurations, dynamic model catalog fetching (`fetchAIModels`), and reflection generation (`generateSummary`) via `generateText`.
-  - Deleted the old, native fetch-based helper [nvidia.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/lib/nvidia.ts).
-  - Refactored [drafts.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/actions/drafts.ts) Server Actions (`generateDraftSummary`, `getAIModels`) and [use-drafts.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/hooks/use-drafts.ts) TanStack Query hooks (`useAIModels`) to map to the new unified API.
-  - Refactored [page.tsx](file:///d:/MyProjects/stater-kits/starter-nextjs/app/dashboard/drafts/page.tsx) to group models inside the selector using `<optgroup>` subdivisions (`NVIDIA NIM`, `OpenRouter`, `Google Gemini`).
+- **Dependencies:**
+  - Added `@react-email/components` (`^0.0.31`) and `resend` (`^4.0.0`) to `package.json` and installed them via `bun install`.
+- **Resend Setup:**
+  - Configured `lib/resend.ts` as the central Resend client instance using `serverEnv.RESEND_API_KEY`.
+- **Welcome Email Template:**
+  - Created a styled welcome email template in `emails/WelcomeEmail.tsx` using React Email components.
+- **Email Server Action:**
+  - Created `actions/email.ts` exposing the `sendWelcomeEmail` server action with robust logging.
+- **Clerk Webhook Integration:**
+  - Wired `sendWelcomeEmail` inside `handleUserCreated` of `app/api/webhooks/clerk/route.ts` to send welcome emails asynchronously whenever a new user is created.
+- **Testing API Endpoint:**
+  - Created a POST endpoint at `app/api/emails/route.ts` which validates request payloads using Zod and triggers the `sendWelcomeEmail` action.
+- **UI Trigger:**
+  - Created `components/settings/TestEmailButton.tsx` which gets the active Clerk user's primary email address and full name, and displays an elegant trigger button with loading, success, and error feedback states.
+  - Integrated the component inside the "Email Notifications" section of `components/settings/PreferencesSettings.tsx`.
+- **Todos & Checklist:**
+  - Marked Phase 12 — Email (Resend) as completed in [todos.md](file:///d:/MyProjects/stater-kits/starter-nextjs/context/todos.md).
 
 ## Decisions made
 
-- **Unified Select Identifier:** Standardized a prefixed model format (`provider/model-id`) to identify the provider dynamically from the client choice in a single select element.
-- **Provider Isolation in Catalog Fetch:** Used `Promise.allSettled` when fetching models from each active provider. If an API key is missing or an API call fails, the utility falls back to static lists for that provider, preventing a single failure from blocking the entire UI catalog.
-- **Backward Compatibility:** Added a helper in the UI to normalize un-prefixed model parameter values (e.g., from old sessions/bookmarks) by mapping them to the `nvidia/` prefix.
+- **Safe Webhook Delivery:** Wrapped the `sendWelcomeEmail` invocation in the webhook handler in a try/catch block to ensure that any mail delivery issues (e.g. unverified API keys, unverified domains) do not cause user registration or the Clerk webhook to crash.
+- **Root-level Mail templates:** Placed the `emails` directory at the project root to match TypeScript path mapping config (`@/*` mapping to `./*`).
+- **Separation of Concerns & File Size Control:** Extracted the "Send Test" button into a standalone `TestEmailButton` client component to keep `PreferencesSettings.tsx` well under the 300-line constraint.
 
 ## Problems solved
 
-- **Formatting issues:** Formatted both [page.tsx](file:///d:/MyProjects/stater-kits/starter-nextjs/app/dashboard/drafts/page.tsx) and [ai.ts](file:///d:/MyProjects/stater-kits/starter-nextjs/lib/ai.ts) using Prettier to resolve warnings and pass the project build scripts.
+- **Prettier Code Alignment:** Manually formatted all modified and newly created files to pass prettier code style requirements.
 
 ## Current state
 
-- Vercel AI SDK migration and multi-provider selection is 100% complete and fully integrated. All files compile and lint cleanly.
+- Phase 12 — Email (Resend) is 100% complete and fully verified.
+- The UI trigger is in place inside the settings workspace.
+- All files compile and format cleanly.
 
 ## Next session starts with
 
-- Phase 11 — Payments (Stripe integration) in [context/todos.md](file:///d:/MyProjects/stater-kits/starter-nextjs/context/todos.md) to set up subscription tiers and checkout sessions.
+- **Phase 14 — Analytics (PostHog):** Integrate PostHog script provider and setup pageview tracking and event captures.
+- **Phase 15 — Testing:** Write Vitest unit tests and Playwright E2E tests for user creation webhooks, drafts, and email flows.
 
 ## Open questions
 

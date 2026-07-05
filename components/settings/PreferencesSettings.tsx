@@ -12,6 +12,7 @@ import {
   Mail,
 } from 'lucide-react';
 import { usePreferencesStore } from '@/store/use-preferences-store';
+import { TestEmailButton } from '@/components/settings/TestEmailButton';
 
 export function PreferencesSettings() {
   const {
@@ -263,7 +264,16 @@ export function PreferencesSettings() {
           <div className='mt-0.5 flex size-9 items-center justify-center rounded-full bg-[#111111]/5 text-[#111111]'>
             <Mail size={16} />
           </div>
-          <div className='flex-1'>
+          <div className='flex-1 space-y-4'>
+            <div>
+              <h4 className='text-sm font-semibold text-[#111111]'>
+                Email Notifications
+              </h4>
+              <p className='font-mono-custom mt-1 text-[9px] tracking-widest text-[#525252]/60 uppercase'>
+                Configure email settings and dispatch test notifications
+              </p>
+            </div>
+
             <div className='flex items-center justify-between rounded-xl border border-[#111111]/5 bg-[#111111]/5 p-4'>
               <div className='flex items-start gap-3'>
                 <div className='mt-0.5 flex size-8 items-center justify-center rounded-lg bg-[#111111]/5 text-[#111111]'>
@@ -286,6 +296,8 @@ export function PreferencesSettings() {
                 className='size-4 cursor-pointer rounded border-[#111111]/20 bg-white text-[#111111] focus:ring-0 focus:ring-offset-0'
               />
             </div>
+
+            <TestEmailButton />
           </div>
         </div>
       </div>

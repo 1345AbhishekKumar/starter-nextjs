@@ -5,29 +5,25 @@ import { db } from '@/db';
 import { posts, users } from '@/db/schema';
 import { and, eq, ilike, or, desc, sql, type SQL } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
-import { draftFormSchema } from '@/lib/validations/drafts';
+import { draftFormSchema, draftFiltersSchema } from '@/lib/validations/drafts';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
 
 /**
  * Fetches user drafts (posts) from Neon database with filters and pagination.
  */
-export async function getDrafts(filters: {
-  search: string;
-  category: string;
-  page: number;
-  pageSize?: number;
-}) {
+export async function getDrafts(filters: unknown) {
   try {
     const { userId } = await auth();
     if (!userId) {
       return { success: false, error: 'Unauthorized' };
     }
 
-    const search = filters.search || '';
-    const category = filters.category || 'all';
-    const page = filters.page || 1;
-    const pageSize = filters.pageSize || 2;
+    const validatedFilters = draftFiltersSchema.parse(filters);
+    const search = validatedFilters.search || '';
+    const category = validatedFilters.category || 'all';
+    const page = validatedFilters.page || 1;
+    const pageSize = validatedFilters.pageSize || 2;
 
     const conditions: SQL[] = [eq(posts.userId, userId)];
 

@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import { logger, flushLogsAfterResponse } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
 import { serverEnv } from '@/config/env.server';
+import { sendWelcomeEmail } from '@/actions/email';
 
 /**
  * Clerk Webhook Handler
@@ -159,6 +160,18 @@ async function handleUserCreated(data: UserPayload) {
     { userId: id, email: primaryEmail },
     'User created and profile initialized',
   );
+
+  // Send welcome email asynchronously without blocking webhook execution
+  if (primaryEmail) {
+    try {
+      await sendWelcomeEmail(primaryEmail, fullName || 'there');
+    } catch (emailErr) {
+      logger.error(
+        { err: emailErr, userId: id, email: primaryEmail },
+        'Failed to send welcome email during user creation webhook',
+      );
+    }
+  }
 }
 
 async function handleUserUpdated(data: UserPayload) {

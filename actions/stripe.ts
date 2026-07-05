@@ -9,12 +9,24 @@ import { clientEnv } from '@/config/env.client';
 import { serverEnv } from '@/config/env.server';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
+import { z } from 'zod';
 
 /**
  * Creates a Stripe Checkout Session for a subscription plan.
  */
 export async function createCheckoutSession(priceId: string) {
   try {
+    // Validate priceId parameter
+    z.string().min(1).parse(priceId);
+    const allowedPrices = [
+      serverEnv.STRIPE_PRO_PRICE_ID,
+      serverEnv.STRIPE_ENTERPRISE_PRICE_ID,
+    ].filter(Boolean);
+
+    if (!allowedPrices.includes(priceId)) {
+      return { success: false, error: 'Invalid plan selected' };
+    }
+
     const { userId } = await auth();
     if (!userId) {
       return { success: false, error: 'Unauthorized' };

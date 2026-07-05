@@ -328,18 +328,18 @@
 
 ### Email Notification System
 
-- [ ] **Setup Resend Transactional Email** `[M]` 🟢
+- [x] **Setup Resend Transactional Email** `[M]` 🟢
   - **What:** Configure email templates using React Email components, trigger sends via Resend client APIs.
   - **Why:** Welcomes new users and delivers transactional details.
   - **Stack notes:** `resend`, `@react-email/components`.
   - **Subtasks:**
-    - [ ] Set up Resend API credentials inside environment configuration files
-    - [ ] Design welcome email templates using `@react-email/components`
-    - [ ] Wire welcome email dispatching to trigger when user signup events complete
-    - [ ] Write email sending helper methods for general use
+    - [x] Set up Resend API credentials inside environment configuration files
+    - [x] Design welcome email templates using `@react-email/components`
+    - [x] Wire welcome email dispatching to trigger when user signup events complete
+    - [x] Write email sending helper methods for general use
   - **Acceptance criteria:**
-    - [ ] Completing new signups triggers API requests delivering emails
-    - [ ] HTML email templates render properly across mobile and desktop clients
+    - [x] Completing new signups triggers API requests delivering emails
+    - [x] HTML email templates render properly across mobile and desktop clients
 
 ---
 

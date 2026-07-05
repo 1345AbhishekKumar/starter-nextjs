@@ -31,6 +31,7 @@ export const draftFiltersSchema = z.object({
   search: z.string().default(''),
   category: z.string().default('all'),
   page: z.number().int().min(1).default(1),
+  pageSize: z.number().int().min(1).default(2).optional(),
 });
 
 export type DraftFiltersInput = z.infer<typeof draftFiltersSchema>;

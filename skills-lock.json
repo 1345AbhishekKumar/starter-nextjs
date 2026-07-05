@@ -6,6 +6,12 @@
       "sourceType": "local",
       "computedHash": "b93b77d9a63143fcefa7d371c1fceba58f1f310ef76a5f2ad3d4d2077efa8c25"
     },
+    "agent-email-inbox": {
+      "source": "resend/resend-skills",
+      "sourceType": "github",
+      "skillPath": "skills/agent-email-inbox/SKILL.md",
+      "computedHash": "6280018b559b3a932bf0f610146978ca3416e2b2bf21f62c45dbad4d3ccd1282"
+    },
     "agent-reach": {
       "source": "panniantong/agent-reach",
       "sourceType": "github",
@@ -89,6 +95,12 @@
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",
       "computedHash": "d63e6d73a9f579b505a5694af2f3b3200c2b5eeea147e88b9b6d1e5fce23bcbb"
+    },
+    "email-best-practices": {
+      "source": "resend/resend-skills",
+      "sourceType": "github",
+      "skillPath": "skills/email-best-practices/SKILL.md",
+      "computedHash": "cf53e0d7ad72c440818c64a104ab220f527f26f10c7d8163fa99e066bf747eed"
     },
     "embedded-captions": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
@@ -251,6 +263,12 @@
       "sourceType": "local",
       "computedHash": "1b1a4713fdcf9f21916a59a3e637de88beaaabecccf900a815d8fd4123d72473"
     },
+    "react-email": {
+      "source": "resend/resend-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-email/SKILL.md",
+      "computedHash": "1d2afbc631670c6bc23e90d0d4776d25f08eabed4bac72485bf06aea1f91ae89"
+    },
     "remember": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",
@@ -260,6 +278,12 @@
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",
       "sourceType": "local",
       "computedHash": "3f5441e7d3b935d61e98d185c96555b51f9c5229b3a77b940765bd852aa0629f"
+    },
+    "resend": {
+      "source": "resend/resend-skills",
+      "sourceType": "github",
+      "skillPath": "skills/resend/SKILL.md",
+      "computedHash": "2b07552d7ad20b61c89d93bcd378f52c0379453a983f277dffb20d8f9b86494a"
     },
     "sentry-fix-issues": {
       "source": "D:\\MyProjects\\stater-kits\\starter-kit\\.agents\\skills",

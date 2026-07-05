@@ -3,7 +3,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/db';
 import { uploadcareFiles } from '@/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { and, eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
@@ -92,17 +92,17 @@ export async function deleteSyncedFile(id: number) {
       return { success: false, error: 'Unauthorized' };
     }
 
-    // Ensure user owns the file before deleting
-    const [file] = await db
-      .select()
-      .from(uploadcareFiles)
-      .where(eq(uploadcareFiles.id, id));
+    // Ensure user owns the file and delete it in a single query
+    const [deletedFile] = await db
+      .delete(uploadcareFiles)
+      .where(
+        and(eq(uploadcareFiles.id, id), eq(uploadcareFiles.userId, userId)),
+      )
+      .returning();
 
-    if (!file || file.userId !== userId) {
+    if (!deletedFile) {
       return { success: false, error: 'File not found or unauthorized' };
     }
-
-    await db.delete(uploadcareFiles).where(eq(uploadcareFiles.id, id));
 
     revalidatePath('/dashboard/uploads');
     return { success: true };
