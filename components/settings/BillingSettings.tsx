@@ -166,7 +166,7 @@ export function BillingSettings() {
             <span className='font-mono-custom tracking-wider text-[#525252] uppercase'>
               Status
             </span>
-            <span className='font-mono-custom rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#009966] uppercase'>
+            <span className='font-mono-custom rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#047857] uppercase'>
               {subscription.status}
             </span>
           </div>

@@ -10,6 +10,7 @@ import {
   generateDraftSummary,
   getAIModels,
 } from '@/actions/drafts';
+import { draftKeys } from '@/lib/query-keys';
 
 export interface Draft {
   id: string;
@@ -20,16 +21,6 @@ export interface Draft {
   summary: string | null;
   createdAt: string;
 }
-
-// Query Key Factory
-export const draftKeys = {
-  all: ['drafts'] as const,
-  lists: () => [...draftKeys.all, 'list'] as const,
-  list: (filters: { search: string; category: string; page: number }) =>
-    [...draftKeys.lists(), filters] as const,
-  models: () => [...draftKeys.all, 'models'] as const,
-};
-
 // Custom hooks for TanStack Query
 export function useDrafts(filters: {
   search: string;

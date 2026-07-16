@@ -44,12 +44,12 @@ export function ActivityFeed() {
   return (
     <div className='bento-cell flex h-full min-h-[300px] flex-col justify-between p-6'>
       <div>
-        <p className='font-mono-custom text-[10px] tracking-widest text-[#525252]/60 uppercase'>
+        <p className='font-mono-custom text-[10px] tracking-widest text-[#525252] uppercase'>
           Recent Activity
         </p>
-        <h3 className='mt-1 mb-6 text-base font-semibold text-[#111111]'>
+        <h2 className='mt-1 mb-6 text-base font-semibold text-[#111111]'>
           Meadow Stream
-        </h3>
+        </h2>
 
         {/* Timeline List */}
         <div className='relative space-y-6 pl-6 before:absolute before:inset-y-2 before:left-[11px] before:w-[1px] before:bg-[#111111]/10'>
@@ -67,7 +67,7 @@ export function ActivityFeed() {
                     <span className='text-[#525252]/70'>{act.icon}</span>
                     {act.title}
                   </span>
-                  <span className='font-mono-custom text-[9px] tracking-wider whitespace-nowrap text-[#525252]/50 uppercase'>
+                  <span className='font-mono-custom text-[9px] tracking-wider whitespace-nowrap text-[#525252]/80 uppercase'>
                     {act.timestamp}
                   </span>
                 </div>
@@ -83,11 +83,11 @@ export function ActivityFeed() {
       </div>
 
       <div className='mt-6 flex items-center justify-between border-t border-[#111111]/5 pt-3'>
-        <span className='font-mono-custom text-[9px] tracking-wider text-[#525252]/60 uppercase'>
+        <span className='font-mono-custom text-[9px] tracking-wider text-[#525252] uppercase'>
           Stream Status
         </span>
-        <span className='font-mono-custom flex items-center gap-1 text-[10px] font-semibold text-[#6e9c4e]'>
-          <span className='inline-block size-1.5 animate-pulse rounded-full bg-[#6e9c4e]' />
+        <span className='font-mono-custom flex items-center gap-1 text-[10px] font-semibold text-[#166534]'>
+          <span className='inline-block size-1.5 animate-pulse rounded-full bg-[#166534]' />
           Live updates online
         </span>
       </div>

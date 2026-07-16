@@ -8,11 +8,47 @@ import { revalidatePath } from 'next/cache';
 import { draftFormSchema, draftFiltersSchema } from '@/lib/validations/drafts';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
+import { arcjetClient } from '@/lib/arcjet';
+import { request, tokenBucket } from '@arcjet/next';
+import { aiTokenLimiters, CHARS_PER_TOKEN } from '@/lib/ai-limits';
+import { getSubscriptionStatus } from '@/actions/stripe';
+import { type AIModel } from '@/lib/ai';
+
+// Define route-specific rate limiting for AI summary generation
+const aiSummaryProtect = arcjetClient.withRule(
+  tokenBucket({
+    mode: 'LIVE',
+    characteristics: ['userId'], // Track rate limits by Clerk userId
+    refillRate: 5, // Refill 5 tokens per interval
+    interval: 60, // 1-minute window
+    capacity: 10, // Max capacity of 10 tokens
+  }),
+);
+
+export type DraftItem = {
+  id: string;
+  title: string;
+  content: string;
+  category: 'nature' | 'poetry' | 'reflection' | 'journal';
+  tags: string[];
+  summary: string | null;
+  createdAt: string;
+};
+
+export type GetDraftsResponse = {
+  success: boolean;
+  data?: {
+    drafts: DraftItem[];
+    totalCount: number;
+    totalPages: number;
+  };
+  error?: string;
+};
 
 /**
  * Fetches user drafts (posts) from Neon database with filters and pagination.
  */
-export async function getDrafts(filters: unknown) {
+export async function getDrafts(filters: unknown): Promise<GetDraftsResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -84,10 +120,16 @@ export async function getDrafts(filters: unknown) {
   }
 }
 
+export type CreateDraftResponse = {
+  success: boolean;
+  data?: DraftItem;
+  error?: string;
+};
+
 /**
  * Creates a new draft (post) in Neon database.
  */
-export async function createDraft(data: unknown) {
+export async function createDraft(data: unknown): Promise<CreateDraftResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -151,10 +193,18 @@ export async function createDraft(data: unknown) {
   }
 }
 
+export type ActionResponse = {
+  success: boolean;
+  error?: string;
+};
+
 /**
  * Updates an existing draft (post) in Neon database.
  */
-export async function updateDraft(id: string, data: unknown) {
+export async function updateDraft(
+  id: string,
+  data: unknown,
+): Promise<ActionResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -196,7 +246,7 @@ export async function updateDraft(id: string, data: unknown) {
 /**
  * Deletes a draft (post) from Neon database.
  */
-export async function deleteDraft(id: string) {
+export async function deleteDraft(id: string): Promise<ActionResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -229,10 +279,19 @@ export async function deleteDraft(id: string) {
   }
 }
 
+export type GenerateSummaryResponse = {
+  success: boolean;
+  summary?: string;
+  error?: string;
+};
+
 /**
  * Generates an AI summary for a specific draft and updates it in the Neon database.
  */
-export async function generateDraftSummary(id: string, model: string) {
+export async function generateDraftSummary(
+  id: string,
+  model: string,
+): Promise<GenerateSummaryResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -244,7 +303,24 @@ export async function generateDraftSummary(id: string, model: string) {
       return { success: false, error: 'Invalid draft ID' };
     }
 
-    // Fetch the draft to verify ownership
+    const req = await request();
+    const decision = await aiSummaryProtect.protect(req, {
+      requested: 1,
+      userId,
+    });
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return {
+          success: false,
+          error: 'Too many requests. Please slow down.',
+        };
+      }
+      return {
+        success: false,
+        error: 'Security filters blocked this request.',
+      };
+    }
+
     const draft = await db.query.posts.findFirst({
       where: (p, { and: andOp, eq: eqOp }) =>
         andOp(eqOp(p.id, postId), eqOp(p.userId, userId)),
@@ -252,6 +328,31 @@ export async function generateDraftSummary(id: string, model: string) {
 
     if (!draft) {
       return { success: false, error: 'Draft not found or unauthorized' };
+    }
+
+    const subStatus = await getSubscriptionStatus();
+    const isPro =
+      subStatus.success &&
+      subStatus.data?.status === 'active' &&
+      (subStatus.data.isPro || subStatus.data.isEnterprise);
+    const tier: 'pro' | 'free' = isPro ? 'pro' : 'free';
+
+    const estimatedPromptTokens = Math.max(
+      1,
+      Math.ceil(draft.content.length / CHARS_PER_TOKEN),
+    );
+
+    const limitCheck = await aiTokenLimiters[tier].limit(userId, {
+      rate: estimatedPromptTokens,
+    });
+
+    if (!limitCheck.success) {
+      const cooldownMs = limitCheck.reset - Date.now();
+      const cooldownHours = Math.max(0, cooldownMs / (1000 * 60 * 60));
+      return {
+        success: false,
+        error: `AI token limit reached. Please wait ${cooldownHours.toFixed(1)} hours before trying again.`,
+      };
     }
 
     // Call the AI utility to generate summary
@@ -280,10 +381,16 @@ export async function generateDraftSummary(id: string, model: string) {
   }
 }
 
+export type GetAIModelsResponse = {
+  success: boolean;
+  data?: AIModel[];
+  error?: string;
+};
+
 /**
  * Server Action to fetch available models from AI catalog (or fallbacks).
  */
-export async function getAIModels() {
+export async function getAIModels(): Promise<GetAIModelsResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {

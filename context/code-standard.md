@@ -377,6 +377,7 @@ Approved dependencies for this project:
 
 - **Caching & Rate Limiting**:
   - `@upstash/redis` — Serverless HTTP Redis client for global caching, session storage, and pub/sub
+  - `@upstash/ratelimit` — Sliding-window token and rate limiters for Redis
   - `@arcjet/next` — Edge‑native rate limiting, bot detection, and OWASP Top‑10 attack protection
 
 - **AI & Automation**:

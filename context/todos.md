@@ -396,30 +396,30 @@
 
 ### Quality Assurance Testing
 
-- [ ] **Write Vitest Unit and Integration Tests** `[M]` 🔴
+- [x] **Write Vitest Unit and Integration Tests** `[M]` 🔴
   - **What:** Set up Vitest configuration, write unit tests for utils and component validation tests.
   - **Why:** Verifies logical components perform correctly in isolation.
   - **Stack notes:** `vitest`, `@testing-library/react`, `jsdom`.
   - **Subtasks:**
-    - [ ] Configure `vitest.config.ts` environment options
-    - [ ] Write unit tests verifying core logic helpers (formatters, parser functions)
-    - [ ] Write integration test cases mocking settings form Server Actions
+    - [x] Configure `vitest.config.ts` environment options
+    - [x] Write unit tests verifying core logic helpers (formatters, parser functions)
+    - [x] Write integration test cases mocking settings form Server Actions
   - **Acceptance criteria:**
-    - [ ] Running testing commands passes all local unit tests
-    - [ ] Test coverage results exceed the 70% threshold configuration target
+    - [x] Running testing commands passes all local unit tests
+    - [x] Test coverage results exceed the 70% threshold configuration target
 
-- [ ] **Write Playwright E2E Tests** `[M]` 🔴
+- [x] **Write Playwright E2E Tests** `[M]` 🔴
   - **What:** Setup Playwright testing suites, write user scenario tests, and test accessibility rules.
   - **Why:** Validates end-to-end user actions under simulated browser sessions.
   - **Stack notes:** `@playwright/test`, `@axe-core/playwright`.
   - **Subtasks:**
-    - [ ] Install Playwright browser frameworks
-    - [ ] Write E2E login/logout session navigation flows
-    - [ ] Write post creation tests (navigating dashboard, writing data, listing results)
-    - [ ] Integrate automated accessibility scanning checking public page compliance
+    - [x] Install Playwright browser frameworks
+    - [x] Write E2E login/logout session navigation flows
+    - [x] Write post creation tests (navigating dashboard, writing data, listing results)
+    - [x] Integrate automated accessibility scanning checking public page compliance
   - **Acceptance criteria:**
-    - [ ] Running E2E scripts executes and passes all browser tests successfully
-    - [ ] Accessibility reviews output zero critical WCAG AA warnings on landing pages
+    - [x] Running E2E scripts executes and passes all browser tests successfully
+    - [x] Accessibility reviews output zero critical WCAG AA warnings on landing pages
 
 ---
 

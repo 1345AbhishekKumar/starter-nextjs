@@ -7,5 +7,5 @@ if (!serverEnv.DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined in serverEnv');
 }
 
-const sql = neon(serverEnv.DATABASE_URL);
+const sql = neon(serverEnv.DATABASE_URL.trim());
 export const db = drizzle({ client: sql, schema });

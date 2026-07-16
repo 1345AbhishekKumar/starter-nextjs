@@ -1,90 +1,144 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['pino', 'pino-pretty'],
   allowedDevOrigins: ['closing-upward-mite.ngrok-free.app'],
+  serverExternalPackages: ['pino', 'arcjet', '@arcjet/next'],
+
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*.ucarecdn.com',
-        pathname: '/**',
+        hostname: '**.ucarecdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.ucarecdn.net',
       },
     ],
   },
+
+  async headers() {
+    const csp = `
+      default-src 'self';
+
+      script-src
+        'self'
+        ${isDev ? "'unsafe-eval' 'unsafe-inline'" : "'unsafe-inline'"}
+        https://*.clerk.com
+        https://*.clerk.accounts.dev
+        https://*.posthog.com
+        https://us-assets.i.posthog.com;
+
+      style-src
+        'self'
+        'unsafe-inline';
+
+      img-src
+        'self'
+        data:
+        blob:
+        https:
+        https://img.clerk.com;
+
+      font-src
+        'self'
+        data:;
+
+      connect-src
+        'self'
+        https://*.clerk.com
+        https://*.clerk.accounts.dev
+        https://*.posthog.com
+        https://us-assets.i.posthog.com
+        https://app.posthog.com
+        https://upload.uploadcare.com
+        https://*.uploadcare.com
+        https://*.ucarecdn.com
+        https://*.ucarecdn.net
+        ${isDev ? 'ws://localhost:* ws://127.0.0.1:*' : ''};
+
+      frame-src
+        'self'
+        https://*.clerk.com
+        https://*.clerk.accounts.dev;
+
+      worker-src
+        'self'
+        blob:;
+
+      media-src
+        'self';
+
+      object-src
+        'none';
+
+      base-uri
+        'self';
+
+      form-action
+        'self';
+
+      frame-ancestors
+        'none';
+
+      manifest-src
+        'self';
+
+      upgrade-insecure-requests;
+    `
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+
+    const headers = [
+      {
+        key: 'Content-Security-Policy',
+        value: csp,
+      },
+      {
+        key: 'X-Content-Type-Options',
+        value: 'nosniff',
+      },
+      {
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin',
+      },
+      {
+        key: 'Cross-Origin-Opener-Policy',
+        value: 'same-origin-allow-popups',
+      },
+      {
+        key: 'Cross-Origin-Resource-Policy',
+        value: 'same-site',
+      },
+      {
+        key: 'Permissions-Policy',
+        value:
+          'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+      },
+      {
+        key: 'X-Frame-Options',
+        value: 'DENY',
+      },
+    ];
+
+    if (!isDev) {
+      headers.push({
+        key: 'Strict-Transport-Security',
+        value: 'max-age=31536000; includeSubDomains; preload',
+      });
+    }
+
+    return [
+      {
+        source: '/:path*',
+        headers,
+      },
+    ];
+  },
 };
-
-// const nextConfig: NextConfig = {
-//   serverExternalPackages: ['pino', 'pino-pretty'],
-//   allowedDevOrigins: ['closing-upward-mite.ngrok-free.app'],
-//   images: {
-//     remotePatterns: [
-//       {
-//         protocol: 'https',
-//         hostname: 'ucarecdn.com',
-//         pathname: '/**',
-//       },
-//       {
-//         protocol: 'https',
-//         hostname: '*.ucarecdn.com',
-//         pathname: '/**',
-//       },
-//       {
-//         protocol: 'https',
-//         hostname: 'ucarecdn.net',
-//         pathname: '/**',
-//       },
-//       {
-//         protocol: 'https',
-//         hostname: '*.ucarecdn.net',
-//         pathname: '/**',
-//       },
-//     ],
-//   },
-//   async headers() {
-//     const cspHeader = `
-//       default-src 'self';
-//       script-src 'self' 'unsafe-eval' 'unsafe-inline' blob: https://*.clerk.accounts.dev https://*.clerk.com https://*.posthog.com https://us-assets.i.posthog.com;
-//       worker-src 'self' blob:;
-//       style-src 'self' 'unsafe-inline';
-//       img-src 'self' data: blob: https://ucarecdn.com https://*.ucarecdn.com https://ucarecdn.net https://*.ucarecdn.net https://img.clerk.com https://images.unsplash.com https://*.posthog.com https://us-assets.i.posthog.com;
-//       font-src 'self';
-//       connect-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://*.sentry.io https://*.posthog.com https://us-assets.i.posthog.com https://ucarecdn.com https://*.ucarecdn.com https://ucarecdn.net https://*.ucarecdn.net https://upload.uploadcare.com https://*.uploadcare.com ws://localhost:* ws://127.0.0.1:* wss://closing-upward-mite.ngrok-free.app;
-//       frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com;
-//       media-src 'self';
-//       object-src 'none';
-//       base-uri 'self';
-//       form-action 'self';
-//     `
-//       .replace(/\s{2,}/g, ' ')
-//       .trim();
-
-//     return [
-//       {
-//         source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
-//         headers: [
-//           {
-//             key: 'Content-Security-Policy',
-//             value: cspHeader,
-//           },
-//           {
-//             key: 'X-Frame-Options',
-//             value: 'DENY',
-//           },
-//           {
-//             key: 'X-Content-Type-Options',
-//             value: 'nosniff',
-//           },
-//           {
-//             key: 'Referrer-Policy',
-//             value: 'strict-origin-when-cross-origin',
-//           },
-//         ],
-//       },
-//     ];
-//   },
-// };
 
 export default withSentryConfig(nextConfig, {
   // For all available options, see:

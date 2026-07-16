@@ -1,20 +1,26 @@
 import React from 'react';
 import { Users, FileText, Compass, Activity, ArrowUpRight } from 'lucide-react';
 
-interface KPICardProps {
+type KPICardProps = {
   title: string;
   value: string | number;
   subtext: string;
   trend?: string;
   icon: React.ReactNode;
-}
+};
 
-function KPICard({ title, value, subtext, trend, icon }: KPICardProps) {
+function KPICard({
+  title,
+  value,
+  subtext,
+  trend,
+  icon,
+}: KPICardProps): React.JSX.Element {
   return (
     <div className='bento-cell flex min-h-[160px] flex-col justify-between p-6'>
       <div className='flex items-start justify-between'>
         <div>
-          <p className='font-mono-custom text-[10px] tracking-widest text-[#525252]/60 uppercase'>
+          <p className='font-mono-custom text-[10px] tracking-widest text-[#525252] uppercase'>
             {title}
           </p>
           <p className='font-handwritten mt-2 text-4xl leading-tight font-normal text-[#111111]'>
@@ -27,11 +33,11 @@ function KPICard({ title, value, subtext, trend, icon }: KPICardProps) {
       </div>
 
       <div className='mt-4 flex items-center justify-between border-t border-[#111111]/5 pt-3'>
-        <span className='font-mono-custom text-[9px] tracking-wider text-[#525252]/80 uppercase'>
+        <span className='font-mono-custom text-[9px] tracking-wider text-[#525252] uppercase'>
           {subtext}
         </span>
         {trend && (
-          <span className='flex items-center gap-0.5 rounded bg-[#ECFDF5] px-1.5 py-0.5 text-[9px] font-medium text-[#009966]'>
+          <span className='flex items-center gap-0.5 rounded bg-[#ECFDF5] px-1.5 py-0.5 text-[9px] font-medium text-[#047857]'>
             {trend}
             <ArrowUpRight size={10} />
           </span>
@@ -41,7 +47,7 @@ function KPICard({ title, value, subtext, trend, icon }: KPICardProps) {
   );
 }
 
-export function KPICards() {
+export function KPICards(): React.JSX.Element {
   const cards = [
     {
       title: 'Active Sessions',

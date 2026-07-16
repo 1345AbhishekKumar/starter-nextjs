@@ -40,8 +40,11 @@ export const serverEnv = createEnv({
     NVIDIA_API_KEY: z.string().optional(),
     OPENROUTER_API_KEY: z.string().optional(),
     GEMINI_API_KEY: z.string().optional(),
-    // UPSTASH_REDIS_REST_URL: z.string().optional(),
-    // UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+    UPSTASH_REDIS_REST_URL: z.string().min(1),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+
+    // Rate Limiting
+    ARCJET_KEY: z.string().min(1),
   },
 
   // For Next.js server components
@@ -61,8 +64,9 @@ export const serverEnv = createEnv({
     NVIDIA_API_KEY: process.env.NVIDIA_API_KEY,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
-    // UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
-    // UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    ARCJET_KEY: process.env.ARCJET_KEY,
   },
 
   // For server-side validation

@@ -69,12 +69,12 @@ export function ActivityChart() {
       <div>
         <div className='flex items-center justify-between'>
           <div>
-            <p className='font-mono-custom text-[10px] tracking-widest text-[#525252]/60 uppercase'>
+            <p className='font-mono-custom text-[10px] tracking-widest text-[#525252] uppercase'>
               Activity Trends
             </p>
-            <h3 className='mt-1 text-base font-semibold text-[#111111]'>
+            <h2 className='mt-1 text-base font-semibold text-[#111111]'>
               Creation Index
-            </h3>
+            </h2>
           </div>
           <div className='font-mono-custom flex items-center gap-1.5 rounded-full bg-[#6e9c4e]/10 px-3 py-1 text-[10px] tracking-wider text-[#6e9c4e] uppercase'>
             <span>+15% vs last week</span>
@@ -212,7 +212,7 @@ export function ActivityChart() {
 
       {/* Footer Info / Value display */}
       <div className='flex items-center justify-between border-t border-[#111111]/5 pt-3'>
-        <span className='font-mono-custom text-[9px] tracking-wider text-[#525252]/60 uppercase'>
+        <span className='font-mono-custom text-[9px] tracking-wider text-[#525252] uppercase'>
           {hoveredIndex !== null ? 'Selected Value' : 'Weekly Average'}
         </span>
         <span className='font-mono-custom text-xs font-semibold text-[#111111]'>

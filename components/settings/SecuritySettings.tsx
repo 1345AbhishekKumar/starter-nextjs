@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUser, useAuth, useReverification } from '@clerk/nextjs';
 import { isReverificationCancelledError } from '@clerk/nextjs/errors';
+import * as Sentry from '@sentry/nextjs';
+import { logger } from '@/lib/logger';
 import {
   Key,
   Smartphone,
@@ -16,6 +18,7 @@ import {
   CheckCircle2,
   Lock,
   Plus,
+  Loader2,
 } from 'lucide-react';
 
 import {
@@ -29,7 +32,7 @@ type UserSessions = Awaited<
   ReturnType<NonNullable<ReturnType<typeof useUser>['user']>['getSessions']>
 >;
 
-export function SecuritySettings() {
+export function SecuritySettings(): React.JSX.Element {
   const { user, isLoaded: isUserLoaded } = useUser();
   const { sessionId: currentSessionId, signOut } = useAuth();
   const [activeSessions, setActiveSessions] = useState<UserSessions>([]);
@@ -51,7 +54,8 @@ export function SecuritySettings() {
           setIsSessionsLoading(false);
         }
       } catch (err) {
-        console.error('Error fetching sessions:', err);
+        logger.error({ err }, 'Error fetching active user sessions');
+        Sentry.captureException(err);
         if (isMounted) {
           setIsSessionsLoading(false);
         }
@@ -86,6 +90,7 @@ export function SecuritySettings() {
     formState: { errors, isSubmitting },
   } = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
+    mode: 'onBlur',
     defaultValues: {
       newPassword: '',
       confirmPassword: '',
@@ -122,6 +127,8 @@ export function SecuritySettings() {
         alert(res.error || 'Failed to revoke device session.');
       }
     } catch (err) {
+      logger.error({ err, id }, 'Error revoking device session');
+      Sentry.captureException(err);
       const message =
         err instanceof Error ? err.message : 'Failed to revoke device session.';
       alert(message);
@@ -145,7 +152,8 @@ export function SecuritySettings() {
       if (isReverificationCancelledError(err)) {
         return;
       }
-      console.error('Error adding passkey:', err);
+      logger.error({ err }, 'Error adding passkey');
+      Sentry.captureException(err);
       const message =
         err instanceof Error ? err.message : 'Failed to register passkey.';
       alert(message);
@@ -161,6 +169,8 @@ export function SecuritySettings() {
         setTimeout(() => setSuccessMessage(null), 4000);
       }
     } catch (err) {
+      logger.error({ err, id }, 'Error deleting passkey');
+      Sentry.captureException(err);
       const message =
         err instanceof Error ? err.message : 'Failed to delete passkey.';
       alert(message);
@@ -183,6 +193,8 @@ export function SecuritySettings() {
         alert(res.error || 'Failed to delete account.');
       }
     } catch (err) {
+      logger.error({ err }, 'Error deleting account');
+      Sentry.captureException(err);
       const message =
         err instanceof Error ? err.message : 'Failed to delete account.';
       alert(message);
@@ -202,8 +214,8 @@ export function SecuritySettings() {
   return (
     <div className='space-y-8 text-[#111111]'>
       {successMessage && (
-        <div className='font-mono-custom flex items-center gap-2 rounded-2xl border border-[#009966]/20 bg-[#ECFDF5] p-4 text-xs tracking-wide text-[#009966]'>
-          <CheckCircle2 size={16} className='text-[#009966]' />
+        <div className='font-mono-custom flex items-center gap-2 rounded-2xl border border-[#047857]/20 bg-[#ECFDF5] p-4 text-xs tracking-wide text-[#047857]'>
+          <CheckCircle2 size={16} className='text-[#047857]' />
           <span>{successMessage}</span>
         </div>
       )}
@@ -519,26 +531,5 @@ export function SecuritySettings() {
         </div>
       </div>
     </div>
-  );
-}
-
-// Simple loader helper
-function Loader2({ className, ...props }: React.ComponentProps<'svg'>) {
-  return (
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      className={className}
-      {...props}
-    >
-      <path d='M21 12a9 9 0 1 1-6.219-8.56' />
-    </svg>
   );
 }

@@ -22,9 +22,9 @@ export default function SignUpPage() {
 
   React.useEffect(() => {
     if (isUserLoaded && isSignedIn) {
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     }
-  }, [isUserLoaded, isSignedIn, router]);
+  }, [isUserLoaded, isSignedIn]);
 
   if (isUserLoaded && isSignedIn) {
     return null;

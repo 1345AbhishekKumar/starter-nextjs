@@ -53,6 +53,51 @@ bun run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
+### 4. Local Webhook Testing (Clerk & Stripe)
+
+To receive webhooks locally from Clerk and Stripe, you need to expose your local development server to the internet using **ngrok** (or another tunnel like Tailscale Funnel):
+
+1. **Install and Start ngrok**:
+
+   ```bash
+   ngrok http 3000
+   ```
+
+   _If you are using a custom/persistent ngrok domain:_
+
+   ```bash
+   ngrok http --domain=your-domain.ngrok-free.app 3000
+   ```
+
+2. **Configure Next.js Allowed Dev Origins**:
+   When using a tunneling service in development, add your ngrok domain to `allowedDevOrigins` inside `next.config.ts` so Next.js accepts requests from the tunnel:
+
+   ```typescript
+   const nextConfig: NextConfig = {
+     allowedDevOrigins: ['your-domain.ngrok-free.app'],
+     // ...
+   };
+   ```
+
+3. **Configure Clerk Webhooks**:
+   - Go to your **Clerk Dashboard** > **Webhooks** > **Add Endpoint**.
+   - Set the URL to: `https://your-domain.ngrok-free.app/api/webhooks/clerk`.
+   - Select the events to listen to (e.g., `user.created`, `user.updated`).
+   - Copy the **Signing Secret** and paste it in `.env.local` as `CLERK_WEBHOOK_SECRET`.
+
+4. **Configure Stripe Webhooks**:
+   - **Method A: Stripe CLI (Highly Recommended)**:
+     Download and run the Stripe CLI to listen locally:
+     ```bash
+     stripe listen --forward-to localhost:3000/api/webhooks/stripe
+     ```
+     Copy the CLI-provided webhook signing secret (e.g., `whsec_...`) and set it as `STRIPE_WEBHOOK_SECRET` in `.env.local`.
+   - **Method B: ngrok Endpoint**:
+     - Go to your **Stripe Dashboard** > **Developers** > **Webhooks** > **Add endpoint**.
+     - Set the URL to: `https://your-domain.ngrok-free.app/api/webhooks/stripe`.
+     - Select events (e.g., `checkout.session.completed`, `customer.subscription.deleted`).
+     - Copy the **Signing Secret** and set it as `STRIPE_WEBHOOK_SECRET` in `.env.local`.
+
 ---
 
 ## ⚙️ Development Scripts & Commands

@@ -22,4 +22,5 @@ Sentry.init({
       error: { levels: ['error', 'fatal'] },
     }),
   ],
+  tracePropagationTargets: ['localhost', /^\//],
 });

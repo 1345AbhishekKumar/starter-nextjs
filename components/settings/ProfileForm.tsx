@@ -5,6 +5,8 @@ import { useUser } from '@clerk/nextjs';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, CheckCircle2, Camera, UploadCloud } from 'lucide-react';
+import * as Sentry from '@sentry/nextjs';
+import { logger } from '@/lib/logger';
 
 import {
   profileFormSchema,
@@ -20,11 +22,13 @@ type ProfileData = {
   avatarUrl: string;
 };
 
-interface ProfileFormProps {
+type ProfileFormProps = {
   initialProfile: ProfileData;
-}
+};
 
-export function ProfileForm({ initialProfile }: ProfileFormProps) {
+export function ProfileForm({
+  initialProfile,
+}: ProfileFormProps): React.JSX.Element {
   const { user, isLoaded } = useUser();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -41,6 +45,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<ProfileFormInput>({
     resolver: zodResolver(profileFormSchema),
+    mode: 'onBlur',
     defaultValues: {
       name: initialProfile.name,
       email: user?.primaryEmailAddress?.emailAddress || '',
@@ -117,7 +122,8 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       }
     } catch (err) {
       clearInterval(interval);
-      console.error('Error uploading avatar:', err);
+      logger.error({ err }, 'Error uploading avatar to Clerk');
+      Sentry.captureException(err);
       const message =
         err instanceof Error
           ? err.message
@@ -156,7 +162,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
       {successMessage && (
-        <div className='font-mono-custom flex items-center gap-2 rounded-2xl border border-[#009966]/20 bg-[#ECFDF5] p-4 text-xs tracking-wide text-[#009966]'>
+        <div className='font-mono-custom flex items-center gap-2 rounded-2xl border border-[#047857]/20 bg-[#ECFDF5] p-4 text-xs tracking-wide text-[#047857]'>
           <CheckCircle2 size={16} />
           <span>{successMessage}</span>
         </div>
