@@ -19,11 +19,12 @@ export default async function SettingsPage(): Promise<React.JSX.Element> {
   }
 
   // Ensure user and profile records exist (self-healing)
-  const { profile } = await ensureUserAndProfile(userId);
+  const { user, profile } = await ensureUserAndProfile(userId);
 
   const serializableProfile = {
     id: userId,
     name: profile?.name || '',
+    email: user?.email || '',
     bio: profile?.bio || '',
     website: profile?.website || '',
     avatarUrl: profile?.avatarUrl || '',

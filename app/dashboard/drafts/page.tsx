@@ -33,38 +33,38 @@ export default async function DraftsPage({ searchParams }: Props) {
 
   const queryClient = new QueryClient();
 
-  // Prefetch AI models
-  await queryClient.prefetchQuery({
-    queryKey: draftKeys.models(),
-    queryFn: async () => {
-      const res = await getAIModels();
-      if (!res.success || !res.data) {
-        throw new Error(res.error || 'Failed to fetch AI models');
-      }
-      return res.data;
-    },
-  });
-
-  // Prefetch active list of drafts based on dynamic search params
-  await queryClient.prefetchQuery({
-    queryKey: draftKeys.list({
-      search,
-      category,
-      page: pageNumber,
+  // Prefetch AI models and drafts in parallel to avoid a waterfall
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: draftKeys.models(),
+      queryFn: async () => {
+        const res = await getAIModels();
+        if (!res.success || !res.data) {
+          throw new Error(res.error || 'Failed to fetch AI models');
+        }
+        return res.data;
+      },
     }),
-    queryFn: async () => {
-      const res = await getDrafts({
+    queryClient.prefetchQuery({
+      queryKey: draftKeys.list({
         search,
         category,
         page: pageNumber,
-        pageSize: 2,
-      });
-      if (!res.success || !res.data) {
-        throw new Error(res.error || 'Failed to fetch drafts');
-      }
-      return res.data;
-    },
-  });
+      }),
+      queryFn: async () => {
+        const res = await getDrafts({
+          search,
+          category,
+          page: pageNumber,
+          pageSize: 2,
+        });
+        if (!res.success || !res.data) {
+          throw new Error(res.error || 'Failed to fetch drafts');
+        }
+        return res.data;
+      },
+    }),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

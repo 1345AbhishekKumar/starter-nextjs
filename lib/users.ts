@@ -15,25 +15,33 @@ export async function ensureUserAndProfile(userId: string): Promise<{
   user: UserRecord;
   profile: ProfileRecord;
 }> {
-  // 1. Ensure user record exists
-  let userRecord: UserRecord | undefined;
+  // 1. Fetch user and profile in a single joined database query
+  let userWithProfile:
+    (UserRecord & { profile: ProfileRecord | null }) | undefined;
   try {
-    userRecord = await db.query.users.findFirst({
+    userWithProfile = (await db.query.users.findFirst({
       where: (u, { eq }) => eq(u.id, userId),
-    });
+      with: {
+        profile: true,
+      },
+    })) as (UserRecord & { profile: ProfileRecord | null }) | undefined;
   } catch (error) {
     logger.error(
       {
         err: error,
         userId,
       },
-      'Failed to fetch user record due to connection/database error',
+      'Failed to fetch user and profile records due to database error',
     );
     Sentry.captureException(error);
     throw error;
   }
 
-  if (!userRecord) {
+  let userRecord: UserRecord;
+  let profileRecord: ProfileRecord;
+
+  // 2. If user record is missing, create both user and profile (self-healing)
+  if (!userWithProfile) {
     try {
       const client = await clerkClient();
       const clerkUser = await client.users.getUser(userId);
@@ -52,10 +60,13 @@ export async function ensureUserAndProfile(userId: string): Promise<{
       if (newUser) {
         userRecord = newUser;
       } else {
-        // Fetch again if inserted concurrently by webhook
-        userRecord = await db.query.users.findFirst({
+        const refetchedUser = await db.query.users.findFirst({
           where: (u, { eq }) => eq(u.id, userId),
         });
+        if (!refetchedUser) {
+          throw new Error('User record still missing after concurrent insert');
+        }
+        userRecord = refetchedUser;
       }
     } catch (error) {
       logger.error(
@@ -68,31 +79,20 @@ export async function ensureUserAndProfile(userId: string): Promise<{
       Sentry.captureException(error);
       throw error;
     }
+  } else {
+    userRecord = {
+      id: userWithProfile.id,
+      email: userWithProfile.email,
+      role: userWithProfile.role,
+      stripeCustomerId: userWithProfile.stripeCustomerId,
+      createdAt: userWithProfile.createdAt,
+      updatedAt: userWithProfile.updatedAt,
+    };
   }
 
-  if (!userRecord) {
-    throw new Error(`Failed to ensure user record for user: ${userId}`);
-  }
-
-  // 2. Ensure profile record exists
-  let profileRecord: ProfileRecord | undefined;
-  try {
-    profileRecord = await db.query.profiles.findFirst({
-      where: (p, { eq }) => eq(p.id, userId),
-    });
-  } catch (error) {
-    logger.error(
-      {
-        err: error,
-        userId,
-      },
-      'Failed to fetch profile record due to connection/database error',
-    );
-    Sentry.captureException(error);
-    throw error;
-  }
-
-  if (!profileRecord) {
+  // 3. If profile record is missing, create it
+  const existingProfile = userWithProfile?.profile;
+  if (!existingProfile) {
     try {
       const client = await clerkClient();
       const clerkUser = await client.users.getUser(userId);
@@ -114,9 +114,15 @@ export async function ensureUserAndProfile(userId: string): Promise<{
     } catch {
       // Safe to ignore if written concurrently, fetch again
       try {
-        profileRecord = await db.query.profiles.findFirst({
+        const refetchedProfile = await db.query.profiles.findFirst({
           where: (p, { eq }) => eq(p.id, userId),
         });
+        if (!refetchedProfile) {
+          throw new Error(
+            'Profile record still missing after concurrent insert',
+          );
+        }
+        profileRecord = refetchedProfile;
       } catch (refetchError) {
         logger.error(
           {
@@ -129,10 +135,8 @@ export async function ensureUserAndProfile(userId: string): Promise<{
         throw refetchError;
       }
     }
-  }
-
-  if (!profileRecord) {
-    throw new Error(`Failed to ensure profile record for user: ${userId}`);
+  } else {
+    profileRecord = existingProfile;
   }
 
   return {

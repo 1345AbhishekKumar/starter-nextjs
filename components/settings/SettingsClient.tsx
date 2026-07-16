@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useQueryState } from 'nuqs';
 
 import {
   SettingsSidebar,
@@ -16,6 +17,7 @@ import { BillingSettings } from '@/components/settings/BillingSettings';
 type ProfileData = {
   id: string;
   name: string;
+  email: string;
   bio: string;
   website: string;
   avatarUrl: string;
@@ -26,7 +28,19 @@ interface SettingsClientProps {
 }
 
 export function SettingsClient({ initialProfile }: SettingsClientProps) {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
+  const [tabState, setTabState] = useQueryState('tab', {
+    defaultValue: 'profile',
+  });
+
+  const activeTab = (
+    ['profile', 'preferences', 'security', 'billing'].includes(tabState)
+      ? tabState
+      : 'profile'
+  ) as SettingsTab;
+
+  const handleTabChange = (tab: SettingsTab) => {
+    void setTabState(tab);
+  };
 
   return (
     <div className='relative flex min-h-screen flex-col bg-[#f9f8f6] px-6 py-12 md:py-20'>
@@ -71,7 +85,7 @@ export function SettingsClient({ initialProfile }: SettingsClientProps) {
           <div className='md:col-span-1'>
             <SettingsSidebar
               activeTab={activeTab}
-              setActiveTab={setActiveTab}
+              setActiveTab={handleTabChange}
             />
           </div>
 

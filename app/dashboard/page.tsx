@@ -20,9 +20,9 @@ export const metadata = {
 };
 
 export default async function DashboardPage(): Promise<React.JSX.Element> {
-  logger.info('Rendering dashboard server component');
-
   const { userId } = await auth();
+
+  logger.info('Rendering dashboard server component');
 
   if (!userId) {
     redirect('/sign-in');

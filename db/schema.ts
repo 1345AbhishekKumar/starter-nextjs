@@ -1,4 +1,11 @@
-import { pgTable, text, timestamp, serial, integer } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  timestamp,
+  serial,
+  integer,
+  index,
+} from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
@@ -30,43 +37,51 @@ export const profiles = pgTable('profiles', {
     .notNull(),
 });
 
-export const posts = pgTable('posts', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  content: text('content').notNull(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  status: text('status').notNull().default('draft'),
-  category: text('category').notNull().default('nature'),
-  tags: text('tags')
-    .array()
-    .notNull()
-    .default(sql`ARRAY[]::text[]`),
-  summary: text('summary'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const posts = pgTable(
+  'posts',
+  {
+    id: serial('id').primaryKey(),
+    title: text('title').notNull(),
+    content: text('content').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    status: text('status').notNull().default('draft'),
+    category: text('category').notNull().default('nature'),
+    tags: text('tags')
+      .array()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
+    summary: text('summary'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index('posts_user_id_idx').on(table.userId)],
+);
 
-export const subscriptions = pgTable('subscriptions', {
-  id: text('id').primaryKey(), // Stripe subscription ID
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  status: text('status').notNull(),
-  priceId: text('price_id'),
-  currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const subscriptions = pgTable(
+  'subscriptions',
+  {
+    id: text('id').primaryKey(), // Stripe subscription ID
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    status: text('status').notNull(),
+    priceId: text('price_id'),
+    currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index('subscriptions_user_id_idx').on(table.userId)],
+);
 
 export const webhookEvents = pgTable('webhook_events', {
   id: text('id').primaryKey(),
@@ -75,19 +90,23 @@ export const webhookEvents = pgTable('webhook_events', {
     .notNull(),
 });
 
-export const uploadcareFiles = pgTable('uploadcare_files', {
-  id: serial('id').primaryKey(),
-  fileId: text('file_id').notNull().unique(), // Uploadcare UUID
-  fileUrl: text('file_url').notNull(), // CDN URL
-  fileName: text('file_name').notNull(),
-  fileSize: integer('file_size').notNull(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const uploadcareFiles = pgTable(
+  'uploadcare_files',
+  {
+    id: serial('id').primaryKey(),
+    fileId: text('file_id').notNull().unique(), // Uploadcare UUID
+    fileUrl: text('file_url').notNull(), // CDN URL
+    fileName: text('file_name').notNull(),
+    fileSize: integer('file_size').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index('uploadcare_files_user_id_idx').on(table.userId)],
+);
 
 // Relationships
 export const usersRelations = relations(users, ({ one, many }) => ({

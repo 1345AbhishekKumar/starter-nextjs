@@ -17,6 +17,7 @@ import { updateProfile } from '@/actions/profile';
 type ProfileData = {
   id: string;
   name: string;
+  email: string;
   bio: string;
   website: string;
   avatarUrl: string;
@@ -48,13 +49,13 @@ export function ProfileForm({
     mode: 'onBlur',
     defaultValues: {
       name: initialProfile.name,
-      email: user?.primaryEmailAddress?.emailAddress || '',
+      email: initialProfile.email || '',
       bio: initialProfile.bio,
       website: initialProfile.website,
     },
   });
 
-  // Reset form once Clerk user loads
+  // Keep form in sync once Clerk user loads in the background (no loading flash)
   useEffect(() => {
     if (isLoaded && user) {
       reset({
@@ -63,7 +64,8 @@ export function ProfileForm({
           user.fullName ||
           `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
           'Meadow Creator',
-        email: user.primaryEmailAddress?.emailAddress || '',
+        email:
+          initialProfile.email || user.primaryEmailAddress?.emailAddress || '',
         bio: initialProfile.bio,
         website: initialProfile.website,
       });
@@ -151,13 +153,7 @@ export function ProfileForm({
     setTimeout(() => setSuccessMessage(null), 4000);
   };
 
-  if (!isLoaded) {
-    return (
-      <div className='flex h-48 items-center justify-center'>
-        <Loader2 className='size-6 animate-spin text-[#6e9c4e]' />
-      </div>
-    );
-  }
+  // Render form instantly without waiting for Clerk SDK load to prevent layout flashes
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
@@ -216,11 +212,15 @@ export function ProfileForm({
           <button
             type='button'
             onClick={triggerFileInput}
-            disabled={uploading}
+            disabled={uploading || !isLoaded}
             className='outline-btn font-mono-custom mt-3 flex items-center gap-1.5 border-[#111111]/20 px-4 py-2 text-[9px] tracking-wider uppercase hover:border-[#111111] disabled:opacity-50'
           >
             <UploadCloud size={12} />
-            {uploading ? `Uploading ${uploadProgress}%` : 'Upload New Photo'}
+            {uploading
+              ? `Uploading ${uploadProgress}%`
+              : isLoaded
+                ? 'Upload New Photo'
+                : 'Loading Photo Uploader...'}
           </button>
 
           {/* Progress bar */}

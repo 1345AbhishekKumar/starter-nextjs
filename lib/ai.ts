@@ -1,6 +1,7 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateText } from 'ai';
+import { cacheLife } from 'next/cache';
 import { serverEnv } from '@/config/env.server';
 import { logger } from './logger';
 
@@ -90,7 +91,6 @@ async function fetchProviderModels(
       const res = await fetch('https://integrate.api.nvidia.com/v1/models', {
         method: 'GET',
         headers: { Authorization: `Bearer ${apiKey}` },
-        next: { revalidate: 3600 * 24 }, // Cache list for 24h
       });
       if (!res.ok) throw new Error(`NVIDIA status ${res.status}`);
       const json = (await res.json()) as { data: Array<{ id: string }> };
@@ -118,7 +118,6 @@ async function fetchProviderModels(
       const res = await fetch('https://openrouter.ai/api/v1/models', {
         method: 'GET',
         headers: { Authorization: `Bearer ${apiKey}` },
-        next: { revalidate: 3600 * 24 },
       });
       if (!res.ok) throw new Error(`OpenRouter status ${res.status}`);
       const json = (await res.json()) as {
@@ -146,7 +145,6 @@ async function fetchProviderModels(
         `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`,
         {
           method: 'GET',
-          next: { revalidate: 3600 * 24 },
         },
       );
       if (!res.ok) throw new Error(`Gemini status ${res.status}`);
@@ -190,6 +188,9 @@ async function fetchProviderModels(
  * Dynamically fetches and consolidates available models from all configured API providers.
  */
 export async function fetchAIModels(): Promise<AIModel[]> {
+  'use cache';
+  cacheLife('days');
+
   const providers: Array<'nvidia' | 'openrouter' | 'gemini'> = [];
   if (serverEnv.NVIDIA_API_KEY) providers.push('nvidia');
   if (serverEnv.OPENROUTER_API_KEY) providers.push('openrouter');

@@ -1,33 +1,12 @@
-'use client';
-
-import { useEffect } from 'react';
-import { MagneticButton } from './MagneticButton';
 import Image from 'next/image';
+import { FadeInInitializer } from '@/components/shared/FadeInInitializer';
+import { NewsletterForm } from './NewsletterForm';
+import { MagneticButton } from './MagneticButton';
 
 export function HeroSection() {
-  // Set up Intersection Observer for fade-in animations on mount
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
-    );
-
-    const elements = document.querySelectorAll('.fade-in-up');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => {
-      elements.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
-
   return (
     <>
+      <FadeInInitializer />
       {/* Hero Section */}
       <main className='relative z-10 flex flex-1 flex-col justify-center px-6 pt-32 pb-16 md:pt-40 md:pb-24'>
         <div className='mx-auto w-full max-w-300'>
@@ -571,34 +550,7 @@ export function HeroSection() {
                 stories, and quiet moments delivered to your inbox.
               </p>
 
-              <form
-                className='flex max-w-md flex-col gap-3 sm:flex-row'
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <input
-                  type='email'
-                  placeholder='your@email.com'
-                  className='font-mono-custom flex-1 rounded-full border border-[#111111]/10 bg-white/80 px-6 py-4 text-sm tracking-wide text-[#111111] placeholder-[#525252]/50 transition-colors focus:border-[#111111]/30 focus:outline-none'
-                />
-                <MagneticButton
-                  type='submit'
-                  className='group whitespace-nowrap'
-                >
-                  Subscribe
-                  <svg
-                    className='size-4 transition-transform duration-300 group-hover:translate-x-1'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <line x1='5' y1='12' x2='19' y2='12'></line>
-                    <polyline points='12 5 19 12 12 19'></polyline>
-                  </svg>
-                </MagneticButton>
-              </form>
+              <NewsletterForm />
               <p className='font-mono-custom mt-4 text-[11px] tracking-wider text-[#525252]/60'>
                 No spam. Only meadow whispers. Unsubscribe anytime.
               </p>
