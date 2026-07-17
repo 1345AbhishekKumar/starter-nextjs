@@ -10,7 +10,7 @@ import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
 import { arcjetClient } from '@/lib/arcjet';
 import { request, tokenBucket } from '@arcjet/next';
-import { aiTokenLimiters, CHARS_PER_TOKEN } from '@/lib/ai-limits';
+import { getAIService } from '@/lib/ai';
 import { getSubscriptionStatus } from '@/actions/stripe';
 import { type AIModel } from '@/lib/ai';
 
@@ -291,6 +291,7 @@ export type GenerateSummaryResponse = {
 export async function generateDraftSummary(
   id: string,
   model: string,
+  aiService = getAIService(),
 ): Promise<GenerateSummaryResponse> {
   try {
     const { userId } = await auth();
@@ -335,29 +336,20 @@ export async function generateDraftSummary(
       subStatus.success &&
       subStatus.data?.status === 'active' &&
       (subStatus.data.isPro || subStatus.data.isEnterprise);
-    const tier: 'pro' | 'free' = isPro ? 'pro' : 'free';
 
-    const estimatedPromptTokens = Math.max(
-      1,
-      Math.ceil(draft.content.length / CHARS_PER_TOKEN),
-    );
-
-    const limitCheck = await aiTokenLimiters[tier].limit(userId, {
-      rate: estimatedPromptTokens,
+    // Delegate limits, token tracking, and generation to the deep AI Service module
+    const aiResult = await aiService.summarize({
+      content: draft.content,
+      modelId: model,
+      userId,
+      isPro,
     });
 
-    if (!limitCheck.success) {
-      const cooldownMs = limitCheck.reset - Date.now();
-      const cooldownHours = Math.max(0, cooldownMs / (1000 * 60 * 60));
-      return {
-        success: false,
-        error: `AI token limit reached. Please wait ${cooldownHours.toFixed(1)} hours before trying again.`,
-      };
+    if (!aiResult.success) {
+      return { success: false, error: aiResult.error };
     }
 
-    // Call the AI utility to generate summary
-    const { generateSummary } = await import('@/lib/ai');
-    const summary = await generateSummary(draft.content, model);
+    const summary = aiResult.summary;
 
     // Save the summary back to the database
     await db
