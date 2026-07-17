@@ -5,7 +5,7 @@ import { PostHogProvider as PHProvider } from '@posthog/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { PreferencesSync } from '@/components/settings/PreferencesSync';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -27,7 +27,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <PHProvider client={posthog}>
       <QueryClientProvider client={queryClient}>
         <NuqsAdapter>
-          <PreferencesSync>{children}</PreferencesSync>
+          <Suspense fallback={null}>
+            <PreferencesSync>{children}</PreferencesSync>
+          </Suspense>
         </NuqsAdapter>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

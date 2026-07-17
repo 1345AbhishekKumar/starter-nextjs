@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { Settings } from 'lucide-react';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 export function DashboardHeader() {
   const { signOut } = useAuth();
@@ -32,6 +33,7 @@ export function DashboardHeader() {
       </Link>
 
       <div className='flex items-center gap-3'>
+        <NotificationBell />
         <Link
           href='/settings'
           className='outline-btn font-mono-custom flex items-center gap-1.5 border-[#111111]/30 bg-transparent px-4 py-2.5 text-[10px] tracking-wider uppercase hover:border-[#111111]'

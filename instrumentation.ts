@@ -54,6 +54,15 @@ export async function register() {
     } catch (e) {
       console.error('Failed to initialize OpenTelemetry LoggerProvider:', e);
     }
+
+    // Initialize notification listeners on startup
+    try {
+      const { initializeNotificationListeners } =
+        await import('./lib/notifications/listener');
+      initializeNotificationListeners();
+    } catch (e) {
+      console.error('Failed to initialize notification listeners:', e);
+    }
   }
 
   if (process.env.NEXT_RUNTIME === 'edge') {

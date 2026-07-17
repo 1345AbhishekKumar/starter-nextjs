@@ -5,6 +5,7 @@ import {
   serial,
   integer,
   index,
+  jsonb,
 } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
@@ -114,6 +115,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   posts: many(posts),
   subscription: one(subscriptions),
   uploadcareFiles: many(uploadcareFiles),
+  notifications: many(notifications),
 }));
 
 export const profilesRelations = relations(profiles, ({ one }) => ({
@@ -137,3 +139,49 @@ export const uploadcareFilesRelations = relations(
     }),
   }),
 );
+
+export const notifications = pgTable(
+  'notifications',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    templateId: text('template_id').notNull(),
+    variables: jsonb('variables')
+      .$type<Record<string, string>>()
+      .notNull()
+      .default({}),
+    priority: text('priority').notNull().default('normal'), // low, normal, high, urgent
+    delivery: jsonb('delivery')
+      .$type<{ inApp: boolean; email: boolean; push: boolean }>()
+      .notNull()
+      .default({ inApp: true, email: false, push: false }),
+    deduplicationKey: text('deduplication_key'),
+    readAt: timestamp('read_at', { withTimezone: true }),
+    archivedAt: timestamp('archived_at', { withTimezone: true }),
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    deliverAt: timestamp('deliver_at', { withTimezone: true }),
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('notifications_user_id_idx').on(table.userId),
+    index('notifications_user_unread_idx').on(table.userId, table.readAt),
+    index('notifications_deliver_at_idx').on(table.deliverAt),
+    index('notifications_dedup_idx').on(
+      table.userId,
+      table.deduplicationKey,
+      table.createdAt,
+    ),
+  ],
+);
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user: one(users, { fields: [notifications.userId], references: [users.id] }),
+}));
