@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { notificationRepository } from '@/lib/notifications/repository';
 import { createNotification } from '@/lib/notifications/service';
+import { createNotificationSchema } from '@/lib/notifications/service';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
+import { z } from 'zod';
+import { getNotificationsFiltersSchema } from '@/lib/notifications/validations';
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,33 +19,33 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const readStatus = searchParams.get('readStatus') as
-      'all' | 'unread' | 'read' | null;
-    const archivedStatus = searchParams.get('archivedStatus') as
-      'active' | 'archived' | 'all' | null;
-    const priority = searchParams.get('priority') || undefined;
-    const search = searchParams.get('search') || undefined;
-    const limit = searchParams.get('limit')
-      ? Number(searchParams.get('limit'))
-      : undefined;
-    const offset = searchParams.get('offset')
-      ? Number(searchParams.get('offset'))
-      : undefined;
-    const cursor = searchParams.get('cursor') || undefined;
+    const params = Object.fromEntries(searchParams.entries());
+    const parseResult = getNotificationsFiltersSchema.safeParse(params);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid query parameters',
+          details: parseResult.error.format(),
+        },
+        { status: 400 },
+      );
+    }
 
     const result = await notificationRepository.findMany({
       userId,
-      readStatus: readStatus || 'all',
-      archivedStatus: archivedStatus || 'active',
-      priority,
-      search,
-      limit,
-      offset,
-      cursor,
+      ...parseResult.data,
     });
 
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: 'Validation failed', details: error.format() },
+        { status: 400 },
+      );
+    }
     logger.error(
       { error, path: '/api/notifications' },
       'Failed to fetch notifications via API route',
@@ -65,15 +68,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const parseResult = createNotificationSchema
+      .omit({ userId: true })
+      .safeParse(body);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid notification payload',
+          details: parseResult.error.format(),
+        },
+        { status: 400 },
+      );
+    }
+
     // Enforce userId matches the authenticated session user
     const result = await createNotification({
-      ...body,
+      ...parseResult.data,
       userId,
     });
 
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: 'Validation failed', details: error.format() },
+        { status: 400 },
+      );
+    }
     logger.error(
       { error, path: '/api/notifications' },
       'Failed to create notification via API route',

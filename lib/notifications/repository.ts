@@ -1,6 +1,16 @@
 import { db } from '@/db';
 import { notifications } from '@/db/schema';
-import { and, eq, isNull, desc, lt, sql, or, type SQL } from 'drizzle-orm';
+import {
+  and,
+  eq,
+  isNull,
+  desc,
+  lt,
+  sql,
+  or,
+  type SQL,
+  inArray,
+} from 'drizzle-orm';
 import { type NewNotification, type Notification } from './types';
 
 export class NotificationRepository {
@@ -151,7 +161,9 @@ export class NotificationRepository {
     await db
       .update(notifications)
       .set({ readAt: new Date(), updatedAt: new Date() })
-      .where(and(sql`id IN ${ids}`, eq(notifications.userId, userId)));
+      .where(
+        and(inArray(notifications.id, ids), eq(notifications.userId, userId)),
+      );
   }
 
   async markAllAsRead(userId: string): Promise<void> {

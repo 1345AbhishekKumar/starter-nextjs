@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 import { logger, flushLogsAfterResponse } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
 import { serverEnv } from '@/config/env.server';
-import { sendWelcomeEmail } from '@/actions/email';
+import { sendWelcomeEmail } from '@/lib/email';
 
 /**
  * Clerk Webhook Handler

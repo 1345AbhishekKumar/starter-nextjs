@@ -3,6 +3,7 @@ import { users, profiles } from '@/db/schema';
 import { clerkClient } from '@clerk/nextjs/server';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
+import { withDbRetry } from '@/lib/utils';
 
 export type UserRecord = typeof users.$inferSelect;
 export type ProfileRecord = typeof profiles.$inferSelect;
@@ -19,12 +20,12 @@ export async function ensureUserAndProfile(userId: string): Promise<{
   let userWithProfile:
     (UserRecord & { profile: ProfileRecord | null }) | undefined;
   try {
-    userWithProfile = (await db.query.users.findFirst({
-      where: (u, { eq }) => eq(u.id, userId),
-      with: {
-        profile: true,
-      },
-    })) as (UserRecord & { profile: ProfileRecord | null }) | undefined;
+    userWithProfile = (await withDbRetry(() =>
+      db.query.users.findFirst({
+        where: (u, { eq }) => eq(u.id, userId),
+        with: { profile: true },
+      }),
+    )) as (UserRecord & { profile: ProfileRecord | null }) | undefined;
   } catch (error) {
     logger.error(
       {
@@ -60,9 +61,9 @@ export async function ensureUserAndProfile(userId: string): Promise<{
       if (newUser) {
         userRecord = newUser;
       } else {
-        const refetchedUser = await db.query.users.findFirst({
-          where: (u, { eq }) => eq(u.id, userId),
-        });
+        const refetchedUser = await withDbRetry(() =>
+          db.query.users.findFirst({ where: (u, { eq }) => eq(u.id, userId) }),
+        );
         if (!refetchedUser) {
           throw new Error('User record still missing after concurrent insert');
         }
@@ -114,9 +115,11 @@ export async function ensureUserAndProfile(userId: string): Promise<{
     } catch {
       // Safe to ignore if written concurrently, fetch again
       try {
-        const refetchedProfile = await db.query.profiles.findFirst({
-          where: (p, { eq }) => eq(p.id, userId),
-        });
+        const refetchedProfile = await withDbRetry(() =>
+          db.query.profiles.findFirst({
+            where: (p, { eq }) => eq(p.id, userId),
+          }),
+        );
         if (!refetchedProfile) {
           throw new Error(
             'Profile record still missing after concurrent insert',
@@ -143,4 +146,21 @@ export async function ensureUserAndProfile(userId: string): Promise<{
     user: userRecord,
     profile: profileRecord,
   };
+}
+
+/**
+ * Retrieves a user's role from the database.
+ */
+export async function getUserRole(userId: string): Promise<string | null> {
+  try {
+    const user = await db.query.users.findFirst({
+      where: (u, { eq }) => eq(u.id, userId),
+      columns: { role: true },
+    });
+    return user?.role || null;
+  } catch (error) {
+    logger.error({ error, userId }, 'Failed to fetch user role');
+    Sentry.captureException(error);
+    return null;
+  }
 }

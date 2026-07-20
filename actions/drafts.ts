@@ -365,10 +365,7 @@ export async function generateDraftSummary(
     Sentry.captureException(error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : 'Failed to generate draft summary',
+      error: 'Failed to generate draft summary',
     };
   }
 }

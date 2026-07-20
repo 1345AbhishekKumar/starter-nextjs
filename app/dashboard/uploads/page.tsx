@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useUser, useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FileUploader } from '@/components/uploader/FileUploader';
 import { FileGrid } from '@/components/uploader/FileGrid';
-import { CloudUpload } from 'lucide-react';
+import { CloudUpload, Loader2 } from 'lucide-react';
 
 export default function UploadsPage() {
   const { isLoaded, isSignedIn } = useUser();
@@ -111,7 +111,15 @@ export default function UploadsPage() {
               Persisted in Neon
             </p>
           </div>
-          <FileGrid />
+          <Suspense
+            fallback={
+              <div className='flex justify-center py-12'>
+                <Loader2 className='size-8 animate-spin text-[var(--brand-green)]' />
+              </div>
+            }
+          >
+            <FileGrid />
+          </Suspense>
         </div>
       </div>
     </div>

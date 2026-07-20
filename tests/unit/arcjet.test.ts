@@ -80,8 +80,8 @@ describe('Arcjet Client Configuration', () => {
 
   it('should correctly allow requests when isDenied is false', async () => {
     const { arcjetClient } = await import('@/lib/arcjet');
-    const customRule = {};
-    const derivedClient = arcjetClient.withRule(customRule);
+    const customRule = {} as unknown as import('@arcjet/next').ArcjetRule;
+    const derivedClient = arcjetClient.withRule([customRule]);
 
     mockProtect.mockResolvedValueOnce({
       isDenied: () => false,
@@ -99,8 +99,8 @@ describe('Arcjet Client Configuration', () => {
 
   it('should correctly flag rate limits when denied with rate limit reason', async () => {
     const { arcjetClient } = await import('@/lib/arcjet');
-    const customRule = {};
-    const derivedClient = arcjetClient.withRule(customRule);
+    const customRule = {} as unknown as import('@arcjet/next').ArcjetRule;
+    const derivedClient = arcjetClient.withRule([customRule]);
 
     mockProtect.mockResolvedValueOnce({
       isDenied: () => true,

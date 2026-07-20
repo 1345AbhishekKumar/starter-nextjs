@@ -2,26 +2,20 @@
 
 import { auth } from '@clerk/nextjs/server';
 import { notificationRepository } from '@/lib/notifications/repository';
-import { notificationService } from '@/lib/notifications/service';
 import { revalidatePath } from 'next/cache';
 import { logger } from '@/lib/logger';
 import * as Sentry from '@sentry/nextjs';
+import { z } from 'zod';
+import { getNotificationsFiltersSchema } from '@/lib/notifications/validations';
 
 import { type Notification } from '@/lib/notifications/types';
 
 export type ActionResponse<T = void> =
   { success: true; data?: T } | { success: false; error: string };
 
-export async function getNotificationsAction(filters: {
-  readStatus?: 'all' | 'unread' | 'read';
-  archivedStatus?: 'active' | 'archived' | 'all';
-  priority?: string;
-  search?: string;
-  limit?: number;
-  offset?: number;
-  cursor?: string;
-  userId?: string;
-}): Promise<
+export async function getNotificationsAction(
+  filters: unknown,
+): Promise<
   ActionResponse<{ notifications: Notification[]; totalCount: number }>
 > {
   try {
@@ -30,8 +24,10 @@ export async function getNotificationsAction(filters: {
       return { success: false, error: 'Unauthorized' };
     }
 
+    const validatedFilters = getNotificationsFiltersSchema.parse(filters);
+
     const result = await notificationRepository.findMany({
-      ...filters,
+      ...validatedFilters,
       userId,
     });
 
@@ -41,6 +37,9 @@ export async function getNotificationsAction(filters: {
       { error, filters },
       'Failed to fetch notifications via server action',
     );
+    if (error instanceof z.ZodError) {
+      return { success: false, error: 'Invalid query filters' };
+    }
     Sentry.captureException(error);
     return { success: false, error: 'Failed to fetch notifications' };
   }
@@ -139,18 +138,5 @@ export async function archiveNotificationAction(
     );
     Sentry.captureException(error);
     return { success: false, error: 'Failed to update notification state' };
-  }
-}
-
-export async function processScheduledNotificationsAction(): Promise<
-  ActionResponse<number>
-> {
-  try {
-    const count = await notificationService.processScheduledPending();
-    return { success: true, data: count };
-  } catch (error) {
-    logger.error({ error }, 'Failed to process scheduled notifications');
-    Sentry.captureException(error);
-    return { success: false, error: 'Failed to process scheduled items' };
   }
 }
